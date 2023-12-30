@@ -9,7 +9,7 @@ on:
 
 env:
   SOLUTION_FILE_PATH: ./minty.sln
-  BUILD_CONFIGURATION: Debug
+  BUILD_CONFIGURATION: Release
 
 permissions:
   contents: read
@@ -33,8 +33,8 @@ jobs:
     - name: Removing unused files
       shell: bash
       run: |
-        rm -rf ./x64/Debug/*.obj
-        rm -rf ./x64/Debug/*.pdb
+        rm -rf ./x64/Release/*.obj
+        rm -rf ./x64/Release/*.pdb
       
     - name: Install 7zip
       run: choco install 7zip
@@ -47,5 +47,5 @@ jobs:
       uses: actions/upload-artifact@v3.1.0
       with:
         name: minty-release
-        path: ./minty-Debug-*.7z
+        path: ./minty-release-*.7z
         if-no-files-found: error
