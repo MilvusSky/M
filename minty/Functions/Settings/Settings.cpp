@@ -1,4 +1,4 @@
-﻿#include "Settings.h"
+#include "Settings.h"
 
 namespace cheat {
     static void DrawFPS();
@@ -29,9 +29,16 @@ namespace cheat {
     }
     const char* languages[] = { "English", "Russian", "Chinese", "Indonesian" };
     void RefreshMenu() {
+      
       // 刷新菜单的逻辑
     }
     void Settings::GUI() {
+
+	//更换语言
+	ImGui::SeparatorText(_("language settings"));
+	ConfigComboLanguage(f_Language);
+
+
         ImGui::SeparatorText("General");
 
 	f_Hotkey.Draw(_("Show the Minty Menu."));
@@ -69,11 +76,8 @@ namespace cheat {
 
 	ConfigCheckbox(_("mobileMode"), f_MobileMode, _("Using mobile platform touch screen mode\n""please restart."));
 
-	//更换语言
-	ConfigComboLanguage(f_Language);
-	    
-        ConfigInputText(_("Startup arguments"), f_StartupArguments, _("Launch the game with command line arguments.\n"
-            "(changes will take effect after relaunch)."));
+	ConfigInputText(_("Startup arguments"), f_StartupArguments, _("Launch the game with command line arguments.\n"
+	    "(changes will take effect after relaunch)."));
         TextURL(_("List of unity command line arguments"), "https://docs.unity3d.com/Manual/PlayerCommandLineArguments.html", false, false);
 
         ImGui::SeparatorText(_("Theme"));
