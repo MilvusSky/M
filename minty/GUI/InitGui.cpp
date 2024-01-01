@@ -44,23 +44,24 @@ void gui::Render() {
 
     auto& settings = cheat::Settings::getInstance();
     static double startTime = ImGui::GetTime();
-    static bool prevShowMenu = settings.f_ShowMenu;
+    static bool prevShowMenu = settings.f_ShowMenu.getValue();
     const float animDuration = settings.f_AnimationDuration.getValue();
 
-    if (settings.f_ShowMenu != prevShowMenu) {
-        startTime = ImGui::GetTime(); // Reset startTime when the menu state changes
-        prevShowMenu = settings.f_ShowMenu;
+    if (settings.f_ShowMenu.getValue() != prevShowMenu) {
+        startTime = ImGui::GetTime(); 
+        prevShowMenu = settings.f_ShowMenu.getValue();
     }
 
-    float alpha = settings.f_ShowMenu ? min(1.0f, (ImGui::GetTime() - startTime) / animDuration) : max(0.0f, 1.0f - (ImGui::GetTime() - startTime) / animDuration);
+    float alpha = settings.f_ShowMenu.getValue() ? min(1.0f, (ImGui::GetTime() - startTime) / animDuration) : max(0.0f, 1.0f - (ImGui::GetTime() - startTime) / animDuration);
 
     ImGui::PushStyleVar(ImGuiStyleVar_Alpha, alpha);
 
-    if (settings.f_ShowMenu || alpha > 0.0f)
+    if (settings.f_ShowMenu.getValue() || alpha > 0.0f)
         gui::FrameLoadGui();
 
     ImGui::PopStyleVar();
-    //ImGui::GetIO().MouseDrawCursor = settings.f_ShowMenu;
 
+    //ImGui::GetIO().MouseDrawCursor = settings.f_ShowMenu.getValue();
+    
     ImGui::Render();
 }

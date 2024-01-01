@@ -1,4 +1,4 @@
-#include "Settings.h"
+﻿#include "Settings.h"
 
 namespace cheat {
     static void DrawFPS();
@@ -12,15 +12,15 @@ namespace cheat {
 	f_ShowRpc = config::getValue("functions:Settings", "showRpc", true);
 	f_ShowConsole = config::getValue("functions:Settings", "showConsole", true);
         f_InitDelay = config::getValue("functions:Settings", "initDelay", 7000);
-	f_Language = config::getValue("functions:Settings", "f_Language", 0);
+	f_Language = config::getValue("functions:Settings", "language", 0);
 	f_MobileMode = config::getValue("functions:Settings", "mobileMode", false);
         f_StartupArguments = config::getValue<std::string>("functions:Settings", "startupArguments", "");
 	f_AnimationDuration = config::getValue("functions:Settings", "animationDuration", 0.2f);
 	f_Status = config::getValue("functions:Settings", "status", true);
 	f_StatusMove = config::getValue("functions:Settings", "statusMove", true);
+	f_ShowMenu = config::getValue("functions:Settings", "showMenu", true);
         f_Hotkey = Hotkey("functions:Settings:Menu", VK_F12);
 	f_HotkeyConsole= Hotkey("functions:Settings:Console", VK_HOME);
-        f_ShowMenu = true;
     }
 
     Settings& Settings::getInstance() {
@@ -28,18 +28,11 @@ namespace cheat {
         return instance;
     }
     const char* languages[] = { "English", "Russian", "Chinese", "Indonesian" };
-    void RefreshMenu() {
-      
-      // 刷新菜单的逻辑
-    }
     void Settings::GUI() {
-
-	//更换语言
-	ImGui::SeparatorText(_("language settings"));
+	ImGui::SeparatorText(_("Language settings"));
 	ConfigComboLanguage(f_Language);
 
-
-        ImGui::SeparatorText("General");
+        ImGui::SeparatorText(_("General"));
 
 	f_Hotkey.Draw(_("Show the Minty Menu."));
 
@@ -74,7 +67,7 @@ namespace cheat {
         ConfigSliderInt(_("Initialization delay (ms)"), f_InitDelay, 0, 60000,
 	    _("Change delay before showing menu.\nMay cause lags while opening, so try to change this value in case."));
 
-	ConfigCheckbox(_("mobileMode"), f_MobileMode, _("Using mobile platform touch screen mode\n""please restart."));
+	ConfigCheckbox(_("Mobile mode"), f_MobileMode, _("Using mobile platform touch screen mode\n""Please restart."));
 
 	ConfigInputText(_("Startup arguments"), f_StartupArguments, _("Launch the game with command line arguments.\n"
 	    "(changes will take effect after relaunch)."));
@@ -114,9 +107,11 @@ namespace cheat {
 	}
 
     void Settings::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_ShowMenu = !f_ShowMenu;
-
+        if (f_Hotkey.IsPressed()) {
+	    f_ShowMenu.setValue(!f_ShowMenu.getValue());
+	    config::setValue("functions:Settings", "showMenu", f_ShowMenu.getValue());
+	}
+            
 	if (f_HotkeyConsole.IsPressed())
 	    f_ShowConsole.setValue(!f_ShowConsole.getValue());
 

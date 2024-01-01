@@ -20,10 +20,11 @@
 #include "../functions/visuals/ShowIndicators.h"
 #include "../functions/visuals/UnlockFPS.h"
 
-//#include "../functions/world/AutoLoot.h"
+#include "../functions/world/PickupRange.h"
+#include "../functions/world/AutoLoot.h"
 #include "../functions/world/AutoTalk.h"
 //#include "../functions/world/MobVacuum.h"
-//#include "../functions/world/VacuumLoot.h"
+#include "../functions/world/VacuumLoot.h"
 //#include "../functions/world/AutoDestroy.h"
 //#include "../functions/world/AutoChallenge.h"
 //#include "../functions/world/AutoTP.h"
@@ -65,7 +66,8 @@ void Init() {
   INIT_FUNC(ShowIndicators);
   INIT_FUNC(UnlockFPS);
 
-  //INIT_FUNC(AutoLoot);
+  INIT_FUNC(PickupRange);
+  INIT_FUNC(AutoLoot);
   //INIT_FUNC(AutoChallenge);
   //INIT_FUNC(MobVacuum);
   //INIT_FUNC(AutoDestroy);
@@ -77,7 +79,7 @@ void Init() {
   INIT_FUNC(GameSpeed);
   //INIT_FUNC(OpenTeamImmediately);
   //INIT_FUNC(SkipEnhanceAnimation);
-  //INIT_FUNC(VacuumLoot);
+  INIT_FUNC(VacuumLoot);
 }
 
 void Outer() {

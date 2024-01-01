@@ -3,10 +3,10 @@
 #include "../FunctionIncludes.h"
 
 namespace cheat {
-    class AutoLoot : public Function {
+    class PickupRange : public Function {
     public:
 	ConfigField<bool> f_Enabled;
-	ConfigField<int> f_Delay;
+	ConfigField<float> f_CustomRange;
 
 	Hotkey f_Hotkey;
 
@@ -16,7 +16,9 @@ namespace cheat {
 
 	std::string getModule() override;
 
-	static AutoLoot& getInstance();
-	AutoLoot();
+	static PickupRange& getInstance();
+	bool isTeleportHotkeyPressed;
+
+	PickupRange();
     };
 }

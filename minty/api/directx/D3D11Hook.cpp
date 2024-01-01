@@ -1,4 +1,4 @@
-// Check windows
+﻿// Check windows
 #if _WIN32 || _WIN64
 #if _WIN64
 #define ENV64BIT
@@ -106,34 +106,34 @@ bool LoadTextureFromResources(LPCTSTR resource_name, LPCTSTR resource_type, ID3D
 // Boolean
 BOOL g_bInitialised = false;
 bool g_PresentHooked = false;
-
-bool m_IsPrevCursorActive = false;
+bool m_IsPrevCursorActive = true;
 LRESULT CALLBACK hWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	ImGuiIO& io = ImGui::GetIO();
-	POINT mPos;
-	GetCursorPos(&mPos);
-	ScreenToClient(hWnd, &mPos);
-	ImGui::GetIO().MousePos.x = static_cast<float>(mPos.x);
-	ImGui::GetIO().MousePos.y = static_cast<float>(mPos.y);
+    ImGuiIO& io = ImGui::GetIO();
+    POINT mPos;
+    GetCursorPos(&mPos);
+    ScreenToClient(hWnd, &mPos);
+    ImGui::GetIO().MousePos.x = static_cast<float>(mPos.x);
+    ImGui::GetIO().MousePos.y = static_cast<float>(mPos.y);
 
-	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+    ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
-	auto& settings = cheat::Settings::getInstance();
+    auto& settings = cheat::Settings::getInstance();
 
-	if (settings.f_ShowMenu) {
-		m_IsPrevCursorActive = app::Cursor_get_visible(nullptr);
+    if (settings.f_ShowMenu.getValue()) {
+	m_IsPrevCursorActive = app::Cursor_get_visible(nullptr);
 
-		if (!m_IsPrevCursorActive) {
-			app::Cursor_set_visible(true);
-			app::Cursor_set_lockState(app::CursorLockMode__Enum::None);
-		}
-		return true;
-	} else if (!m_IsPrevCursorActive) {
-		app::Cursor_set_visible(false);
-		app::Cursor_set_lockState(app::CursorLockMode__Enum::Locked);
+	if (!m_IsPrevCursorActive) {
+	    app::Cursor_set_visible(true);
+	    app::Cursor_set_lockState(app::CursorLockMode__Enum::None);
 	}
+	return true;
+    }
+    else if (!m_IsPrevCursorActive) {
+	app::Cursor_set_visible(false);
+	app::Cursor_set_lockState(app::CursorLockMode__Enum::Locked);
+    }
 
-	return CallWindowProc(OriginalWndProcHandler, hWnd, uMsg, wParam, lParam);
+    return CallWindowProc(OriginalWndProcHandler, hWnd, uMsg, wParam, lParam);
 }
 
 HRESULT GetDeviceAndCtxFromSwapchain(IDXGISwapChain* pSwapChain, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext) {
@@ -176,60 +176,60 @@ HRESULT GetDeviceAndCtxFromSwapchain(IDXGISwapChain* pSwapChain, ID3D11Device** 
 //}
 
 HRESULT __fastcall hkPresent(IDXGISwapChain* pChain, UINT SyncInterval, UINT Flags) {
-	if (!g_bInitialised) {
-		g_PresentHooked = true;
+    if (!g_bInitialised) {
+	g_PresentHooked = true;
 
-		//LOG_DEBUG("DirectX Present Hook called by first time");
+	//LOG_DEBUG("DirectX Present Hook called by first time");
 
-		if (FAILED(GetDeviceAndCtxFromSwapchain(pChain, &pDevice, &pContext)))
-			return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
+	if (FAILED(GetDeviceAndCtxFromSwapchain(pChain, &pDevice, &pContext)))
+		return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
 
-		pSwapChain = pChain;
-		DXGI_SWAP_CHAIN_DESC sd;
-		pChain->GetDesc(&sd);
-		window = sd.OutputWindow;
+	pSwapChain = pChain;
+	DXGI_SWAP_CHAIN_DESC sd;
+	pChain->GetDesc(&sd);
+	window = sd.OutputWindow;
 
-		gui::InitImGui(window, pDevice, pContext);
+	gui::InitImGui(window, pDevice, pContext);
 
-		//Set OriginalWndProcHandler to the Address of the Original WndProc function
-		OriginalWndProcHandler = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)hWndProc);
-		ID3D11Texture2D* pBackBuffer;
-		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Use the UNORM format to specify RGB88 color space
-		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		rtvDesc.Texture2D.MipSlice = 0;
+	//Set OriginalWndProcHandler to the Address of the Original WndProc function
+	OriginalWndProcHandler = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)hWndProc);
+	ID3D11Texture2D* pBackBuffer;
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Use the UNORM format to specify RGB88 color space
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Texture2D.MipSlice = 0;
 
-		pChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-		pDevice->CreateRenderTargetView(pBackBuffer, &rtvDesc, &mainRenderTargetView);
-		pBackBuffer->Release();
+	pChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	pDevice->CreateRenderTargetView(pBackBuffer, &rtvDesc, &mainRenderTargetView);
+	pBackBuffer->Release();
 
-		g_bInitialised = true;
-	}
+	g_bInitialised = true;
+    }
 
-	gui::Render();
+    gui::Render();
 
-	//// Load texture from resources
-	//int imageWidth = 512;  // Specify the desired image width
-	//int imageHeight = 512; // Specify the desired image height
-	//ID3D11ShaderResourceView* textureSRV = nullptr;
-	//if (LoadTextureFromResources(MAKEINTRESOURCE(103), LPCSTR("PNG"), pDevice, &textureSRV, &imageWidth, &imageHeight)) {
-	//	// Draw the texture
-	//	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
-	//	//ImGui::SetNextWindowPos(ImVec2(about.width / 2, about.height * 0.063f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
-	//	if (ImGui::Begin("Gato", nullptr, flags)) {
-	//		ImGui::Image(textureSRV, ImVec2(static_cast<float>(imageWidth), static_cast<float>(imageHeight)));
-	//		ImGui::End();
-	//	}
-	//	textureSRV->Release();
-	//}
-	//else {
-	//	util::log(2, "loadtex err");
-	//}
+    //// Load texture from resources
+    //int imageWidth = 512;  // Specify the desired image width
+    //int imageHeight = 512; // Specify the desired image height
+    //ID3D11ShaderResourceView* textureSRV = nullptr;
+    //if (LoadTextureFromResources(MAKEINTRESOURCE(103), LPCSTR("PNG"), pDevice, &textureSRV, &imageWidth, &imageHeight)) {
+    //	// Draw the texture
+    //	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
+    //	//ImGui::SetNextWindowPos(ImVec2(about.width / 2, about.height * 0.063f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    //	if (ImGui::Begin("Gato", nullptr, flags)) {
+    //		ImGui::Image(textureSRV, ImVec2(static_cast<float>(imageWidth), static_cast<float>(imageHeight)));
+    //		ImGui::End();
+    //	}
+    //	textureSRV->Release();
+    //}
+    //else {
+    //	util::log(2, "loadtex err");
+    //}
 
-	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-	return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
+    return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
 }
 
 void DetourDirectXPresent() {

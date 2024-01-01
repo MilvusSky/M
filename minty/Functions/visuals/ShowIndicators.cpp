@@ -6,7 +6,7 @@ namespace cheat {
     ShowIndicators::ShowIndicators() {
 	f_Enabled = config::getValue("functions:ShowIndicators", "enabled", false);
 	f_Waypoints = config::getValue("functions:ShowIndicators", "waypoints", false);
-	f_Chests = config::getValue("functions:ShowChestIndicator", "chests", true);
+	f_Chests = config::getValue("functions:ShowChestIndicator", "chests", false);
         f_Hotkey = Hotkey("functions:ShowChestIndicator");
 
         HookManager::install(app::MoleMole_LCIndicatorPlugin_DoCheck, IndicatorPlugin_DoCheck);
