@@ -146,7 +146,7 @@
 	"Auto Talk": "Авто-пропуск диалогов",
 	"Auto challenge": "Авто-прохождение испытаний",
 	"AutoDestroy": "Авто-разрушение объектов",
-	"Automatically goes through dialogue.": "Автоматчиеское продолжение диалога.",
+	"Automatically goes through dialogue.": "Автоматическое продолжение диалога.",
 	"Camera Zoom": "Приближение камеры",
 	"Change delay before showing menu.\nMay cause lags while opening, so try to change this value in case.": "Измените задержку перед отображением меню.\nМогут вызвать задержки при открытии, поэтому попробуйте изменить это значение на всякий случай.",
 	"Changes the UID visually.": "Визуально меняет UID.",
