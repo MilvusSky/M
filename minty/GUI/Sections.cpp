@@ -38,7 +38,7 @@
 std::vector<std::string> ModuleOrder = {
     _("About"),
     _("Player"),
-    _("World"), 
+    _("World"),
     _("Visuals"),
     _("Settings")
 };
