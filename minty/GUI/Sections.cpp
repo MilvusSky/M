@@ -35,11 +35,15 @@
 //#include "../functions/world/OpenTeamImmediately.h"
 //#include "../functions/world/SkipEnhanceAnimation.h"
 
+#include "../functions/ESP/ESP.h"
+
+
 std::vector<std::string> ModuleOrder = {
     _("About"),
     _("Player"),
     _("World"),
-    _("Visuals"),
+	_("Visuals"),
+	_("ESP"),
     _("Settings")
 };
 
@@ -80,6 +84,8 @@ void Init() {
   //INIT_FUNC(OpenTeamImmediately);
   //INIT_FUNC(SkipEnhanceAnimation);
   INIT_FUNC(VacuumLoot);
+
+  INIT_FUNC(ESP);
 }
 
 void Outer() {

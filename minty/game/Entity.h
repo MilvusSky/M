@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../utils/util.h"
 #include "../il2cpp/il2cpp-appdata.h"
@@ -25,6 +25,7 @@ namespace cheat::game {
 		bool isLoaded() const;
 
 		void setRelativePosition(const app::Vector3& value);
+		app::GameObject* gameObject();
 
 		app::Animator* animator();
 		app::Rigidbody* rigidbody();

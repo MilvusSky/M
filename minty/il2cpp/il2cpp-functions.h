@@ -1,6 +1,18 @@
 ﻿#include "il2cpp-types.h"
 
 using namespace app;
+DO_APP_FUNC(0x0CF67940, 0x0, Transform*, Transform_FindChild, (Transform* __this, String* name));
+
+//0x06238AC0 and 0x045CDC10 works perfectly
+DO_APP_FUNC(0x045CDC10, 0x0, app::Bounds, wtf, (app::GameObject* gameObject));
+
+DO_APP_FUNC(0x0CFA1DF0, 0x0, Vector3, Camera_WorldToScreenPoint, (Camera* __this, Vector3 position));
+DO_APP_FUNC(0x0CFA21E0, 0x0, Camera*, Camera_get_main, ());
+DO_APP_FUNC(0x0CFA17C0, 0x0, int32_t, Camera_get_pixelWidth, (Camera* __this));
+DO_APP_FUNC(0x0CFA17D0, 0x0, int32_t, Camera_get_pixelHeight, (Camera* __this));
+
+DO_APP_FUNC(0x0D0B9510, 0x0, bool, Behaviour_get_isActiveAndEnabled, (Behaviour* __this));
+DO_APP_FUNC(0x07631C30, 0x0, GameObject*, MoleMole_BaseEntity_get_gameObject, (BaseEntity* __this));
 
 // unsorted
 DO_APP_FUNC(0x0617E860, 0x06155180, void, MoleMole_LCSelectPickup_AddInteeBtnByID, (void* __this, app::BaseEntity* entity, app::MethodInfo* method));

@@ -113,6 +113,8 @@
     <ClCompile Include="GUI\mutil.cpp" />
     <ClCompile Include="Functions\World\PickupRange.cpp" />
     <ClCompile Include="Functions\World\AutoLoot.cpp" />
+    <ClCompile Include="Functions\ESP\ESP.cpp" />
+    <ClCompile Include="Functions\ESP\ESPRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gui\MainGUI.h" />
@@ -268,6 +270,9 @@
     <ClInclude Include="GUI\mutil.h" />
     <ClInclude Include="Functions\World\PickupRange.h" />
     <ClInclude Include="Functions\World\AutoLoot.h" />
+    <ClInclude Include="Functions\ESP\ESP.h" />
+    <ClInclude Include="Functions\ESP\ESPItem.h" />
+    <ClInclude Include="Functions\ESP\ESPRender.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="api\lua\lua53.lib" />

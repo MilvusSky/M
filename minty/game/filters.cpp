@@ -1,4 +1,4 @@
-#include "filters.h"
+﻿#include "filters.h"
 
 namespace cheat::game::filters
 {
@@ -576,10 +576,7 @@ namespace cheat::game::filters
 				"Ningyo", "Regisvine", "Hypostasis", "Planelurker", "Nithhoggr"
 			}
 		};
-		SimpleFilter OrganicTargets = { Monsters, Animals }; // Solael: Please don't mess around with this filter.
-		//m0nkrel: We can choose the entities we need ourselves so as not to magnetize cats, dogs, etc.
-		//AdvancedFilter Animals = { {EntityType__Enum_1::EnvAnimal, EntityType__Enum_1::Monster }, {"Crane", "Tit", "Boar", "Squirrel", "Fox", "Pigeon", "Wigeon", "Falcon" ,"Marten" } };
-
+		SimpleFilter OrganicTargets = { Monsters, Animals }; 
 		SimpleFilter Lightning = { EntityType__Enum_1::Lightning };
 
 		SimpleFilter Plants = {
@@ -645,6 +642,12 @@ namespace cheat::game::filters
 			equipment::Bow,
 			equipment::Claymore,
 			equipment::Pole,
+		};
+
+		SimpleFilter AllMonsters{
+			Monsters,
+			MonsterCommon,
+			MonsterElites
 		};
 
 		SimpleFilter AllPickableLoot = {
