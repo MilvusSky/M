@@ -3,22 +3,22 @@
 #include "../FunctionIncludes.h"
 
 namespace cheat {
-	class ShowIndicators : public Function {
-	public:
-	    ConfigField<bool> f_Enabled;
-	    ConfigField<bool> f_Waypoints;
-	    ConfigField<bool> f_Chests;
+    class ShowIndicators : public Function {
+    public:
+	ConfigField<bool> f_Enabled;
+	ConfigField<bool> f_ShowWaypoints;
+	ConfigField<bool> f_ShowChests;
 
-	    Hotkey f_Hotkey;
+	Hotkey f_Hotkey;
 
-	    void GUI() override;
-	    void Outer() override;
-	    void Status() override;
+	void GUI() override;
+	void Outer() override;
+	void Status() override;
 
-	    std::string getModule() override;
+	std::string getModule() override;
 
-	    static ShowIndicators& getInstance();
+	static ShowIndicators& getInstance();
 
-	    ShowIndicators();
-	};
+	ShowIndicators();
+    };
 }

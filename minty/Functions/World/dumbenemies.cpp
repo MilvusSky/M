@@ -1,51 +1,51 @@
 ﻿#include "DumbEnemies.h"
 
 namespace cheat {
-    static void VCMonsterAIController_TryDoSkill_Hook(void* __this, uint32_t skillID);
-    
-    DumbEnemies::DumbEnemies() {
-        f_Enabled = config::getValue("functions:DumbEnemies", "enabled", false);
-        f_Hotkey = Hotkey("functions:DumbEmenies");
+	static void VCMonsterAIController_TryDoSkill_Hook(void* __this, uint32_t skillID);
 
-        HookManager::install(app::MoleMole_VCMonsterAIController_TryDoSkill, VCMonsterAIController_TryDoSkill_Hook);
-    }
+	DumbEnemies::DumbEnemies() {
+		f_Enabled = config::getValue("functions:DumbEnemies", "enabled", false);
 
-    DumbEnemies& DumbEnemies::getInstance() {
-        static DumbEnemies instance;
-        return instance;
-    }
+		f_Hotkey = Hotkey("functions:DumbEmenies");
 
-    void DumbEnemies::GUI() {
-        ConfigCheckbox(_("Dumb Enemies"), f_Enabled, _("Enemies don't attack or use abilities against player.\n"
-            "May not work with some enemies or enemy abilities."));
+		HookManager::install(app::MoleMole_VCMonsterAIController_TryDoSkill, VCMonsterAIController_TryDoSkill_Hook);
+	}
 
-        if (f_Enabled.getValue()) {
-            ImGui::Indent();
-            f_Hotkey.Draw();
-            ImGui::Unindent();
-        }
-    }
+	DumbEnemies& DumbEnemies::getInstance() {
+		static DumbEnemies instance;
+		return instance;
+	}
 
-    void DumbEnemies::Status() {
-        if (f_Enabled.getValue())
-            ImGui::Text(_("Dumb enemies"));
-    }
+	void DumbEnemies::GUI() {
+		ConfigCheckbox(_("DUMB_ENEMIES_TITLE"), f_Enabled, _("DUMB_ENEMIES_DESCRIPTION"));
 
-    void DumbEnemies::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_Enabled.setValue(!f_Enabled.getValue());
-    }
+		if (f_Enabled.getValue()) {
+			ImGui::Indent();
+			f_Hotkey.Draw();
+			ImGui::Unindent();
+		}
+	}
 
-    std::string DumbEnemies::getModule() {
-        return _("World");
-    }
+	void DumbEnemies::Status() {
+		if (f_Enabled.getValue())
+			ImGui::Text(_("DUMB_ENEMIES_TITLE"));
+	}
 
-    void VCMonsterAIController_TryDoSkill_Hook(void* __this, uint32_t skillID) {
-        auto& dumbEnemies = DumbEnemies::getInstance();
+	void DumbEnemies::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+	}
 
-        if (dumbEnemies.f_Enabled.getValue() && skillID != 101)
-            return;
+	std::string DumbEnemies::getModule() {
+		return _("MODULE_WORLD");
+	}
 
-        CALL_ORIGIN(VCMonsterAIController_TryDoSkill_Hook, __this, skillID);
-    }
+	void VCMonsterAIController_TryDoSkill_Hook(void* __this, uint32_t skillID) {
+		auto& dumbEnemies = DumbEnemies::getInstance();
+
+		if (dumbEnemies.f_Enabled.getValue() && skillID != 101)
+			return;
+
+		CALL_ORIGIN(VCMonsterAIController_TryDoSkill_Hook, __this, skillID);
+	}
 }

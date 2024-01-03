@@ -9,6 +9,7 @@ namespace cheat {
 		f_EnabledAltSpeed = config::getValue("functions:NoClip:Alt", "enabled", false);
 		f_Speed = config::getValue("functions:NoClip", "speed", 5.0f);
 		f_AltSpeed = config::getValue("functions:NoClip:Alt", "speed", 10.0f);
+
 		f_Hotkey = Hotkey("functions:NoClip");
 		f_HotkeyAlt = Hotkey("functions:NoClip:Alt", VK_LCONTROL);
 
@@ -22,20 +23,16 @@ namespace cheat {
 	}
 
 	void NoClip::GUI() {
-		ConfigCheckbox(_("No Clip"), f_Enabled, _("Enables No Clip (fast speed + no collision).\n"
-			"To move, use WASD, Space (go up), and Shift (go down)."));
+		ConfigCheckbox(_("NO_CLIP_TITLE"), f_Enabled, _("NO_CLIP_DESCRIPTION"));
 
 		if (f_Enabled.getValue()) {
 			ImGui::Indent();
-			ConfigSliderFloat(_("Speed"), f_Speed, 0.1f, 100.0f, _("No Clip move speed.\n"
-				"Not recommended setting above 5.0."));
-			ConfigCheckbox(_("Alternate No Clip"), f_EnabledAltSpeed, _("Allows usage of alternate speed when holding down LeftCtrl key.\n"
-				"Useful if you want to temporarily go faster/slower than the No Clip speed setting."));
+			ConfigSliderFloat(_("SPEED_TITLE"), f_Speed, 0.1f, 100.0f, _("SPEED_DESCRIPTION"));
+			ConfigCheckbox(_("ALT_NO_CLIP_TITLE"), f_EnabledAltSpeed, _("ALT_NO_CLIP_DESCRIPTION"));
 
 			if (f_EnabledAltSpeed.getValue()) {
 				ImGui::Indent();
-				ConfigSliderFloat(_("Alternate Speed"), f_AltSpeed, 0.1f, 100.0f, _("Alternate No Clip move speed.\n"
-					"Not recommended setting above 5.0."));
+				ConfigSliderFloat(_("ALT_SPEED_TITLE"), f_AltSpeed, 0.1f, 100.0f, _("ALT_SPEED_DESCRIPTION"));
 				f_HotkeyAlt.Draw();
 				ImGui::Unindent();
 			}
@@ -56,11 +53,12 @@ namespace cheat {
 
 	void NoClip::Status() {
 		if (f_Enabled.getValue())
-			ImGui::Text("Noclip (%.1f U/s | %.1f U/s ", f_Speed.getValue(), f_AltSpeed.getValue());
+			ImGui::Text("%s (%.1f|%.1f)",
+				_("NO_CLIP_TITLE"), f_Speed.getValue(), f_AltSpeed.getValue());
 	}
 
 	std::string NoClip::getModule() {
-		return _("Player");
+		return _("MODULE_PLAYER");
 	}
 
 	app::Vector3 prevPos, newPos, posCheck;
@@ -152,7 +150,8 @@ namespace cheat {
 		__try {
 			if (noClip.f_Enabled.getValue())
 				onNoClip();
-		} __except (EXCEPTION_EXECUTE_HANDLER) {
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER) {
 			//LOG_WARNING("Exception 0x%08x.", GetExceptionCode());
 		}
 

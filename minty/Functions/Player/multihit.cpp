@@ -6,6 +6,7 @@ namespace cheat {
 	MultiHit::MultiHit() {
 		f_Enabled = config::getValue("functions:MultiHit", "enabled", false);
 		f_Hits = config::getValue("functions:MultiHit", "hits", 1);
+
 		f_Hotkey = Hotkey("functions:MultiHit");
 
 		HookManager::install(app::MoleMole_LCBaseCombat_FireBeingHitEvent, LCBaseCombat_FireBeingHitEvent_Hook);
@@ -17,11 +18,11 @@ namespace cheat {
 	}
 
 	void MultiHit::GUI() {
-		ConfigCheckbox(_("Multi Hit"), f_Enabled, _("Enables attack multipliers."));
+		ConfigCheckbox(_("MULTI_HIT_TITLE"), f_Enabled, _("MULTI_HIT_DESCRIPTION"));
 
 		if (f_Enabled.getValue()) {
 			ImGui::Indent();
-			ConfigSliderInt(_("Hits"), f_Hits, 1, 100, _("Attack count multiplier."));
+			ConfigSliderInt(_("HITS_TITLE"), f_Hits, 1, 100, _("HITS_DESCRIPTION"));
 			f_Hotkey.Draw();
 			ImGui::Unindent();
 		}
@@ -34,11 +35,11 @@ namespace cheat {
 
 	void MultiHit::Status() {
 		if (f_Enabled.getValue())
-			ImGui::Text("MultiHit (%i)", f_Hits.getValue());
+			ImGui::Text("%s (%i)", _("MULTI_HIT_TITLE"), f_Hits.getValue());
 	}
-	
+
 	std::string MultiHit::getModule() {
-		return _("Player");
+		return _("MODULE_PLAYER");
 	}
 
 	bool IsAvatarOwner(game::Entity entity) {

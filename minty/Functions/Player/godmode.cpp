@@ -6,6 +6,7 @@ namespace cheat {
 
 	GodMode::GodMode() {
 		f_Enabled = config::getValue("functions:GodMode", "enabled", false);
+
 		f_Hotkey = Hotkey("functions:GodMode");
 
 		HookManager::install(app::Miscs_CheckTargetAttackable, Miscs_CheckTargetAttackable_Hook);
@@ -18,7 +19,7 @@ namespace cheat {
 	}
 
 	void GodMode::GUI() {
-		ConfigCheckbox(_("God Mode"), f_Enabled, _("Enables god mode, i.e. no incoming damage including environmental damage."));
+		ConfigCheckbox(_("GODMODE_TITLE"), f_Enabled, _("GODMODE_DESCRIPTION"));
 
 		if (f_Enabled.getValue()) {
 			ImGui::Indent();
@@ -34,11 +35,11 @@ namespace cheat {
 
 	void GodMode::Status() {
 		if (f_Enabled.getValue())
-			ImGui::Text(_("GodMode"));
+			ImGui::Text(_("GODMODE_TITLE"));
 	}
 
 	std::string GodMode::getModule() {
-		return _("Player");
+		return _("MODULE_PLAYER");
 	}
 
 	void VCHumanoidMove_NotifyLandVelocity_Hook(app::VCHumanoidMove* __this, app::Vector3 velocity, float reachMaxDownVelocityTime) {

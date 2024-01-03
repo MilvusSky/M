@@ -170,7 +170,6 @@
     <ClCompile Include="functions\world\OpenTeamImmediately.cpp" />
     <ClCompile Include="functions\visuals\ProfileChanger.cpp" />
     <ClCompile Include="functions\visuals\ShowIndicators.cpp" />
-    <ClCompile Include="Functions\World\PickupRange.cpp" />
     <ClCompile Include="functions\settings\Settings.cpp" />
     <ClCompile Include="api\discord\src\connection_win.cpp" />
     <ClCompile Include="api\discord\src\discord_register_win.cpp" />
@@ -231,7 +230,6 @@
     <ClInclude Include="functions\world\OpenTeamImmediately.h" />
     <ClInclude Include="functions\visuals\ProfileChanger.h" />
     <ClInclude Include="functions\visuals\ShowIndicators.h" />
-    <ClInclude Include="Functions\World\PickupRange.h" />
     <ClInclude Include="functions\settings\Settings.h" />
     <ClCompile Include="config\ConfigManager.cpp">
       <FileType>CppHeader</FileType>
@@ -470,7 +468,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties resources_4translations_1json__JsonSchema="https://download.stackhawk.com/hawk/jsonschema/hawkconfig.json" />
+      <UserProperties resources_4translations_1json__JsonSchema="https://json-schema.org/draft-04/schema" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

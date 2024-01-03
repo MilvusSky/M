@@ -9,6 +9,7 @@ namespace cheat {
 		f_EnabledSkill = config::getValue("functions:NoCooldown:Skill", "enabled", false);
 		f_EnabledBow = config::getValue("functions:NoCooldown:Bow", "enabled", false);
 		f_EnabledSprint = config::getValue("functions:NoCooldown:Sprint", "enabled", false);
+
 		f_HotkeySkill = Hotkey("functions:NoCooldown:Skill");
 		f_HotkeyBow = Hotkey("functions:NoCooldown:Bow");
 		f_HotkeySprint = Hotkey("functions:NoCooldown:Sprint");
@@ -24,7 +25,7 @@ namespace cheat {
 	}
 
 	void NoCooldown::GUI() {
-		ConfigCheckbox(_("No Skill Cooldown"), f_EnabledSkill, _("Remove cooldowns of elemental skills and bursts."));
+		ConfigCheckbox(_("NO_SKILL_COOLDOWN_TITLE"), f_EnabledSkill, _("NO_SKILL_COOLDOWN_DESCRIPTION"));
 
 		if (f_EnabledSkill.getValue()) {
 			ImGui::Indent();
@@ -32,8 +33,7 @@ namespace cheat {
 			ImGui::Unindent();
 		}
 
-		ConfigCheckbox(_("Instant Bow Charge"), f_EnabledBow, _("Disable cooldown of bow charge.\n"
-			"Known issues with Fischl."));
+		ConfigCheckbox(_("INSTANT_BOW_CHARGE_TITLE"), f_EnabledBow, _("INSTANT_BOW_CHARGE_DESCRIPTION"));
 
 		if (f_EnabledBow.getValue()) {
 			ImGui::Indent();
@@ -41,7 +41,7 @@ namespace cheat {
 			ImGui::Unindent();
 		}
 
-		ConfigCheckbox(_("No Sprint Cooldown"), f_EnabledSprint, _("Removes delay in-between sprints."));
+		ConfigCheckbox(_("NO_SPRINT_COOLDOWN_TITLE"), f_EnabledSprint, _("NO_SPRINT_COOLDOWN_DESCRIPTION"));
 
 		if (f_EnabledSprint.getValue()) {
 			ImGui::Indent();
@@ -63,17 +63,17 @@ namespace cheat {
 
 	void NoCooldown::Status() {
 		if (f_EnabledSkill.getValue())
-			ImGui::Text("NoSkillCD");
+			ImGui::Text(_("NO_SKILL_COOLDOWN_TITLE"));
 
 		if (f_EnabledBow.getValue())
-			ImGui::Text("InstantBow");
+			ImGui::Text(_("INSTANT_BOW_CHARGE_TITLE"));
 
 		if (f_EnabledSprint.getValue())
-			ImGui::Text("NoSprintCD");
+			ImGui::Text(_("NO_SPRINT_COOLDOWN_TITLE"));
 	}
 
 	std::string NoCooldown::getModule() {
-		return _("Player");
+		return _("MODULE_PLAYER");
 	}
 
 	bool LCAvatarCombat_OnSkillStart(app::LCAvatarCombat* __this, uint32_t skillID, float multipler) {
@@ -86,7 +86,7 @@ namespace cheat {
 
 	void ActorAbilityPlugin_AddDynamicFloatWithRange_Hook(app::MoleMole_ActorAbilityPlugin* __this, app::String* key, float value, float minValue, float maxValue, bool forceDoAtRemote) {
 		auto& noCooldown = NoCooldown::getInstance();
-		
+
 		if (noCooldown.f_EnabledBow.getValue() && il2cppi_to_string(key) == "_Enchanted_Time") {
 			value = maxValue;
 			//LOG_INFO("value: %d, minValue: %d, maxValue: %d, nextValidAbilityID: %d", value, minValue, maxValue, __this->fields.nextValidAbilityID);

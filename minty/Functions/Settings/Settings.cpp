@@ -1,145 +1,144 @@
 ﻿#include "Settings.h"
 
 namespace cheat {
-    static void DrawFPS();
+	static void DrawFPS();
 
-    Settings::Settings() {
-        f_DisableProtection = config::getValue("functions:Settings", "disableProtection", true);
-        f_DisableLog = config::getValue("functions:Settings", "disableLog", true);
-        f_SpoofACResult = config::getValue("functions:Settings", "spoofACResult", true);
-        f_UseSignature = config::getValue("functions:Settings", "useSignature", false);
-        f_ShowFps = config::getValue("functions:Settings", "showFps", true);
-	f_ShowRpc = config::getValue("functions:Settings", "showRpc", true);
-	f_ShowConsole = config::getValue("functions:Settings", "showConsole", true);
-        f_InitDelay = config::getValue("functions:Settings", "initDelay", 7000);
-	f_Language = config::getValue("functions:Settings", "language", 0);
-	f_MobileMode = config::getValue("functions:Settings", "mobileMode", false);
-        f_StartupArguments = config::getValue<std::string>("functions:Settings", "startupArguments", "");
-	f_AnimationDuration = config::getValue("functions:Settings", "animationDuration", 0.2f);
-	f_Status = config::getValue("functions:Settings", "status", true);
-	f_StatusMove = config::getValue("functions:Settings", "statusMove", true);
-	f_ShowMenu = config::getValue("functions:Settings", "showMenu", true);
-        f_Hotkey = Hotkey("functions:Settings:Menu", VK_F12);
-	f_HotkeyConsole= Hotkey("functions:Settings:Console", VK_HOME);
-    }
+	Settings::Settings() {
+		f_DisableProtection = config::getValue("functions:Settings", "disableProtection", true);
+		f_DisableLog = config::getValue("functions:Settings", "disableLog", true);
+		f_SpoofACResult = config::getValue("functions:Settings", "spoofACResult", true);
+		f_UseSignature = config::getValue("functions:Settings", "useSignature", false);
+		f_ShowFps = config::getValue("functions:Settings", "showFps", true);
+		f_ShowRpc = config::getValue("functions:Settings", "showRpc", true);
+		f_ShowConsole = config::getValue("functions:Settings", "showConsole", true);
+		f_InitDelay = config::getValue("functions:Settings", "initDelay", 15000);
+		f_Language = config::getValue("functions:Settings", "language", 0);
+		f_MobileMode = config::getValue("functions:Settings", "mobileMode", false);
+		f_StartupArguments = config::getValue<std::string>("functions:Settings", "startupArguments", "");
+		f_AnimationDuration = config::getValue("functions:Settings", "animationDuration", 0.2f);
+		f_Status = config::getValue("functions:Settings", "status", true);
+		f_StatusMove = config::getValue("functions:Settings", "statusMove", true);
+		f_ShowMenu = config::getValue("functions:Settings", "showMenu", true);
 
-    Settings& Settings::getInstance() {
-        static Settings instance;
-        return instance;
-    }
-    const char* languages[] = { "English", "Russian", "Chinese", "Indonesian" };
-    void Settings::GUI() {
-	ImGui::SeparatorText(_("Language settings"));
-	ConfigComboLanguage(f_Language);
-
-        ImGui::SeparatorText(_("General"));
-
-	f_Hotkey.Draw(_("Show the Minty Menu."));
-
-	ConfigCheckbox(_("Show console"), f_ShowConsole, _("Show/Hide console log window."));
-	if (f_Status.getValue()) {
-	    ImGui::Indent();
-	    f_HotkeyConsole.Draw();
-	    ImGui::Unindent();
+		f_Hotkey = Hotkey("functions:Settings:Menu", VK_F12);
+		f_HotkeyConsole = Hotkey("functions:Settings:Console", VK_HOME);
 	}
 
-        ConfigCheckbox(_("Disable protection"), f_DisableProtection, _("Close anitcheat handle.\n(changes will take effect after relaunch)."));
-        ConfigCheckbox(_("Disable analytic log"), f_DisableLog, _("Disable game telemetry and analytic log from spamming the console.\n"
-            "(changes will take effect after relaunch)."));
-        ConfigCheckbox(_("Spoof anticheat result"), f_SpoofACResult, _("Spoofs/Blocks anticheat reports made by WindSeedClientNotify.\n"
-            "(changes will take effect after relaunch)."));
-        ConfigCheckbox(_("Use predefined file signature"), f_UseSignature, _("Uses 'hardcoded' signature value for file check.\n"
-            "Can be useful, when you put the additional executable files to game directory.\n"
-            "And can't pass the 'Integrity check' on login.\n"
-            "(changes will take effect after relaunch)."));
-
-	ConfigCheckbox(_("Show status window"), f_Status, _("Shows a window with statements of enabled functions."));
-
-	if (f_Status.getValue()) {
-	    ImGui::Indent();
-	    ConfigCheckbox(_("Move status window"), f_StatusMove);
-	    ImGui::Unindent();
+	Settings& Settings::getInstance() {
+		static Settings instance;
+		return instance;
 	}
 
-        ConfigCheckbox(_("Show current FPS"), f_ShowFps, _("Shows the current FPS."));
-        ConfigCheckbox(_("Show Discord RPC"), f_ShowRpc, _("Shows the Discord RPC.\n(changes will take effect after relaunch)."));
+	const char* languages[] = { "English", "Russian", "Chinese", "Indonesian" };
 
-        ConfigSliderInt(_("Initialization delay (ms)"), f_InitDelay, 0, 60000,
-	    _("Change delay before showing menu.\nMay cause lags while opening, so try to change this value in case."));
+	void Settings::GUI() {
+		ImGui::SeparatorText(_("SETTINGS_LANGUAGE"));
+		ConfigComboLanguage(f_Language);
 
-	ConfigCheckbox(_("Mobile mode"), f_MobileMode, _("Using mobile platform touch screen mode\n""Please restart."));
+		ImGui::SeparatorText(_("SETTINGS_GENERAL"));
 
-	ConfigInputText(_("Startup arguments"), f_StartupArguments, _("Launch the game with command line arguments.\n"
-	    "(changes will take effect after relaunch)."));
-        TextURL(_("List of unity command line arguments"), "https://docs.unity3d.com/Manual/PlayerCommandLineArguments.html", false, false);
+		f_Hotkey.Draw(_("MENU_HOTKEY_TITLE"));
 
-        ImGui::SeparatorText(_("Theme"));
+		ConfigCheckbox(_("CONSOLE_HOTKEY_TITLE"), f_ShowConsole, _("CONSOLE_HOTKEY_DESCRIPTION"));
 
-        static int themeIndex = 1;
-        if (ImGui::RadioButton("Dark", &themeIndex, 1))
-            setTheme(1);
+		if (f_Status.getValue()) {
+			ImGui::Indent();
+			f_HotkeyConsole.Draw();
+			ImGui::Unindent();
+		}
 
-        if (ImGui::RadioButton("Light", &themeIndex, 2))
-            setTheme(2);
+		ConfigCheckbox(_("DISABLE_PROTECTION_TITLE"), f_DisableProtection, _("DISABLE_PROTECTION_DESCRIPTION"));
+		ConfigCheckbox(_("DISABLE_LOG_TITLE"), f_DisableLog, _("DISABLE_LOG_DESCRIPTION"));
+		ConfigCheckbox(_("DISABLE_SPOOF_ANTICHEAT_TITLE"), f_SpoofACResult, _("DISABLE_SPOOF_ANTICHEAT_DESCRIPTION"));
+		ConfigCheckbox(_("USE_FILE_SIGNATURE_TITLE"), f_UseSignature, _("USE_FILE_SIGNATURE_DESCRIPTION"));
 
-        ImGui::SeparatorText(_("Style"));
+		ConfigCheckbox(_("SHOW_STATUS_WINDOW_TITLE"), f_Status, _("SHOW_STATUS_WINDOW_DESCRIPTION"));
 
-        static int styleIndex = 1;
-        if (ImGui::RadioButton("Cozy", &styleIndex, 1))
-            setStyle(1);
+		if (f_Status.getValue()) {
+			ImGui::Indent();
+			ConfigCheckbox(_("MOVE_STATUS_TITLE"), f_StatusMove);
+			ImGui::Unindent();
+		}
 
-        if (ImGui::RadioButton("Cozy Squared", &styleIndex, 2))
-            setStyle(2);
+		ConfigCheckbox(_("SHOW_FPS_TITLE"), f_ShowFps, _("SHOW_FPS_DESCRIPTION"));
+		ConfigCheckbox(_("SHOW_RPC_TITLE"), f_ShowRpc, _("SHOW_RPC_DESCRIPTION"));
 
-        ImGui::SeparatorText("Font");
+		ConfigSliderInt(_("INIT_DELAY_TITLE"), f_InitDelay, 0, 60000, _("INIT_DELAY_DESCRIPTION"));
 
-        static int fontIndex = 0;
-        if (ImGui::RadioButton("Normal", &fontIndex, 0))
-            setFont(1);
+		ConfigCheckbox(_("MODILE_MODE_TITLE"), f_MobileMode, _("MODILE_MODE_DESCRIPTION"));
 
-        if (ImGui::RadioButton("Bold", &fontIndex, 1))
-            setFont(2);
+		ConfigInputText(_("STARTUP_ARGS_TITLE"), f_StartupArguments, _("STARTUP_ARGS_DESCRIPTION"));
+		TextURL(_("LIST_UNITY_COMMAND_TITLE"), "https://docs.unity3d.com/Manual/PlayerCommandLineArguments.html", false, false);
 
-        ImGui::SeparatorText("Customize");
-        ImGui::Checkbox(_("Show Style Editor"), &show_style_editor);
-        ConfigSliderFloat("Duration of animation (s)", f_AnimationDuration, 0, 5.0f,
-            "Window appearance animation duration.");
+		ImGui::SeparatorText(_("SETTINGS_THEME"));
+
+		static int themeIndex = 1;
+
+		if (ImGui::RadioButton(_("THEME_DARK_TITLE"), &themeIndex, 1))
+			setTheme(1);
+
+		if (ImGui::RadioButton(_("THEME_LIGHT_TITLE"), &themeIndex, 2))
+			setTheme(2);
+
+		ImGui::SeparatorText(_("SETTINGS_STYLE"));
+
+		static int styleIndex = 1;
+
+		if (ImGui::RadioButton(_("STYLE_COZY_TITLE"), &styleIndex, 1))
+			setStyle(1);
+
+		if (ImGui::RadioButton(_("STYLE_COZY_SQUARED_TITLE"), &styleIndex, 2))
+			setStyle(2);
+
+		ImGui::SeparatorText(_("SETTINGS_FONT"));
+
+		static int fontIndex = 1;
+
+		if (ImGui::RadioButton(_("FONT_NORMAL_TITLE"), &fontIndex, 1))
+			setFont(1);
+
+		if (ImGui::RadioButton(_("FONT_BOLD_TITLE"), &fontIndex, 2))
+			setFont(2);
+
+		ImGui::SeparatorText(_("SETTINGS_CUSTOMIZE"));
+		ConfigSliderFloat(_("DURATION_ANIMATION_TITLE"), f_AnimationDuration, 0, 5.0f, _("DURATION_ANIMATION_DESCRIPTION"));
+		ImGui::Checkbox(_("SHOW_STYLE_EDITOR_TITLE"), &show_style_editor);
 	}
 
-    void Settings::Outer() {
-        if (f_Hotkey.IsPressed()) {
-	    f_ShowMenu.setValue(!f_ShowMenu.getValue());
-	    config::setValue("functions:Settings", "showMenu", f_ShowMenu.getValue());
+	void Settings::Outer() {
+		if (f_Hotkey.IsPressed()) {
+			f_ShowMenu.setValue(!f_ShowMenu.getValue());
+			config::setValue("functions:Settings", "showMenu", f_ShowMenu.getValue());
+		}
+
+		if (f_HotkeyConsole.IsPressed())
+			f_ShowConsole.setValue(!f_ShowConsole.getValue());
+
+		if (f_ShowConsole.getValue())
+			ShowWindow(GetConsoleWindow(), SW_SHOW);
+		else
+			ShowWindow(GetConsoleWindow(), SW_HIDE);
+
+		if (f_ShowFps.getValue())
+			DrawFPS();
+
+		if (show_style_editor) {
+			ImGui::Begin(_("STYLE_EDITOR_TITLE"), &show_style_editor);
+			ImGui::ShowStyleEditor();
+			ImGui::End();
+		}
 	}
-            
-	if (f_HotkeyConsole.IsPressed())
-	    f_ShowConsole.setValue(!f_ShowConsole.getValue());
 
-	if (f_ShowConsole.getValue())
-	    ShowWindow(GetConsoleWindow(), SW_SHOW);
-	else
-	    ShowWindow(GetConsoleWindow(), SW_HIDE);
-	
-        if (f_ShowFps.getValue())
-            DrawFPS();
+	std::string Settings::getModule() {
+		return _("MODULE_SETTINGS");
+	}
 
-        if (show_style_editor) {
-            ImGui::Begin("Style Editor", &show_style_editor);
-            ImGui::ShowStyleEditor();
-            ImGui::End();
-        }
-    }
+	void DrawFPS() {
+		ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus |
+			ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize;
 
-    std::string Settings::getModule() {
-        return _("Settings");
-    }
-
-    void DrawFPS() {
-        ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize;
-
-        ImGui::Begin("##FPS", NULL, flags);
-        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-        ImGui::End();
-    }
+		ImGui::Begin("##FPS", NULL, flags);
+		ImGui::Text("%s: %.1f", _("FPS_TITLE"), ImGui::GetIO().Framerate);
+		ImGui::End();
+	}
 }

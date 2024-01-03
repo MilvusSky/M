@@ -111,7 +111,6 @@
     <ClCompile Include="Functions\World\MobVacuum.cpp" />
     <ClCompile Include="GUI\ResourceLoader.cpp" />
     <ClCompile Include="GUI\mutil.cpp" />
-    <ClCompile Include="Functions\World\PickupRange.cpp" />
     <ClCompile Include="Functions\World\AutoLoot.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +265,6 @@
     <ClInclude Include="Functions\World\MobVacuum.h" />
     <ClInclude Include="GUI\ResourceLoader.h" />
     <ClInclude Include="GUI\mutil.h" />
-    <ClInclude Include="Functions\World\PickupRange.h" />
     <ClInclude Include="Functions\World\AutoLoot.h" />
   </ItemGroup>
   <ItemGroup>
