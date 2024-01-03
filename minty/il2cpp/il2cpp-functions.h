@@ -120,8 +120,8 @@ DO_APP_FUNC(0x0C7AE520, 0x0C74DAD0, void, Action_Invoke, (/*Action*/ void* __thi
 // Lua functions
 DO_APP_FUNC(0x03FA0B10, 0x03F974E0, void, MoleMole_LuaShellManager_ReportLuaShellResult, (void* __this, app::String* type, app::String* value));
 
-// Free Camera
-DO_APP_FUNC(0x0CFA11F0, 0x0CF3CFC0, void, Camera_set_fieldOfView, (app::Camera* __this, float value));
+// Fov Changer 4.2
+// DO_APP_FUNC(0x0CFA11F0, 0x0CF3CFC0, void, Camera_set_fieldOfView, (app::Camera* __this, float value));
 
 // World cheats
 DO_APP_FUNC(0x04A78BA0, 0x04A64740, void, MoleMole_VCMonsterAIController_TryDoSkill, (void* __this, uint32_t skillID));
@@ -156,8 +156,6 @@ DO_APP_FUNC(0x03FF0750, 0x03FE6D90, void, MoleMole_HumanoidMoveFSM_LateTick, (ap
 // Singletons 4.2
 // 48 8b 0d ?? ?? ?? ?? e8 ?? ?? ?? fd 48 85 c0 0f 84 5f 01 00 00 48 8b c8 e8 ?? ?? ?? ?? 48 85 c0 74 14 48 8b 15 ?? ?? ?? ?? 48 8b c8 e8 ?? ?? ?? ?? 48 8b f0 eb ??
 // 0x9316540 EntityManager
-// 
-// 0x0 UIManager
 
 // Entities
 DO_APP_FUNC(0x03E2D5B0, 0x03E254D0, app::MoleMole_EntityManager*, MoleMole_InLevelDrumPageContext_get_ENTITY, (app::MethodInfo* method));
@@ -184,18 +182,13 @@ DO_APP_FUNC(0x04713420, 0x04702DE0, app::BaseEntity*, MoleMole_GadgetEntity_GetO
 // Protection bypass
 DO_APP_FUNC(0x0529E520, 0x052818B0, app::Byte__Array*, MoleMole_SecurityModule_RecordUserData, (int32_t nType, app::MethodInfo* method));
 
-// Skip enhance animation
-DO_APP_FUNC(0x042668F0, 0x042AC880, void, MoleMole_EquipLevelUpDialogContext_SetupView, (app::MoleMole_EquipLevelUpDialogContext* __this));
-DO_APP_FUNC(0x04267960, 0x042AD8E0, void, MoleMole_EquipLevelUpDialogContext_ShowReturnedMaterialAndCloseDialog, (/*MoleMole_EquipLevelUpDialogContext*/ void* __this));
-DO_APP_FUNC(0x08940880, 0x088F5720, void, MoleMole_EquipOverviewPageContext_PlayExpAddAnimation, (/*MoleMole_EquipOverviewPageContext*/ void* __this, float startPer, float endPer, /*Action*/ void* callback));
-
 // Teleport hooks
 DO_APP_FUNC(0x0738F470, 0x07354B20, void, GameManager_Update, (app::GameManager* __this, app::MethodInfo* method));
 
 // Open team immediately 4.2
 DO_APP_FUNC(0x04475550, 0x0, bool, MoleMole_InLevelMainPageContext_DoTeamCountDown_c_Iterator0__MoveNext, (app::InLevelMainPageContext_DoTeamCountDown_Iterator* __this));
-DO_APP_FUNC(0x00D82A70, 0x0, void, MoleMole_InLevelPlayerProfilePageContext_SetupView, (/*MoleMole_InLevelPlayerProfilePageContext*/ void* __this));
-DO_APP_FUNC(0x00D7EFF0, 0x0, void, MoleMole_InLevelPlayerProfilePageContext_ClearView, (/*MoleMole_InLevelPlayerProfilePageContext*/ void* __this));
+DO_APP_FUNC(0x00D82A70, 0x0, void, MoleMole_InLevelPlayerProfilePageContext_SetupView, (void* __this));
+DO_APP_FUNC(0x00D7EFF0, 0x0, void, MoleMole_InLevelPlayerProfilePageContext_ClearView, (void* __this));
 DO_APP_FUNC(0x013E7B30, 0x0, void, MoleMole_InLevelMainPageContext_EndCountDown, (app::InLevelMainPageContext* __this));
 
 // Unlimited stamina
