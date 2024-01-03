@@ -34,7 +34,7 @@ namespace cheat {
 
     void FovChanger::Status() {
         if (f_Enabled.getValue())
-            ImGui::Text("FOV (%.1f)", f_Fov.getValue());
+            ImGui::Text("FovChanger (%.1f)", f_Fov.getValue());
     }
 
     std::string FovChanger::getModule() {
