@@ -5,6 +5,7 @@ namespace cheat {
 
     HideReaction::HideReaction() : Function() {
         f_Enabled = config::getValue("functions:HideReaction", "enabled", false);
+
         f_Hotkey = Hotkey("functions:HideReaction");
 
         HookManager::install(app::MonoParticleDamageTextContainer_ShowReactionText, MonoParticleDamageTextContainer_ShowReactionText);
@@ -16,7 +17,7 @@ namespace cheat {
     }
 
     void HideReaction::GUI() {
-        ConfigCheckbox(_("Hide Reaction"), f_Enabled, _("Hide elemental reactions."));
+        ConfigCheckbox(_("HIDE_REACTION_TITLE"), f_Enabled, _("HIDE_REACTION_DESCRIPTION"));
 
         if (f_Enabled.getValue()) {
             ImGui::Indent();
@@ -32,11 +33,11 @@ namespace cheat {
 
     void HideReaction::Status() {
         if (f_Enabled.getValue())
-            ImGui::Text("Hide Reaction");
+            ImGui::Text(_("HIDE_REACTION_TITLE"));
     }
 
     std::string HideReaction::getModule() {
-        return _("Visuals");
+        return _("MODULE_VISUALS");
     }
 
     void MonoParticleDamageTextContainer_ShowReactionText(void* __this, void* reaction, void* elemType1, void* elemType2, void* attackee, int hitIndex) {

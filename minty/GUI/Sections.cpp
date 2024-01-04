@@ -30,13 +30,17 @@
 #include "../functions/world/VacuumLoot.h"
 //#include "../functions/world/AutoDestroy.h"
 //#include "../functions/world/AutoChallenge.h"
+//#include "../functions/world/AutoDestroy.h"
+//#include "../functions/world/AutoLoot.h"
+#include "../functions/world/AutoTalk.h"
 //#include "../functions/world/AutoTP.h"
 #include "../functions/world/CutsceneSkip.h"
 #include "../functions/world/DumbEnemies.h"
 #include "../functions/world/ElementalSight.h"
 #include "../functions/world/GameSpeed.h"
+//#include "../functions/world/MobVacuum.h"
 //#include "../functions/world/OpenTeamImmediately.h"
-//#include "../functions/world/SkipEnhanceAnimation.h"
+//#include "../functions/world/VacuumLoot.h"
 
 std::vector<std::string> ModuleOrder = {
     _("Player"),
@@ -48,16 +52,16 @@ std::vector<std::string> ModuleOrder = {
 };
 
 void Init() {
-  INIT_FUNC(About);
+	INIT_FUNC(About);
 
-  INIT_FUNC(GodMode);
-  INIT_FUNC(InfiniteEnergy);
-  INIT_FUNC(InfiniteStamina);
-  INIT_FUNC(MultiHit);
-  INIT_FUNC(NoClip);
-  INIT_FUNC(NoCooldown);
+	INIT_FUNC(GodMode);
+	INIT_FUNC(InfiniteEnergy);
+	INIT_FUNC(InfiniteStamina);
+	INIT_FUNC(MultiHit);
+	INIT_FUNC(NoClip);
+	INIT_FUNC(NoCooldown);
 
-  INIT_FUNC(Settings);
+	INIT_FUNC(Settings);
 
   INIT_FUNC(CameraZoom);
   //INIT_FUNC(FovChanger);
@@ -73,57 +77,50 @@ void Init() {
 
   INIT_FUNC(LuaConsole);
 
-  INIT_FUNC(PickupRange);
-  INIT_FUNC(AutoLoot);
-  //INIT_FUNC(AutoChallenge);
-  //INIT_FUNC(MobVacuum);
-  //INIT_FUNC(AutoDestroy);
-  INIT_FUNC(AutoTalk);
-  //INIT_FUNC(AutoTP);
-  INIT_FUNC(CutsceneSkip);
-  INIT_FUNC(DumbEnemies);
-  INIT_FUNC(ElementalSight);
-  INIT_FUNC(GameSpeed);
-  //INIT_FUNC(OpenTeamImmediately);
-  //INIT_FUNC(SkipEnhanceAnimation);
-  INIT_FUNC(VacuumLoot);
+	//INIT_FUNC(AutoChallenge);
+	//INIT_FUNC(AutoDestroy);
+	//INIT_FUNC(AutoLoot);
+	INIT_FUNC(AutoTalk);
+	//INIT_FUNC(AutoTP);
+	INIT_FUNC(CutsceneSkip);
+	INIT_FUNC(DumbEnemies);
+	INIT_FUNC(ElementalSight);
+	INIT_FUNC(GameSpeed);
+	//INIT_FUNC(MobVacuum);
+	//INIT_FUNC(OpenTeamImmediately);
+	//INIT_FUNC(VacuumLoot);
 }
 
 void Outer() {
-  for (auto& func : functions)
-    func->Outer();
+	for (auto& func : functions)
+		func->Outer();
 }
 
-void Status()
-{
-    auto& settings = cheat::Settings::getInstance();
-    if (!settings.f_Status.getValue())
-	return;
+void Status() {
+	auto& settings = cheat::Settings::getInstance();
 
-    ImGuiWindowFlags flags = 
-	ImGuiWindowFlags_NoCollapse |
-	ImGuiWindowFlags_NoDecoration |
-	ImGuiWindowFlags_AlwaysAutoResize |
-	ImGuiWindowFlags_NoBringToFrontOnFocus |
-	ImGuiWindowFlags_NoFocusOnAppearing;
+	if (!settings.f_Status.getValue())
+		return;
 
-    if (!settings.f_StatusMove.getValue())
-	flags |= ImGuiWindowFlags_NoMove;
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing;
 
-    ImGui::Begin("Status", nullptr, flags);
-    for (auto& feature : functions)
-    {
-	feature->Status();
-    }
-    ImGui::End();
+	if (!settings.f_StatusMove.getValue())
+		flags |= ImGuiWindowFlags_NoMove;
+
+	ImGui::Begin("Status", nullptr, flags);
+
+	for (auto& feature : functions)
+		feature->Status();
+	ImGui::End();
 }
 
 
 void DrawSection(const std::string& moduleName) {
-  for (auto& func : functions) {
-    if (func->getModule() != moduleName)
-      continue;
+	for (auto& func : functions) {
+		if (func->getModule() != moduleName)
+			continue;
 
-    func->GUI();
-  }
+		func->GUI();
+	}
 }

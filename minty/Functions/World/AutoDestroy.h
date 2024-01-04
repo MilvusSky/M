@@ -4,28 +4,27 @@
 #include "../../game/filters.h"
 
 namespace cheat {
-    class AutoDestroy : public Function {
-    public:
-        ConfigField<bool> f_Enabled;
-        ConfigField<float> f_Range;
+	class AutoDestroy : public Function {
+	public:
+		ConfigField<bool> f_Enabled;
+		ConfigField<float> f_Range;
+		ConfigField<bool> f_DestroyOres;
+		ConfigField<bool> f_DestroyShields;
+		ConfigField<bool> f_DestroyDoodads;
+		ConfigField<bool> f_DestroyPlants;
+		ConfigField<bool> f_DestroySpecialObjects;
+		ConfigField<bool> f_DestroySpecialChests;
 
-        ConfigField<bool> f_DestroyOres;
-        ConfigField<bool> f_DestroyShields;
-        ConfigField<bool> f_DestroyDoodads;
-        ConfigField<bool> f_DestroyPlants;
-        ConfigField<bool> f_DestroySpecialObjects;
-        ConfigField<bool> f_DestroySpecialChests;
+		Hotkey f_Hotkey;
 
+		void GUI() override;
+		void Outer() override;
+		void Status() override;
 
-        Hotkey f_Hotkey;
+		std::string getModule() override;
 
-        void GUI() override;
-        void Outer() override;
-        void Status() override;
+		static AutoDestroy& getInstance();
 
-        std::string getModule() override;
-
-        static AutoDestroy& getInstance();
-        AutoDestroy();
-    };
+		AutoDestroy();
+	};
 }

@@ -1,62 +1,65 @@
 ﻿#include "HideUI.h"
 
 namespace cheat {
-    static void onUpdate_4(app::GameManager* __this, app::MethodInfo* method);
+	static void onUpdate_4(app::GameManager* __this, app::MethodInfo* method);
 
-    HideUI::HideUI() : Function() {
-        f_Enabled = config::getValue("functions:HideUI", "enabled", false);
-        f_Hotkey = Hotkey("functions:HideUI");
+	HideUI::HideUI() : Function() {
+		f_Enabled = config::getValue("functions:HideUI", "enabled", false);
 
-        HookManager::install(app::GameManager_Update, onUpdate_4);
-    }
+		f_Hotkey = Hotkey("functions:HideUI");
 
-    HideUI& HideUI::getInstance() {
-        static HideUI instance;
-        return instance;
-    }
+		HookManager::install(app::GameManager_Update, onUpdate_4);
+	}
 
-    void HideUI::GUI() {
-        ConfigCheckbox(_("Hide UI"), f_Enabled, _("Hide in-game UI."));
+	HideUI& HideUI::getInstance() {
+		static HideUI instance;
+		return instance;
+	}
 
-        if (f_Enabled.getValue()) {
-            ImGui::Indent();
-            f_Hotkey.Draw();
-            ImGui::Unindent();
-        }
-    }
+	void HideUI::GUI() {
+		ConfigCheckbox(_("HIDE_UI_TITLE"), f_Enabled, _("HIDE_UI_DESCRIPTION"));
 
-    void HideUI::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_Enabled.setValue(!f_Enabled.getValue());
-    }
+		if (f_Enabled.getValue()) {
+			ImGui::Indent();
+			f_Hotkey.Draw();
+			ImGui::Unindent();
+		}
+	}
 
-    void HideUI::Status() {
-        if (f_Enabled.getValue())
-            ImGui::Text("Hide UI");
-    }
+	void HideUI::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+	}
 
-    std::string HideUI::getModule() {
-        return _("Visuals");
-    }
+	void HideUI::Status() {
+		if (f_Enabled.getValue())
+			ImGui::Text(_("HIDE_UI_TITLE"));
+	}
 
-    app::GameObject* ui_camera{};
-    void onUpdate_4(app::GameManager* __this, app::MethodInfo* method) {
-        auto& hideUI = HideUI::getInstance();
+	std::string HideUI::getModule() {
+		return _("MODULE_VISUALS");
+	}
 
-        if (hideUI.f_Enabled.getValue()) {
-            if (ui_camera == nullptr)
-                ui_camera = app::GameObject_Find(string_to_il2cppi("/UICamera"));
+	app::GameObject* ui_camera{};
 
-            if (ui_camera->fields._.m_CachedPtr != nullptr)
-                app::GameObject_SetActive(ui_camera, false);
-        } else {
-            if (ui_camera) {
-                if (ui_camera->fields._.m_CachedPtr != nullptr)
-                    app::GameObject_SetActive(ui_camera, true);
+	void onUpdate_4(app::GameManager* __this, app::MethodInfo* method) {
+		auto& hideUI = HideUI::getInstance();
 
-                ui_camera = nullptr;
-            }
-        }
-        CALL_ORIGIN(onUpdate_4, __this, method);
-    }
+		if (hideUI.f_Enabled.getValue()) {
+			if (ui_camera == nullptr)
+				ui_camera = app::GameObject_Find(string_to_il2cppi("/UICamera"));
+
+			if (ui_camera->fields._.m_CachedPtr != nullptr)
+				app::GameObject_SetActive(ui_camera, false);
+		}
+		else {
+			if (ui_camera) {
+				if (ui_camera->fields._.m_CachedPtr != nullptr)
+					app::GameObject_SetActive(ui_camera, true);
+
+				ui_camera = nullptr;
+			}
+		}
+		CALL_ORIGIN(onUpdate_4, __this, method);
+	}
 }

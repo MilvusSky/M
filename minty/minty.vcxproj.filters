@@ -92,7 +92,6 @@
     <ClCompile Include="functions\visuals\ShowIndicators.cpp" />
     <ClCompile Include="functions\visuals\CameraZoom.cpp" />
     <ClCompile Include="functions\world\OpenTeamImmediately.cpp" />
-    <ClCompile Include="functions\world\SkipEnhanceAnimation.cpp" />
     <ClCompile Include="utils\Logger.cpp" />
     <ClCompile Include="api\imgui\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="functions\world\ElementalSight.cpp" />
@@ -112,7 +111,6 @@
     <ClCompile Include="Functions\World\MobVacuum.cpp" />
     <ClCompile Include="GUI\ResourceLoader.cpp" />
     <ClCompile Include="GUI\mutil.cpp" />
-    <ClCompile Include="Functions\World\PickupRange.cpp" />
     <ClCompile Include="Functions\World\AutoLoot.cpp" />
     <ClCompile Include="Functions\visuals\GraphicsChanger.cpp" />
     <ClCompile Include="Functions\Lua\LuaConsole.cpp" />
@@ -246,7 +244,6 @@
     <ClInclude Include="functions\visuals\ShowIndicators.h" />
     <ClInclude Include="functions\visuals\CameraZoom.h" />
     <ClInclude Include="functions\world\OpenTeamImmediately.h" />
-    <ClInclude Include="functions\world\SkipEnhanceAnimation.h" />
     <ClInclude Include="utils\Logger.h" />
     <ClInclude Include="api\imgui\ImGui\imgui_stdlib.h" />
     <ClInclude Include="functions\world\ElementalSight.h" />
@@ -270,7 +267,6 @@
     <ClInclude Include="Functions\World\MobVacuum.h" />
     <ClInclude Include="GUI\ResourceLoader.h" />
     <ClInclude Include="GUI\mutil.h" />
-    <ClInclude Include="Functions\World\PickupRange.h" />
     <ClInclude Include="Functions\World\AutoLoot.h" />
     <ClInclude Include="Functions\visuals\GraphicsChanger.h" />
     <ClInclude Include="Functions\Lua\LuaConsole.h" />

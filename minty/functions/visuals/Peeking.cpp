@@ -1,68 +1,50 @@
 #include "Peeking.h"
 
 namespace cheat {
-    static void onUpdate_6(app::GameManager* __this, app::MethodInfo* method);
-    static void MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue(app::MoleMole_VCBaseSetDitherValue* __this, float value);
+	static void MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue(app::MoleMole_VCBaseSetDitherValue* __this, float value);
 
-    Peeking::Peeking() {
-        f_Enabled = config::getValue("functions:Peeking", "enabled", false);
-        f_Hotkey = Hotkey("functions:Peeking");
+	Peeking::Peeking() {
+		f_Enabled = config::getValue("functions:Peeking", "enabled", false);
 
-        HookManager::install(app::GameManager_Update, onUpdate_6);
-        HookManager::install(app::MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue, MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue);
-    }
+		f_Hotkey = Hotkey("functions:Peeking");
 
-    Peeking& Peeking::getInstance() {
-        static Peeking instance;
-        return instance;
-    }
+		HookManager::install(app::MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue, MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue);
+	}
 
-    void Peeking::GUI() {
-        ConfigCheckbox(_("Enable Peeking"), f_Enabled, ";)");
+	Peeking& Peeking::getInstance() {
+		static Peeking instance;
+		return instance;
+	}
 
-        if (f_Enabled.getValue()) {
-            ImGui::Indent();
-            f_Hotkey.Draw();
-            ImGui::Unindent();
-        }
-    }
-    
-    void Peeking::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_Enabled.setValue(!f_Enabled.getValue());
-    }
+	void Peeking::GUI() {
+		ConfigCheckbox(_("ENABLE_PEEKING_TITLE"), f_Enabled, _("ENABLE_PEEKING_DESCRIPTION"));
 
-    void Peeking::Status() {
-        if (f_Enabled.getValue())
-            ImGui::Text("Enable Peeking");
-    }
+		if (f_Enabled.getValue()) {
+			ImGui::Indent();
+			f_Hotkey.Draw();
+			ImGui::Unindent();
+		}
+	}
 
-    std::string Peeking::getModule() {
-        return _("Visuals");
-    }
+	void Peeking::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+	}
 
-    void MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue(app::MoleMole_VCBaseSetDitherValue* __this, float value) {
-        auto& peeking = Peeking::getInstance();
+	void Peeking::Status() {
+		if (f_Enabled.getValue())
+			ImGui::Text(_("ENABLE_PEEKING_TITLE"));
+	}
 
-        if (peeking.f_Enabled.getValue())
-            value = 1;
-        CALL_ORIGIN(MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue, __this, value);
-    }
+	std::string Peeking::getModule() {
+		return _("MODULE_VISUALS");
+	}
 
-    app::GameObject* divingRoot;
-    void onUpdate_6(app::GameManager* __this, app::MethodInfo* method) {
-        auto& peeking = Peeking::getInstance();
+	void MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue(app::MoleMole_VCBaseSetDitherValue* __this, float value) {
+		auto& peeking = Peeking::getInstance();
 
-        /*if (peeking.f_Enabled.getValue()) {
-            if (divingRoot == nullptr || app::GameObject_get_active(divingRoot))
-                divingRoot = app::GameObject_Find(string_to_il2cppi("/EffectPool/Eff_Player_Diving_Root"));
-        } else {
-            if (divingRoot) {
-                app::GameObject_SetActive(divingRoot, false);
-
-                divingRoot = nullptr;
-            }
-        }*/
-        CALL_ORIGIN(onUpdate_6, __this, method);
-    }
+		if (peeking.f_Enabled.getValue())
+			value = 1;
+		CALL_ORIGIN(MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue, __this, value);
+	}
 }
