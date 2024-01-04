@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "ESPItem.h"
 #include "../../game/IEntityFilter.h"
 #include "../FunctionIncludes.h"
 
@@ -28,13 +27,7 @@ namespace cheat
 
 	ConfigField<int> f_TracerItemCurrent;
 	ConfigField<int> f_BoxItemCurrent;
-
-	//ConfigField<DrawMode> f_DrawBoxMode;
-	//ConfigField<DrawTracerMode> f_DrawTracerMode;
-
-	DrawMode f_DrawBoxMode;
-	DrawTracerMode f_DrawTracerMode;
-
+	
 	ConfigField<float> f_FillTransparency;
 
 	ConfigField<bool> f_DrawDistance;
@@ -48,11 +41,11 @@ namespace cheat
 	ConfigField<float> f_FontOutlineSize;
 
 	ConfigField<ImColor> f_GlobalFontColor;
-	//ImColor m_FontContrastColor;
 	ConfigField<ImColor> f_GlobalBoxColor;
 	ConfigField<ImColor> f_GlobalRectColor;
 	ConfigField<ImColor> f_GlobalLineColor;
 	ConfigField<ImColor> f_GlobalESPColor;
+	ConfigField<ImColor> f_GlobalTracersColor;
 
 	ConfigField<float> f_MinSize;
 	ConfigField<float> f_Range;
@@ -65,7 +58,15 @@ namespace cheat
 	ConfigField<bool> f_PickableLoot;
 	ConfigField<bool> f_Chests;
 	ConfigField<bool> f_Monsters;
+
 	Hotkey f_Hotkey;
+
+	game::EntityManager* entityManager;
+	DrawMode f_DrawBoxMode;
+	DrawTracerMode f_DrawTracerMode;
+
+	ImColor m_FontContrastColor;
+
 
 	ESP();
 

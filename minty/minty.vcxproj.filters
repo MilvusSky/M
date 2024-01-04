@@ -271,7 +271,6 @@
     <ClInclude Include="Functions\World\PickupRange.h" />
     <ClInclude Include="Functions\World\AutoLoot.h" />
     <ClInclude Include="Functions\ESP\ESP.h" />
-    <ClInclude Include="Functions\ESP\ESPItem.h" />
     <ClInclude Include="Functions\ESP\ESPRender.h" />
   </ItemGroup>
   <ItemGroup>

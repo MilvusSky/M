@@ -17,7 +17,7 @@ namespace cheat
 
 		f_Range = config::getValue("functions:ESP", "range", 200.f);
 
-		f_DrawBox = config::getValue("functions:ESP", "drawBox", true);
+		f_DrawBox = config::getValue("functions:ESP", "drawBox", false);
 		f_DrawTracer = config::getValue("functions:ESP", "drawTracer", false);
 
 		f_FillTransparency = config::getValue("functions:ESP", "fillTransparency", 70.f);
@@ -29,13 +29,14 @@ namespace cheat
 		tracerItemCurrent = f_TracerItemCurrent.getValue();
 
 		// Filters
-
 		f_Ores = config::getValue("functions:ESP:filters", "ores", false);
 		f_Oculies = config::getValue("functions:ESP:filters", "oculies", false);
 		f_Plants = config::getValue("functions:ESP:filters", "plants", false);
 		f_PickableLoot = config::getValue("functions:ESP:filters", "itemDrops", false);
 		f_Chests = config::getValue("functions:ESP:filters", "chests", false); 
 		f_Monsters = config::getValue("functions:ESP:filters", "enemies", false);
+
+		entityManager = &game::EntityManager::getInstance();
     }
 
 	std::string ESP::getModule() {
@@ -87,14 +88,11 @@ namespace cheat
 					break;
 				case 1:
 					f_DrawTracerMode = DrawTracerMode::Line;
-
 					break;
 				}
 				config::setValue("functions:ESP", "drawTracerMode", tracerItemCurrent);
-
 			} else
 				f_DrawTracerMode = DrawTracerMode::None;
-
 
 		    if (f_DrawTracerMode == DrawTracerMode::OffscreenArrows)
 		    {
@@ -110,17 +108,21 @@ namespace cheat
 			ConfigCheckbox("Draw name", f_DrawName, "Draw name of object.");
 			ConfigCheckbox("Draw distance", f_DrawDistance, "Draw distance of object.");
 
-			ConfigSliderInt("Font size", f_FontSize, 1, 100, "Font size of name or distance.");
-			ConfigSliderFloat("Font outline", f_FontOutlineSize, 0.1f, 10.0f);
+			if (f_DrawName.getValue() or f_DrawDistance.getValue()) {
+				ConfigSliderInt("Font size", f_FontSize, 1, 100, "Font size of name or distance.");
+				ConfigSliderFloat("Font outline", f_FontOutlineSize, 0.1f, 10.0f);
+			}
 
 		    if (BeginGroupPanel("Colors", true))
 		    {
-				ImGui::ColorEdit4("Global ESP color", &f_GlobalESPColor.getValue().Value.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar);
+				ImGuiColorEditFlags_ flag = ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar;
 
+				ImGui::ColorEdit4("Global ESP color", &f_GlobalESPColor.getValue().Value.x, flag);
 				if (BeginGroupPanel("Advanced", true)) {
-					ImGui::ColorEdit4("Color of box", &f_GlobalBoxColor.getValue().Value.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar);
-					ImGui::ColorEdit4("Color of line", &f_GlobalLineColor.getValue().Value.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar);
-					ImGui::ColorEdit4("Color of rectangle", &f_GlobalRectColor.getValue().Value.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar);
+					ImGui::ColorEdit4("Color of box", &f_GlobalBoxColor.getValue().Value.x, flag);
+					ImGui::ColorEdit4("Color of line", &f_GlobalLineColor.getValue().Value.x, flag);
+					ImGui::ColorEdit4("Color of rectangle", &f_GlobalRectColor.getValue().Value.x, flag);
+					ImGui::ColorEdit4("Color of arrow tracers", &f_GlobalTracersColor.getValue().Value.x, flag);
 				}
 				EndGroupPanel();
 		    }
@@ -168,11 +170,9 @@ namespace cheat
 
 	    PrepareFrame();
 
-	    auto& entityManager = game::EntityManager::getInstance();
-
-	    for (auto& entity : entityManager.entities())
+	    for (auto& entity : esp.entityManager->entities())
 	    {
-		    if (entityManager.avatar()->distance(entity) > esp.f_Range.getValue())
+		    if (esp.entityManager->avatar()->distance(entity) > esp.f_Range.getValue())
 			    continue;
 
 			if (!(

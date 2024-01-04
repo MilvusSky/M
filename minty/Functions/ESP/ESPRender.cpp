@@ -394,29 +394,6 @@ namespace cheat
 		return ImVec2(targetPos.x, targetPos.y);
 	}
 
-	ImVec2 limitToScreenBorder(app::Vector2 position) {
-		ImVec2 SIZE = ImGui::GetMainViewport()->Size;
-		app::Vector2 limitedPosition = position;
-		// 30 - margin from screen border
-		if (limitedPosition.x <= 30) {
-			limitedPosition.x = 30;
-		}
-
-		if (limitedPosition.x >= SIZE.x - 30) {
-			limitedPosition.x = SIZE.x - 30;
-		}
-
-		if (limitedPosition.y <= 30) {
-			limitedPosition.y = 30;
-		}
-
-		if (limitedPosition.y >= SIZE.y - 30) {
-			limitedPosition.y = SIZE.y - 30;
-		}
-
-		return { limitedPosition.x, limitedPosition.y };
-	}
-
 	static void DrawLine(game::Entity* entity, const ImColor& color)
 	{
 		auto screenPos = GetEntityScreenPos(entity);
@@ -429,10 +406,10 @@ namespace cheat
 		ImRect screen_rect = { 0.0f, 0.0f, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y };
 		auto screen_center = screen_rect.GetCenter();
 
-		LOG_DEBUG("screen_center = %f %f", screen_center.x, screen_center.y);
+		//LOG_DEBUG("screen_center = %f %f", screen_center.x, screen_center.y);
 		LOG_DEBUG("screenPos = %f %f", screenPos.value().x, screenPos.value().y);
-
-		draw->AddLine(screen_center, limitToScreenBorder({screenPos.value().x, screenPos.value().y}), color, 0.5f);
+		
+		draw->AddLine(screen_center, *screenPos, color, 1.f);
 	}
   
 #define PI 3.14159265358979323846f
@@ -494,6 +471,8 @@ namespace cheat
 		draw->AddQuad(points[0], points[1], points[2], points[3], ImColor(0.0f, 0.0f, 0.0f, alpha), esp.f_OutlineThickness.getValue());
 	}
 
+#undef PI
+
 	static void DrawName(const Rect& boxRect, game::Entity* entity, const std::string& name, const ImColor& color, const ImColor& contrastColor)
 	{
 		auto& esp = ESP::getInstance();
@@ -515,6 +494,8 @@ namespace cheat
 		else {
 			text = name;
 		}
+
+		LOG_DEBUG("text = %s", text.c_str());
 
 		ImVec2 namePosition;
 		if (!boxRect.empty())
@@ -565,7 +546,7 @@ namespace cheat
 			DrawLine(entity, esp.f_GlobalLineColor.getValue() ? esp.f_GlobalLineColor.getValue() : color);
 			break;
 		case ESP::DrawTracerMode::OffscreenArrows:
-			DrawOffscreenArrows(entity, esp.f_GlobalLineColor.getValue() ? esp.f_GlobalLineColor.getValue() : color);
+			DrawOffscreenArrows(entity, esp.f_GlobalTracersColor.getValue() ? esp.f_GlobalTracersColor.getValue() : color);
 			break;
 		default:
 			break;

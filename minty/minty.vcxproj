@@ -220,7 +220,6 @@
     <ClInclude Include="config\ConfigField.h" />
     <ClInclude Include="config\ConfigManager.h" />
     <ClInclude Include="Functions\ESP\ESP.h" />
-    <ClInclude Include="Functions\ESP\ESPItem.h" />
     <ClInclude Include="Functions\ESP\ESPRender.h" />
     <ClInclude Include="functions\FunctionIncludes.h" />
     <ClInclude Include="functions\visuals\CameraZoom.h" />
