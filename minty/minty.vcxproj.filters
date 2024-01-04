@@ -114,6 +114,8 @@
     <ClCompile Include="GUI\mutil.cpp" />
     <ClCompile Include="Functions\World\PickupRange.cpp" />
     <ClCompile Include="Functions\World\AutoLoot.cpp" />
+    <ClCompile Include="Functions\visuals\GraphicsChanger.cpp" />
+    <ClCompile Include="Functions\Lua\LuaConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gui\MainGUI.h" />
@@ -270,6 +272,8 @@
     <ClInclude Include="GUI\mutil.h" />
     <ClInclude Include="Functions\World\PickupRange.h" />
     <ClInclude Include="Functions\World\AutoLoot.h" />
+    <ClInclude Include="Functions\visuals\GraphicsChanger.h" />
+    <ClInclude Include="Functions\Lua\LuaConsole.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="api\lua\lua53.lib" />

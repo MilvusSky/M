@@ -1,4 +1,4 @@
-#include "MainGUI.h"
+﻿#include "MainGUI.h"
 
 #include "../utils/GuiUtils.h"
 #include "GuiDefinitions.h"
@@ -12,6 +12,10 @@ using namespace std;
 namespace gui {
     void FrameLoadGui() {
         ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[fontindex_menu]);
+
+	ImGui::SetNextWindowPos({ 480, 270 }, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize({ 800, 500 }, ImGuiCond_FirstUseEver);
+
         ImGui::Begin("Minty"); 
         ImGui::BeginGroup();
 

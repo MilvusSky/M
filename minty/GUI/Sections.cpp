@@ -19,6 +19,9 @@
 #include "../functions/visuals/ProfileChanger.h"
 #include "../functions/visuals/ShowIndicators.h"
 #include "../functions/visuals/UnlockFPS.h"
+#include "../functions/visuals/GraphicsChanger.h"
+
+#include "../Functions/Lua/LuaConsole.h"
 
 #include "../functions/world/PickupRange.h"
 #include "../functions/world/AutoLoot.h"
@@ -36,11 +39,12 @@
 //#include "../functions/world/SkipEnhanceAnimation.h"
 
 std::vector<std::string> ModuleOrder = {
-    _("About"),
     _("Player"),
     _("World"),
     _("Visuals"),
-    _("Settings")
+    _("Lua"),
+    _("Settings"),
+    _("About")
 };
 
 void Init() {
@@ -65,6 +69,9 @@ void Init() {
   INIT_FUNC(ProfileChanger);
   INIT_FUNC(ShowIndicators);
   INIT_FUNC(UnlockFPS);
+  INIT_FUNC(GraphicsChanger);
+
+  INIT_FUNC(LuaConsole);
 
   INIT_FUNC(PickupRange);
   INIT_FUNC(AutoLoot);
