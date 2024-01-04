@@ -113,7 +113,6 @@ namespace cheat::game {
 		return entityVector;
 	}
 
-
 	Entity* EntityManager::avatar() {
 		auto entityManager = app::MoleMole_InLevelDrumPageContext_get_ENTITY(nullptr);
 

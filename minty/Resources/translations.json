@@ -189,7 +189,9 @@
     "GAME_SPEED_TITLE": "Game Speed",
     "GAME_SPEED_DESCRIPTION": "Speeds up game.",
     "MULTIPLIER_TITLE": "Multiplier",
-    "MULTIPLIER_DESCRIPTION": "Set GameSpeed Multiplier."
+    "MULTIPLIER_DESCRIPTION": "Set GameSpeed Multiplier.",
+
+    "MODULE_LUA":  "Lua"
   },
   "CN": {
     "About": "关于",

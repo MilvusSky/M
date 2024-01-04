@@ -23,7 +23,6 @@
 
 #include "../Functions/Lua/LuaConsole.h"
 
-#include "../functions/world/PickupRange.h"
 #include "../functions/world/AutoLoot.h"
 #include "../functions/world/AutoTalk.h"
 //#include "../functions/world/MobVacuum.h"
@@ -41,14 +40,15 @@
 //#include "../functions/world/MobVacuum.h"
 //#include "../functions/world/OpenTeamImmediately.h"
 //#include "../functions/world/VacuumLoot.h"
+#include "../Functions/World/ESP.h"
 
 std::vector<std::string> ModuleOrder = {
-    _("Player"),
-    _("World"),
-    _("Visuals"),
-    _("Lua"),
-    _("Settings"),
-    _("About")
+    _("MODULE_PLAYER"),
+    _("MODULE_WORLD"),
+    _("MODULE_VISUALS"),
+    _("MODULE_LUA"),
+    _("MODULE_SETTINGS"),
+    _("MODULE_ABOUT")
 };
 
 void Init() {
@@ -63,19 +63,19 @@ void Init() {
 
 	INIT_FUNC(Settings);
 
-  INIT_FUNC(CameraZoom);
-  //INIT_FUNC(FovChanger);
-  INIT_FUNC(HideDamage);
-  INIT_FUNC(HideReaction);
-  INIT_FUNC(HideUI);
-  INIT_FUNC(NoFog);
-  INIT_FUNC(Peeking);
-  INIT_FUNC(ProfileChanger);
-  INIT_FUNC(ShowIndicators);
-  INIT_FUNC(UnlockFPS);
-  INIT_FUNC(GraphicsChanger);
-
-  INIT_FUNC(LuaConsole);
+    INIT_FUNC(CameraZoom);
+    //INIT_FUNC(FovChanger);
+    INIT_FUNC(HideDamage);
+    INIT_FUNC(HideReaction);
+    INIT_FUNC(HideUI);
+    INIT_FUNC(NoFog);
+    INIT_FUNC(Peeking);
+    INIT_FUNC(ProfileChanger);
+    INIT_FUNC(ShowIndicators);
+    INIT_FUNC(UnlockFPS);
+    INIT_FUNC(GraphicsChanger);
+    
+    INIT_FUNC(LuaConsole);
 
 	//INIT_FUNC(AutoChallenge);
 	//INIT_FUNC(AutoDestroy);
@@ -86,6 +86,7 @@ void Init() {
 	INIT_FUNC(DumbEnemies);
 	INIT_FUNC(ElementalSight);
 	INIT_FUNC(GameSpeed);
+	INIT_FUNC(ESP);
 	//INIT_FUNC(MobVacuum);
 	//INIT_FUNC(OpenTeamImmediately);
 	//INIT_FUNC(VacuumLoot);
@@ -109,9 +110,17 @@ void Status() {
 		flags |= ImGuiWindowFlags_NoMove;
 
 	ImGui::Begin("Status", nullptr, flags);
-
+	//ImGui::BeginListBox("##STATSYDUTASYUDATSYDUTYdasudyTGTD");
+	auto windowWidth = ImGui::GetWindowSize().x;
+	auto textWidth = ImGui::CalcTextSize("Minty-GI 4.3_01").x;
+	ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+	ImGui::PushStyleColor(ImGuiCol_Text, { 0.f / 255, 142.f / 255, 85.f / 255, 1.f });
+	ImGui::Text("Minty-GI 4.3_01");
+	ImGui::PopStyleColor();
+	ImGui::Separator();
 	for (auto& feature : functions)
 		feature->Status();
+	//ImGui::EndListBox();
 	ImGui::End();
 }
 

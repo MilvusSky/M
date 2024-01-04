@@ -228,4 +228,13 @@ namespace cheat::game {
 	app::Vector3 Entity::down() const {
 		return -up();
 	}
+
+	app::GameObject* Entity::gameObject()
+	{
+		SAFE_BEGIN();
+		return app::MoleMole_BaseEntity_get_rootGameObject(m_RawEntity);
+		SAFE_ERROR();
+		return nullptr;
+		SAFE_END();
+	}
 }

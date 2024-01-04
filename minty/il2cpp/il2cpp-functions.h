@@ -110,6 +110,7 @@ DO_APP_FUNC(0x0CF54E20, 0x0CEF0E10, int32_t, Screen_get_height, (app::MethodInfo
 
 DO_APP_FUNC(0x0CFA1E50, 0x0CF3DC20, app::Vector3, Camera_WorldToScreen, (app::Camera* this_, app::Vector3 pos));
 DO_APP_FUNC(0x0CFA21E0, 0x0CF3DFB0, app::Camera*, Camera_get_main, ());
+DO_APP_FUNC(0x0CEB38C0, 0x0CE4F9E0, app::Bounds, Collider_get_bounds, (app::Collider* this_));
 
 DO_APP_FUNC(0x0CEC02A0, 0x0CE5C3C0, void, Rigidbody_set_velocity, (app::Rigidbody* __this, app::Vector3 value));
 DO_APP_FUNC(0x0CEC0430, 0x0CE5C550, void, Rigidbody_set_collisionDetectionMode, (app::Rigidbody* __this, app::CollisionDetectionMode__Enum value));
@@ -196,3 +197,6 @@ DO_APP_FUNC(0x07431BD0, 0x073F6860, app::MotionState__Enum, MotionInfo_set_State
 DO_APP_FUNC(0x0539BA80, 0x0537E040, void, VCHumanoidMove_Scara, (app::VCHumanoidMove* __this, float value));
 
 DO_APP_FUNC(0x0D0EECA0, 0x0D08A800, void, QualitySettings_set_shadows, (app::ShadowQuality value));
+
+// ESP
+

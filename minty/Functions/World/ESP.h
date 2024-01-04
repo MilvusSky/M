@@ -1,18 +1,18 @@
 ﻿#include "../FunctionIncludes.h"
 #include "../../game/EntityManager.h"
+#include "ESPRender.h"
 
 namespace cheat {
     class ESP : public Function {
     public:
 	ConfigField<bool> b_Enabled;
-	ConfigField<std::tuple<int, int, int>> c_Color;
+	ConfigField<std::vector<float>> c_Color;
 	ConfigField<float> f_TracerWidth;
 	ConfigField<float> f_OutlineWidth;
 	ConfigField<bool> b_TracerEnabled;
 	ConfigField<int> i_OutlineType;
-	ConfigField<std::vector<int>> v_Filters;
+	ConfigField<std::vector<std::tuple<int, bool, std::string>>> v_Filters;
 
-	const char* drawModes[4] = { "Line", "Rectangle", "Filled rectangle", "Circle" };
 
 	virtual void GUI() override;
 	virtual void Outer() override;
