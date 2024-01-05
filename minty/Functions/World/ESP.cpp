@@ -190,10 +190,5 @@ namespace cheat
 
 			DrawEntity(entity->name(), entity, esp.f_GlobalESPColor.getValue(), CalcContrastColor(esp.f_GlobalESPColor.getValue()));
 	    }
-        }
-        LOG_INFO("8");
-        ESPBase::DrawESP(camera, instance, filters, drawInfo);
-        LOG_INFO("9");
-        CALL_ORIGIN(GameManager_Update_h, this_, mi);
-    };
+    }
 }

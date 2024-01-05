@@ -76,8 +76,9 @@ void Init() {
   INIT_FUNC(ProfileChanger);
   INIT_FUNC(ShowIndicators);
   INIT_FUNC(UnlockFPS);
+  INIT_FUNC(GraphicsChanger);
 
-  INIT_FUNC(PickupRange);
+  //INIT_FUNC(PickupRange);
   INIT_FUNC(AutoLoot);
   //INIT_FUNC(AutoChallenge);
   //INIT_FUNC(MobVacuum);

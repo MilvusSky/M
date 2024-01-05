@@ -45,8 +45,6 @@ namespace cheat::game {
 		app::Vector3 left() const;
 		app::Vector3 up() const;
 		app::Vector3 down() const;
-
-		app::GameObject* gameObject();
 	private:
 		app::BaseEntity* m_RawEntity;
 		bool m_HasName;

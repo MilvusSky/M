@@ -79,7 +79,6 @@ namespace cheat
 	void Status() override;
 	std::string getModule() override;
 
-	ESP();
     };
 }
 

@@ -220,8 +220,6 @@
     <ClInclude Include="api\magic_enum\magic_enum.hpp" />
     <ClInclude Include="config\ConfigField.h" />
     <ClInclude Include="config\ConfigManager.h" />
-    <ClInclude Include="Functions\World\ESP.h" />
-    <ClInclude Include="Functions\World\ESPRender.h" />
     <ClInclude Include="functions\FunctionIncludes.h" />
     <ClInclude Include="functions\lua\LuaConsole.h" />
     <ClInclude Include="functions\visuals\CameraZoom.h" />
