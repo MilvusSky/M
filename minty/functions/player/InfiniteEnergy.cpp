@@ -5,6 +5,7 @@ namespace cheat {
 
 	InfiniteEnergy::InfiniteEnergy() {
 		f_Enabled = config::getValue("functions:InfiniteEnergy", "enabled", false);
+
 		f_Hotkey = Hotkey("functions:InfiniteEnergy");
 
 		HookManager::install(app::MoleMole_LCAvatarCombat_IsEnergyMax, LCAvatarCombat_IsEnergyMax);
@@ -16,8 +17,7 @@ namespace cheat {
 	}
 
 	void InfiniteEnergy::GUI() {
-		ConfigCheckbox(_("Infinite Energy"), f_Enabled, _("Removes energy requirement for elemental bursts.\n"
-			"(Energy bubble may appear incomplete but still usable)"));
+		ConfigCheckbox(_("INFINITE_ENERGY_TITLE"), f_Enabled, _("INFINITE_ENERGY_DESCRIPTION"));
 
 		if (f_Enabled.getValue()) {
 			ImGui::Indent();
@@ -33,11 +33,11 @@ namespace cheat {
 
 	void InfiniteEnergy::Status() {
 		if (f_Enabled.getValue())
-			ImGui::Text(_("Infinite Energy"));
+			ImGui::Text(_("INFINITE_ENERGY_TITLE"));
 	}
 
 	std::string InfiniteEnergy::getModule() {
-		return _("Player");
+		return _("MODULE_PLAYER");
 	}
 
 	bool LCAvatarCombat_IsEnergyMax(void* __this) {

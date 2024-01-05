@@ -111,8 +111,9 @@
     <ClCompile Include="Functions\World\MobVacuum.cpp" />
     <ClCompile Include="GUI\ResourceLoader.cpp" />
     <ClCompile Include="GUI\mutil.cpp" />
-    <ClCompile Include="Functions\World\PickupRange.cpp" />
     <ClCompile Include="Functions\World\AutoLoot.cpp" />
+    <ClCompile Include="Functions\visuals\GraphicsChanger.cpp" />
+    <ClCompile Include="functions\lua\LuaConsole.cpp" />
     <ClCompile Include="Functions\World\ESP.cpp" />
     <ClCompile Include="Functions\World\ESPRender.cpp" />
   </ItemGroup>
@@ -268,8 +269,9 @@
     <ClInclude Include="Functions\World\MobVacuum.h" />
     <ClInclude Include="GUI\ResourceLoader.h" />
     <ClInclude Include="GUI\mutil.h" />
-    <ClInclude Include="Functions\World\PickupRange.h" />
     <ClInclude Include="Functions\World\AutoLoot.h" />
+    <ClInclude Include="Functions\visuals\GraphicsChanger.h" />
+    <ClInclude Include="functions\lua\LuaConsole.h" />
     <ClInclude Include="Functions\World\ESP.h" />
     <ClInclude Include="Functions\World\ESPRender.h" />
   </ItemGroup>

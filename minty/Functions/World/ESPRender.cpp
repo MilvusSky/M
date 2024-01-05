@@ -250,7 +250,7 @@ namespace cheat
 
 #undef FIX_Y
 
-	}
+			}
 
 	static Rect GetEntityScreenRect(const BoxScreen& box, bool scalling = true)
 	{
@@ -295,7 +295,7 @@ namespace cheat
 		draw->AddLine(p2, p3, col);
 		draw->AddLine(p3, p4, col);
 		draw->AddLine(p4, p1, col);
-	}
+		}
 
 	static bool HasCenter(const Rect& rect)
 	{
@@ -303,7 +303,7 @@ namespace cheat
 
 		return rect.xMin < centerPoint.x&& centerPoint.x < rect.xMax &&
 			rect.yMin < centerPoint.y&& centerPoint.y < rect.yMax;
-	}
+			}
 
 	static Rect DrawRect(game::Entity* entity, const ImColor& color)
 	{
@@ -326,7 +326,7 @@ namespace cheat
 		draw->AddRect(pMin, pMax, color);
 
 		return entityRect;
-	}
+		}
 
 	static Rect DrawBox(game::Entity* entity, const ImColor& color)
 	{
@@ -350,7 +350,7 @@ namespace cheat
 						    (p13.x > threshold && p24.y > threshold) || \
 						    (p24.x > threshold && p13.y > threshold))\
 							draw->AddQuadFilled(p1, p2, p3, p4, newColor);\
-					    }
+			}
 
 			ADD_FIXED_QUAD(box->lowerBottomLeft, box->lowerTopLeft, box->lowerTopRight, box->lowerBottomRight, newColor);
 			ADD_FIXED_QUAD(box->upperBottomLeft, box->upperTopLeft, box->upperTopRight, box->upperBottomRight, newColor);
@@ -373,7 +373,7 @@ namespace cheat
 
 		auto rect = GetEntityScreenRect(*box, false);
 		return rect;
-	}
+		}
 
 	static void UpdateAvatarPosition()
 	{
@@ -383,7 +383,7 @@ namespace cheat
 
 		s_AvatarPosition = ImVec2(avatarPos.x, avatarPos.y);
 		SAFE_EEND();
-	}
+		}
 
 	static std::optional<ImVec2> GetEntityScreenPos(game::Entity* entity)
 	{
@@ -392,7 +392,7 @@ namespace cheat
 			return {};
 
 		return ImVec2(targetPos.x, targetPos.y);
-	}
+		}
 
 	static void DrawLine(game::Entity* entity, const ImColor& color)
 	{
@@ -411,7 +411,7 @@ namespace cheat
 		
 		draw->AddLine(screen_center, *screenPos, color, 1.f);
 	}
-  
+
 #define PI 3.14159265358979323846f
 
 	static void DrawOffscreenArrows(game::Entity* entity, const ImColor& color)
@@ -447,7 +447,7 @@ namespace cheat
 			point.x = arrow_center.x + x * cosf(angle) - y * sinf(angle);
 			point.y = arrow_center.y + x * sinf(angle) + y * cosf(angle);
 		}
-
+		
 		
 		auto draw = ImGui::GetBackgroundDrawList();
 
@@ -490,10 +490,10 @@ namespace cheat
 			std::ostringstream oss;
 			oss << std::fixed << std::setprecision(1) << distance << "m";
 			text = oss.str();
-		}
+				}
 		else {
 			text = name;
-		}
+			}
 
 		LOG_DEBUG("text = %s", text.c_str());
 
@@ -550,7 +550,7 @@ namespace cheat
 			break;
 		default:
 			break;
-		}
+	}
 
 		if (esp.f_DrawName.getValue() || esp.f_DrawDistance.getValue())
 			DrawName(rect, entity, name, esp.f_GlobalFontColor.getValue() ? esp.f_GlobalFontColor.getValue() : color,
@@ -560,7 +560,7 @@ namespace cheat
 		SAFE_ERROR();
 		return false;
 		SAFE_END();
-	}
+}
 
 	void PrepareFrame()
 	{

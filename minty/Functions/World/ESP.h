@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "../../game/IEntityFilter.h"
 #include "../FunctionIncludes.h"
+#include "../../game/EntityManager.h"
+#include "ESPRender.h"
 
 namespace cheat 
 {
@@ -77,6 +79,7 @@ namespace cheat
 	void Status() override;
 	std::string getModule() override;
 
+	ESP();
     };
 }
 

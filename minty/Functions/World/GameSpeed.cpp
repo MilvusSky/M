@@ -6,6 +6,7 @@ namespace cheat {
 	GameSpeed::GameSpeed() {
 		f_Enabled = config::getValue("functions:GameSpeed", "enabled", false);
 		f_Speed = config::getValue("functions:GameSpeed", "multiplier", 5.0f);
+
 		f_Hotkey = Hotkey("functions:GameSpeed");
 
 		HookManager::install(app::GameManager_Update, onUpdate_3);
@@ -17,11 +18,11 @@ namespace cheat {
 	}
 
 	void GameSpeed::GUI() {
-		ConfigCheckbox(_("Game Speed"), f_Enabled, "Speeds up game.");
+		ConfigCheckbox(_("GAME_SPEED_TITLE"), f_Enabled, _("GAME_SPEED_DESCRIPTION"));
 
 		if (f_Enabled.getValue()) {
 			ImGui::Indent();
-			ConfigSliderFloat(_("Multiplier"), f_Speed, 1.0f, 20.0f, _("Set GameSpeed Multiplier"));
+			ConfigSliderFloat(_("MULTIPLIER_TITLE"), f_Speed, 1.0f, 20.0f, _("MULTIPLIER_DESCRIPTION"));
 			f_Hotkey.Draw();
 			ImGui::Unindent();
 		}
@@ -34,11 +35,11 @@ namespace cheat {
 
 	void GameSpeed::Status() {
 		if (f_Enabled.getValue())
-			ImGui::Text(_("GameSpeed (%.1f)"), f_Speed.getValue());
+			ImGui::Text("%s (%.1f)", _("GAME_SPEED_TITLE"), f_Speed.getValue());
 	}
 
 	std::string GameSpeed::getModule() {
-		return _("World");
+		return _("MODULE_WORLD");
 	}
 
 	void onUpdate_3(app::GameManager* __this, app::MethodInfo* method) {

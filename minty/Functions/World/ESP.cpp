@@ -41,7 +41,7 @@ namespace cheat
 
 	std::string ESP::getModule() {
 		return _("MODULE_WORLD");
-	}
+            }
 
 	void ESP::Outer() {
 		if (f_Hotkey.IsPressed())
@@ -89,7 +89,7 @@ namespace cheat
 				case 1:
 					f_DrawTracerMode = DrawTracerMode::Line;
 					break;
-				}
+                    }
 				config::setValue("functions:ESP", "drawTracerMode", tracerItemCurrent);
 			} else
 				f_DrawTracerMode = DrawTracerMode::None;
@@ -101,9 +101,9 @@ namespace cheat
 					ConfigSliderFloat("Size of tracer", f_TracerSize,  0.1f, 10.0f);
 					ConfigSliderFloat("Radius of arrow", f_ArrowRadius, 0.5f, 300.0f);
 					ConfigSliderFloat("Outline thickness of arrow", f_OutlineThickness, 0.1f, 10.0f);
-			    }
+                }
 			    EndGroupPanel();
-		    }
+        }
 
 			ConfigCheckbox("Draw name", f_DrawName, "Draw name of object.");
 			ConfigCheckbox("Draw distance", f_DrawDistance, "Draw distance of object.");
@@ -111,7 +111,7 @@ namespace cheat
 			if (f_DrawName.getValue() or f_DrawDistance.getValue()) {
 				ConfigSliderInt("Font size", f_FontSize, 1, 100, "Font size of name or distance.");
 				ConfigSliderFloat("Font outline", f_FontOutlineSize, 0.1f, 10.0f);
-			}
+    }
 
 		    if (BeginGroupPanel("Colors", true))
 		    {
@@ -135,7 +135,7 @@ namespace cheat
 				ConfigCheckbox("Pickable loot", f_PickableLoot);
 				ConfigCheckbox("Chests", f_Chests);
 				ConfigCheckbox("Monsters", f_Monsters);
-			}
+    }
 			EndGroupPanel();
 
 			ConfigSliderFloat("Minimal size ", f_MinSize, 0.1f, 10.0f, "Minimum entity size as measured in-world.\n" \
@@ -158,13 +158,13 @@ namespace cheat
 
 	ESP& ESP::getInstance()
 	{
-		static ESP instance;
-		return instance;
-	}
+	    static ESP instance;
+	    return instance;
+    }
 
     void DrawExternal()
     {
-	    auto& esp = ESP::getInstance();
+        auto& esp = ESP::getInstance();
 	    if (!esp.f_Enabled.getValue())
 		    return;
 
@@ -190,5 +190,10 @@ namespace cheat
 
 			DrawEntity(entity->name(), entity, esp.f_GlobalESPColor.getValue(), CalcContrastColor(esp.f_GlobalESPColor.getValue()));
 	    }
-    }
+        }
+        LOG_INFO("8");
+        ESPBase::DrawESP(camera, instance, filters, drawInfo);
+        LOG_INFO("9");
+        CALL_ORIGIN(GameManager_Update_h, this_, mi);
+    };
 }

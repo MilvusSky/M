@@ -1,50 +1,51 @@
 ﻿#include "CameraZoom.h"
 
 namespace cheat {
-    static void SCameraModuleInitialize_SetWarningLocateRatio_Hook(app::SCameraModuleInitialize* __this, double deltaTime, app::CameraShareData* data);
+	static void SCameraModuleInitialize_SetWarningLocateRatio_Hook(app::SCameraModuleInitialize* __this, double deltaTime, app::CameraShareData* data);
 
-    CameraZoom::CameraZoom() {
-        f_Enabled = config::getValue("functions:CameraZoom", "enabled", false);
-        f_CameraZoom = config::getValue("functions:CameraZoom", "cameraZoom", 1.0f);
-        f_Hotkey = Hotkey("functions:CameraZoom");
+	CameraZoom::CameraZoom() {
+		f_Enabled = config::getValue("functions:CameraZoom", "enabled", false);
+		f_CameraZoom = config::getValue("functions:CameraZoom", "cameraZoom", 1.0f);
 
-        HookManager::install(app::MoleMole_SCameraModuleInitialize_SetWarningLocateRatio, SCameraModuleInitialize_SetWarningLocateRatio_Hook);
-    }
+		f_Hotkey = Hotkey("functions:CameraZoom");
 
-    CameraZoom& CameraZoom::getInstance() {
-        static CameraZoom instance;
-        return instance;
-    }
+		HookManager::install(app::MoleMole_SCameraModuleInitialize_SetWarningLocateRatio, SCameraModuleInitialize_SetWarningLocateRatio_Hook);
+	}
 
-    void CameraZoom::GUI() {
-        ConfigCheckbox(_("Camera Zoom"), f_Enabled, _("Enables custom camera zoom settings."));
+	CameraZoom& CameraZoom::getInstance() {
+		static CameraZoom instance;
+		return instance;
+	}
 
-        if (f_Enabled.getValue()) {
-            ImGui::Indent();
-            ConfigSliderFloat(_("Zoom value"), f_CameraZoom, 0.1f, 500.0f);
-            f_Hotkey.Draw();
-            ImGui::Unindent();
-        }
-    }
+	void CameraZoom::GUI() {
+		ConfigCheckbox(_("CAMERA_ZOOM_TITLE"), f_Enabled, _("CAMERA_ZOOM_DESCRIPTION"));
 
-    void CameraZoom::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_Enabled.setValue(!f_Enabled.getValue());
-    }
+		if (f_Enabled.getValue()) {
+			ImGui::Indent();
+			ConfigSliderFloat(_("ZOOM_TITLE"), f_CameraZoom, 0.1f, 500.0f);
+			f_Hotkey.Draw();
+			ImGui::Unindent();
+		}
+	}
 
-    void CameraZoom::Status() {
-        if (f_Enabled.getValue())
-            ImGui::Text("Camera zoom (%.1f)", f_CameraZoom);
-    }
+	void CameraZoom::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+	}
 
-    std::string CameraZoom::getModule() {
-        return _("Visuals");
-    }
+	void CameraZoom::Status() {
+		if (f_Enabled.getValue())
+			ImGui::Text("%s (%.1f)", _("CAMERA_ZOOM_TITLE"), f_CameraZoom);
+	}
 
-    void SCameraModuleInitialize_SetWarningLocateRatio_Hook(app::SCameraModuleInitialize* __this, double deltaTime, app::CameraShareData* data) {
-        auto& cameraZoom = CameraZoom::getInstance();
+	std::string CameraZoom::getModule() {
+		return _("MODULE_VISUALS");
+	}
 
-        data->currentWarningLocateRatio = static_cast<double>(cameraZoom.f_Enabled.getValue() ? cameraZoom.f_CameraZoom.getValue() : 1.0f);
-        CALL_ORIGIN(SCameraModuleInitialize_SetWarningLocateRatio_Hook, __this, deltaTime, data);
-    }
+	void SCameraModuleInitialize_SetWarningLocateRatio_Hook(app::SCameraModuleInitialize* __this, double deltaTime, app::CameraShareData* data) {
+		auto& cameraZoom = CameraZoom::getInstance();
+
+		data->currentWarningLocateRatio = static_cast<double>(cameraZoom.f_Enabled.getValue() ? cameraZoom.f_CameraZoom.getValue() : 1.0f);
+		CALL_ORIGIN(SCameraModuleInitialize_SetWarningLocateRatio_Hook, __this, deltaTime, data);
+	}
 }

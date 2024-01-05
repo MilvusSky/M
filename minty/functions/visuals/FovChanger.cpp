@@ -1,51 +1,52 @@
 ﻿#include "FovChanger.h"
 
 namespace cheat {
-    void InLevelCameraSetFov_Hook(app::Camera* __this, float value);
+	void InLevelCameraSetFov_Hook(app::Camera* __this, float value);
 
-    FovChanger::FovChanger() {
-        f_Enabled = config::getValue("functions:FovChanger", "enabled", false);
-        f_Fov = config::getValue("functions:FovChanger", "fov", 45.0f);
-        f_Hotkey = Hotkey("functions:FovChanger");
+	FovChanger::FovChanger() {
+		f_Enabled = config::getValue("functions:FovChanger", "enabled", false);
+		f_Fov = config::getValue("functions:FovChanger", "fov", 45.0f);
 
-        HookManager::install(app::Camera_set_fieldOfView, InLevelCameraSetFov_Hook);
-    }
+		f_Hotkey = Hotkey("functions:FovChanger");
 
-    FovChanger& FovChanger::getInstance() {
-        static FovChanger instance;
-        return instance;
-    }
+		HookManager::install(app::Camera_set_fieldOfView, InLevelCameraSetFov_Hook);
+	}
 
-    void FovChanger::GUI() {
-        ConfigCheckbox(_("Fov Changer"), f_Enabled, _("Custom camera field of view."));
+	FovChanger& FovChanger::getInstance() {
+		static FovChanger instance;
+		return instance;
+	}
 
-        if (f_Enabled.getValue()) {
-            ImGui::Indent();
-            ConfigSliderFloat(_("Fov value"), f_Fov, 10.0f, 170.0f, _("Set a field of view value."));
-            f_Hotkey.Draw();
-            ImGui::Unindent();
-        }
-    }
+	void FovChanger::GUI() {
+		ConfigCheckbox(_("FOV_CHANGER_TITLE"), f_Enabled, _("FOV_CHANGER_DESCRIPTION"));
 
-    void FovChanger::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_Enabled.setValue(!f_Enabled.getValue());
-    }
+		if (f_Enabled.getValue()) {
+			ImGui::Indent();
+			ConfigSliderFloat(_("FOV_TITLE"), f_Fov, 10.0f, 170.0f, _("FOV_DESCRIPTION"));
+			f_Hotkey.Draw();
+			ImGui::Unindent();
+		}
+	}
 
-    void FovChanger::Status() {
-        if (f_Enabled.getValue())
-            ImGui::Text("FovChanger (%.1f)", f_Fov.getValue());
-    }
+	void FovChanger::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+	}
 
-    std::string FovChanger::getModule() {
-        return _("Visuals");
-    }
+	void FovChanger::Status() {
+		if (f_Enabled.getValue())
+			ImGui::Text("%s (%.1f)", _("FOV_CHANGER_TITLE"), f_Fov.getValue());
+	}
 
-    void InLevelCameraSetFov_Hook(app::Camera* __this, float value) {
-        auto& fovChanger = FovChanger::getInstance();
+	std::string FovChanger::getModule() {
+		return _("MODULE_VISUALS");
+	}
 
-        if (fovChanger.f_Enabled.getValue())
-            value = fovChanger.f_Fov.getValue();
-        CALL_ORIGIN(InLevelCameraSetFov_Hook, __this, value);
-    }
+	void InLevelCameraSetFov_Hook(app::Camera* __this, float value) {
+		auto& fovChanger = FovChanger::getInstance();
+
+		if (fovChanger.f_Enabled.getValue())
+			value = fovChanger.f_Fov.getValue();
+		CALL_ORIGIN(InLevelCameraSetFov_Hook, __this, value);
+	}
 }

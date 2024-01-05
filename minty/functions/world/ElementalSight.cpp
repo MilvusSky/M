@@ -1,50 +1,50 @@
 ﻿#include "ElementalSight.h"
 
 namespace cheat {
-    static void LevelSceneElementViewPlugin_Tick_Hook(app::LevelSceneElementViewPlugin* __this, float inDeltaTime);
+	static void LevelSceneElementViewPlugin_Tick_Hook(app::LevelSceneElementViewPlugin* __this, float inDeltaTime);
 
-    ElementalSight::ElementalSight() : Function() {
-        f_Enabled = config::getValue("functions:ElementalSight", "enabled", false);
-        f_Hotkey = Hotkey("functions:ElementalSight");
-        
-        HookManager::install(app::MoleMole_LevelSceneElementViewPlugin_Tick, LevelSceneElementViewPlugin_Tick_Hook);
-    }
+	ElementalSight::ElementalSight() : Function() {
+		f_Enabled = config::getValue("functions:ElementalSight", "enabled", false);
 
-    ElementalSight& ElementalSight::getInstance() {
-        static ElementalSight instance;
-        return instance;
-    }
+		f_Hotkey = Hotkey("functions:ElementalSight");
 
-    void ElementalSight::GUI() {
-        ConfigCheckbox(_("Permanent Elemental Sight"), f_Enabled, _("Elemental sight is kept on even when moving.\n"
-                     "To turn off, toggle off and use Elemental Sight again."));
+		HookManager::install(app::MoleMole_LevelSceneElementViewPlugin_Tick, LevelSceneElementViewPlugin_Tick_Hook);
+	}
 
-        if (f_Enabled.getValue()) {
-            ImGui::Indent();
-            f_Hotkey.Draw();
-            ImGui::Unindent();
-        }
-    }
+	ElementalSight& ElementalSight::getInstance() {
+		static ElementalSight instance;
+		return instance;
+	}
 
-    void ElementalSight::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_Enabled.setValue(!f_Enabled.getValue());
-    }
+	void ElementalSight::GUI() {
+		ConfigCheckbox(_("ELEMENTAL_SIGHT_TITLE"), f_Enabled, _("ELEMENTAL_SIGHT_DESCRIPTION"));
 
-    void ElementalSight::Status() {
-        if (f_Enabled.getValue())
-            ImGui::Text("Elemental Sight");
-    }
+		if (f_Enabled.getValue()) {
+			ImGui::Indent();
+			f_Hotkey.Draw();
+			ImGui::Unindent();
+		}
+	}
 
-    std::string ElementalSight::getModule() {
-        return _("World");
-    }
+	void ElementalSight::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+	}
 
-    void LevelSceneElementViewPlugin_Tick_Hook(app::LevelSceneElementViewPlugin* __this, float inDeltaTime) {
-        auto& elementalSight = ElementalSight::getInstance();
+	void ElementalSight::Status() {
+		if (f_Enabled.getValue())
+			ImGui::Text(_("ELEMENTAL_SIGHT_TITLE"));
+	}
 
-        if (elementalSight.f_Enabled.getValue())
-            app::MoleMole_LevelSceneElementViewPlugin_TriggerElementView(__this, true);
-        CALL_ORIGIN(LevelSceneElementViewPlugin_Tick_Hook, __this, inDeltaTime);
-    }
+	std::string ElementalSight::getModule() {
+		return _("MODULE_WORLD");
+	}
+
+	void LevelSceneElementViewPlugin_Tick_Hook(app::LevelSceneElementViewPlugin* __this, float inDeltaTime) {
+		auto& elementalSight = ElementalSight::getInstance();
+
+		if (elementalSight.f_Enabled.getValue())
+			app::MoleMole_LevelSceneElementViewPlugin_TriggerElementView(__this, true);
+		CALL_ORIGIN(LevelSceneElementViewPlugin_Tick_Hook, __this, inDeltaTime);
+	}
 }

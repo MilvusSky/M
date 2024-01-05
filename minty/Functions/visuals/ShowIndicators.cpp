@@ -1,71 +1,73 @@
 ﻿#include "ShowIndicators.h"
 
 namespace cheat {
-    bool IndicatorPlugin_DoCheck(app::LCIndicatorPlugin* __this);
+	bool IndicatorPlugin_DoCheck(app::LCIndicatorPlugin* __this);
 
-    ShowIndicators::ShowIndicators() {
-	f_Enabled = config::getValue("functions:ShowIndicators", "enabled", false);
-	f_Waypoints = config::getValue("functions:ShowIndicators", "waypoints", false);
-	f_Chests = config::getValue("functions:ShowChestIndicator", "chests", false);
-        f_Hotkey = Hotkey("functions:ShowChestIndicator");
+	ShowIndicators::ShowIndicators() {
+		f_Enabled = config::getValue("functions:ShowIndicators", "enabled", false);
+		f_ShowWaypoints = config::getValue("functions:ShowIndicators", "waypoints", false);
+		f_ShowChests = config::getValue("functions:ShowIndicators", "chests", false);
 
-        HookManager::install(app::MoleMole_LCIndicatorPlugin_DoCheck, IndicatorPlugin_DoCheck);
-    }
+		f_Hotkey = Hotkey("functions:ShowIndicators");
 
-    ShowIndicators& ShowIndicators::getInstance() {
-        static ShowIndicators instance;
-        return instance;
-    }
-
-    void ShowIndicators::GUI() {
-        ConfigCheckbox(_("Show indicators"), f_Enabled, _("Show chests or/and waypoints indicators."));
-
-        if (f_Enabled.getValue()) {
-            ImGui::Indent();
-	    ConfigCheckbox(_("Show chests indicators"), f_Chests, _("Show chests indicators."));
-	    ConfigCheckbox(_("Show waypoints indicators"), f_Waypoints, _("Show waypoints indicators."));
-
-            f_Hotkey.Draw();
-            ImGui::Unindent();
-        }
-    }
-
-    void ShowIndicators::Outer() {
-        if (f_Hotkey.IsPressed())
-            f_Enabled.setValue(!f_Enabled.getValue());
-    }
-
-    void ShowIndicators::Status() {
-	if (f_Chests.getValue() and f_Waypoints.getValue()) {
-	    ImGui::Text("Show chests and waypoints indicators");
-	    return;
+		HookManager::install(app::MoleMole_LCIndicatorPlugin_DoCheck, IndicatorPlugin_DoCheck);
 	}
-	if (f_Chests.getValue()) {
-	    ImGui::Text("Show chests indicators");
-	    return;
+
+	ShowIndicators& ShowIndicators::getInstance() {
+		static ShowIndicators instance;
+		return instance;
 	}
-	if (f_Waypoints.getValue()) 
-	    ImGui::Text("Show waypoints indicators");
-    }
 
-    std::string ShowIndicators::getModule() {
-        return _("Visuals");
-    }
+	void ShowIndicators::GUI() {
+		ConfigCheckbox(_("SHOW_INDICATORS_TITLE"), f_Enabled, _("SHOW_INDICATORS_DESCRIPTION"));
 
-    bool IndicatorPlugin_DoCheck(app::LCIndicatorPlugin* __this) {
-	auto& showChestIndicator = ShowIndicators::getInstance();
-	if (showChestIndicator.f_Enabled.getValue()) {
-	    bool isWaypoint = (__this->fields._dataItem->fields.ownerUid == 0);
+		if (f_Enabled.getValue()) {
+			ImGui::Indent();
+			ConfigCheckbox(_("CHESTS_INDICATORS_TITLE"), f_ShowChests, _("CHESTS_INDICATORS_DESCRIPTION"));
+			ConfigCheckbox(_("WAYPOINTS_INDICATORS_TITLE"), f_ShowWaypoints, _("WAYPOINTS_INDICATORS_DESCRIPTION"));
 
-	    bool showIcon = (showChestIndicator.f_Chests.getValue() && !isWaypoint) ||
-		(showChestIndicator.f_Waypoints.getValue() && isWaypoint) ||
-		(showChestIndicator.f_Chests.getValue() && showChestIndicator.f_Waypoints.getValue());
-
-	    if (showIcon)
-		app::MoleMole_LCIndicatorPlugin_ShowIcon(__this);
-	    else
-		app::MoleMole_LCIndicatorPlugin_HideIcon(__this);
+			f_Hotkey.Draw();
+			ImGui::Unindent();
+		}
 	}
-	return CALL_ORIGIN(IndicatorPlugin_DoCheck, __this);
-    }
+
+	void ShowIndicators::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+	}
+
+	void ShowIndicators::Status() {
+		if (f_Enabled.getValue()) {
+			/*ImGui::Text("%s (%s)", _("SHOW_INDICATORS_TITLE"),
+				f_ShowChests.getValue() && f_ShowWaypoints.getValue() ? _("ALL_INDICATORS_STATUS") :
+				f_ShowChests.getValue() ? _("CHESTS_INDICATORS_STATUS") :
+				f_ShowWaypoints.getValue() ? _("WAYPOINTS_INDICATORS_STATUS") :
+				_("NONE_INDICATORS_STATUS"));*/
+			ImGui::Text("%s", _("SHOW_INDICATORS_TITLE"));
+		}
+	}
+
+	std::string ShowIndicators::getModule() {
+		return _("MODULE_VISUALS");
+	}
+
+	bool IndicatorPlugin_DoCheck(app::LCIndicatorPlugin* __this) {
+		auto& showIndicators = ShowIndicators::getInstance();
+
+		if (showIndicators.f_Enabled.getValue()) {
+			bool isWaypoint = __this->fields._dataItem->fields.ownerUid == 0;
+			bool showIcon = (showIndicators.f_ShowChests.getValue() && !isWaypoint) ||
+			(showIndicators.f_ShowWaypoints.getValue() && isWaypoint) ||
+			(showIndicators.f_ShowChests.getValue() && showIndicators.f_ShowWaypoints.getValue());
+			/*bool showIcon = showIndicators.f_ShowChests.getValue() ? !isWaypoint :
+				showIndicators.f_ShowWaypoints.getValue() ? isWaypoint :
+				showIndicators.f_ShowChests.getValue() && showIndicators.f_ShowWaypoints.getValue();*/
+
+			if (showIcon)
+				app::MoleMole_LCIndicatorPlugin_ShowIcon(__this);
+			else
+				app::MoleMole_LCIndicatorPlugin_HideIcon(__this);
+		}
+		return CALL_ORIGIN(IndicatorPlugin_DoCheck, __this);
+	}
 }

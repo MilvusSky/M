@@ -120,6 +120,10 @@ DO_APP_FUNC(0x0CF73F60, 0x0CF0FEA0, void, Cursor_set_lockState, (app::CursorLock
 DO_APP_FUNC(0x0CF54E10, 0x0CEF0E00, int32_t, Screen_get_width, (app::MethodInfo* method));
 DO_APP_FUNC(0x0CF54E20, 0x0CEF0E10, int32_t, Screen_get_height, (app::MethodInfo* method));
 
+DO_APP_FUNC(0x0CFA1E50, 0x0CF3DC20, app::Vector3, Camera_WorldToScreen, (app::Camera* this_, app::Vector3 pos));
+DO_APP_FUNC(0x0CFA21E0, 0x0CF3DFB0, app::Camera*, Camera_get_main, ());
+DO_APP_FUNC(0x0CEB38C0, 0x0CE4F9E0, app::Bounds, Collider_get_bounds, (app::Collider* this_));
+
 DO_APP_FUNC(0x0CEC02A0, 0x0CE5C3C0, void, Rigidbody_set_velocity, (app::Rigidbody* __this, app::Vector3 value));
 DO_APP_FUNC(0x0CEC0430, 0x0CE5C550, void, Rigidbody_set_collisionDetectionMode, (app::Rigidbody* __this, app::CollisionDetectionMode__Enum value));
 DO_APP_FUNC(0x0CEC0550, 0x0CE5C670, void, Rigidbody_set_detectCollisions, (app::Rigidbody* __this, bool value));
@@ -131,9 +135,6 @@ DO_APP_FUNC(0x0C7AE520, 0x0C74DAD0, void, Action_Invoke, (/*Action*/ void* __thi
 
 // Lua functions
 DO_APP_FUNC(0x03FA0B10, 0x03F974E0, void, MoleMole_LuaShellManager_ReportLuaShellResult, (void* __this, app::String* type, app::String* value));
-
-// Fov Changer 4.2
-// DO_APP_FUNC(0x0CFA11F0, 0x0CF3CFC0, void, Camera_set_fieldOfView, (app::Camera* __this, float value));
 
 // World cheats
 DO_APP_FUNC(0x04A78BA0, 0x04A64740, void, MoleMole_VCMonsterAIController_TryDoSkill, (void* __this, uint32_t skillID));
@@ -164,10 +165,6 @@ DO_APP_FUNC(0x0831EA80, 0x082D74B0, void, MonoParticleDamageTextContainer_ShowRe
 
 // Modify
 DO_APP_FUNC(0x03FF0750, 0x03FE6D90, void, MoleMole_HumanoidMoveFSM_LateTick, (app::HumanoidMoveFSM* __this, float deltaTime, app::MethodInfo* method));
-
-// Singletons 4.2
-// 48 8b 0d ?? ?? ?? ?? e8 ?? ?? ?? fd 48 85 c0 0f 84 5f 01 00 00 48 8b c8 e8 ?? ?? ?? ?? 48 85 c0 74 14 48 8b 15 ?? ?? ?? ?? 48 8b c8 e8 ?? ?? ?? ?? 48 8b f0 eb ??
-// 0x9316540 EntityManager
 
 // Entities
 DO_APP_FUNC(0x03E2D5B0, 0x03E254D0, app::MoleMole_EntityManager*, MoleMole_InLevelDrumPageContext_get_ENTITY, (app::MethodInfo* method));
@@ -207,8 +204,11 @@ DO_APP_FUNC(0x013E7B30, 0x0, void, MoleMole_InLevelMainPageContext_EndCountDown,
 DO_APP_FUNC(0x03A70CE0, 0x03A6CCA0, void, MoleMole_LevelSyncCombatPlugin_RequestSceneEntityMoveReq, (app::LevelSyncCombatPlugin* __this, uint32_t entityId, app::MotionInfo* syncInfo, bool isReliable, uint32_t reliableSeq));
 DO_APP_FUNC(0x07431BC0, 0x073F6850, app::MotionState__Enum, MotionInfo_get_State, (app::MotionInfo* __this));
 DO_APP_FUNC(0x07431BD0, 0x073F6860, app::MotionState__Enum, MotionInfo_set_State, (app::MotionInfo* __this, app::MotionState__Enum value));
-DO_APP_FUNC(0x03AFF770, 0x03AFAED0, void, MoleMole_DataItem_HandleNormalProp, (app::DataItem* __this, uint32_t type, int64_t value, app::DataPropOp__Enum state));
+//DO_APP_FUNC(0x03AFF770, 0x03AFAED0, void, MoleMole_DataItem_HandleNormalProp, (app::DataItem* __this, uint32_t type, int64_t value, app::DataPropOp__Enum state));
 // Wanderer E Stamina
 DO_APP_FUNC(0x0539BA80, 0x0537E040, void, VCHumanoidMove_Scara, (app::VCHumanoidMove* __this, float value));
 
-DO_APP_FUNC(0x0, 0x0, void, QualitySettings_set_shadows, (app::ShadowQuality value));
+DO_APP_FUNC(0x0D0EECA0, 0x0D08A800, void, QualitySettings_set_shadows, (app::ShadowQuality value));
+
+// ESP
+
