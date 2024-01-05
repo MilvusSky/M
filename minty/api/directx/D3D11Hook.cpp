@@ -108,32 +108,32 @@ BOOL g_bInitialised = false;
 bool g_PresentHooked = false;
 bool m_IsPrevCursorActive = true;
 LRESULT CALLBACK hWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    ImGuiIO& io = ImGui::GetIO();
-    POINT mPos;
-    GetCursorPos(&mPos);
-    ScreenToClient(hWnd, &mPos);
-    ImGui::GetIO().MousePos.x = static_cast<float>(mPos.x);
-    ImGui::GetIO().MousePos.y = static_cast<float>(mPos.y);
+	ImGuiIO& io = ImGui::GetIO();
+	POINT mPos;
+	GetCursorPos(&mPos);
+	ScreenToClient(hWnd, &mPos);
+	ImGui::GetIO().MousePos.x = static_cast<float>(mPos.x);
+	ImGui::GetIO().MousePos.y = static_cast<float>(mPos.y);
 
-    ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
-    auto& settings = cheat::Settings::getInstance();
+	auto& settings = cheat::Settings::getInstance();
 
-    if (settings.f_ShowMenu.getValue()) {
-	m_IsPrevCursorActive = app::Cursor_get_visible(nullptr);
+	if (settings.f_ShowMenu.getValue()) {
+		m_IsPrevCursorActive = app::Cursor_get_visible(nullptr);
 
-	if (!m_IsPrevCursorActive) {
-	    app::Cursor_set_visible(true);
-	    app::Cursor_set_lockState(app::CursorLockMode__Enum::None);
+		if (!m_IsPrevCursorActive) {
+			app::Cursor_set_visible(true);
+			app::Cursor_set_lockState(app::CursorLockMode__Enum::None);
+		}
+		return true;
 	}
-	return true;
-    }
-    else if (!m_IsPrevCursorActive) {
-	app::Cursor_set_visible(false);
-	app::Cursor_set_lockState(app::CursorLockMode__Enum::Locked);
-    }
+	else if (!m_IsPrevCursorActive) {
+		app::Cursor_set_visible(false);
+		app::Cursor_set_lockState(app::CursorLockMode__Enum::Locked);
+	}
 
-    return CallWindowProc(OriginalWndProcHandler, hWnd, uMsg, wParam, lParam);
+	return CallWindowProc(OriginalWndProcHandler, hWnd, uMsg, wParam, lParam);
 }
 
 HRESULT GetDeviceAndCtxFromSwapchain(IDXGISwapChain* pSwapChain, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext) {
@@ -146,92 +146,91 @@ HRESULT GetDeviceAndCtxFromSwapchain(IDXGISwapChain* pSwapChain, ID3D11Device** 
 }
 
 HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags) {
-    if (mainRenderTargetView) {
-	pContext->OMSetRenderTargets(0, 0, 0);
-	mainRenderTargetView->Release();
-    }
+	if (mainRenderTargetView) {
+		pContext->OMSetRenderTargets(0, 0, 0);
+		mainRenderTargetView->Release();
+	}
 
-    HRESULT hr = oResizeBuffers(pSwapChain, BufferCount, Width, Height, DXGI_FORMAT_R8G8B8A8_UNORM, SwapChainFlags);
-    printf("oSIdjfoidsfj fiosdjfio %i", NewFormat);
+	HRESULT hr = oResizeBuffers(pSwapChain, BufferCount, Width, Height, DXGI_FORMAT_R8G8B8A8_UNORM, SwapChainFlags);
 
-    ID3D11Texture2D* pBuffer;
-    
-    pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
-    // Perform error handling here!
+	ID3D11Texture2D* pBuffer;
 
-    pDevice->CreateRenderTargetView(pBuffer, NULL, &mainRenderTargetView);
-    // Perform error handling here!
-    pBuffer->Release();
-    
-    pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
+	// Perform error handling here!
 
-    // Set up the viewport.
-    D3D11_VIEWPORT vp;
-    vp.Width = Width;
-    vp.Height = Height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    pContext->RSSetViewports(1, &vp);
-    return hr;
+	pDevice->CreateRenderTargetView(pBuffer, NULL, &mainRenderTargetView);
+	// Perform error handling here!
+	pBuffer->Release();
+
+	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+
+	// Set up the viewport.
+	D3D11_VIEWPORT vp;
+	vp.Width = Width;
+	vp.Height = Height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	pContext->RSSetViewports(1, &vp);
+	return hr;
 }
 
 HRESULT __fastcall hkPresent(IDXGISwapChain* pChain, UINT SyncInterval, UINT Flags) {
-    if (!g_bInitialised) {
-	g_PresentHooked = true;
+	if (!g_bInitialised) {
+		g_PresentHooked = true;
 
-	//LOG_DEBUG("DirectX Present Hook called by first time");
+		//LOG_DEBUG("DirectX Present Hook called by first time");
 
-	if (FAILED(GetDeviceAndCtxFromSwapchain(pChain, &pDevice, &pContext)))
-		return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
+		if (FAILED(GetDeviceAndCtxFromSwapchain(pChain, &pDevice, &pContext)))
+			return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
 
-	pSwapChain = pChain;
-	DXGI_SWAP_CHAIN_DESC sd;
-	pChain->GetDesc(&sd);
-	window = sd.OutputWindow;
+		pSwapChain = pChain;
+		DXGI_SWAP_CHAIN_DESC sd;
+		pChain->GetDesc(&sd);
+		window = sd.OutputWindow;
 
-	gui::InitImGui(window, pDevice, pContext);
+		gui::InitImGui(window, pDevice, pContext);
 
-	//Set OriginalWndProcHandler to the Address of the Original WndProc function
-	OriginalWndProcHandler = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)hWndProc);
-	ID3D11Texture2D* pBackBuffer;
-	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Use the UNORM format to specify RGB88 color space
-	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	rtvDesc.Texture2D.MipSlice = 0;
+		//Set OriginalWndProcHandler to the Address of the Original WndProc function
+		OriginalWndProcHandler = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)hWndProc);
+		ID3D11Texture2D* pBackBuffer;
+		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Use the UNORM format to specify RGB88 color space
+		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvDesc.Texture2D.MipSlice = 0;
 
-	pChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	pDevice->CreateRenderTargetView(pBackBuffer, &rtvDesc, &mainRenderTargetView);
-	pBackBuffer->Release();
+		pChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+		pDevice->CreateRenderTargetView(pBackBuffer, &rtvDesc, &mainRenderTargetView);
+		pBackBuffer->Release();
 
-	g_bInitialised = true;
-    }
+		g_bInitialised = true;
+	}
 
-    gui::Render();
+	gui::Render();
 
-    //// Load texture from resources
-    //int imageWidth = 512;  // Specify the desired image width
-    //int imageHeight = 512; // Specify the desired image height
-    //ID3D11ShaderResourceView* textureSRV = nullptr;
-    //if (LoadTextureFromResources(MAKEINTRESOURCE(103), LPCSTR("PNG"), pDevice, &textureSRV, &imageWidth, &imageHeight)) {
-    //	// Draw the texture
-    //	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
-    //	//ImGui::SetNextWindowPos(ImVec2(about.width / 2, about.height * 0.063f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
-    //	if (ImGui::Begin("Gato", nullptr, flags)) {
-    //		ImGui::Image(textureSRV, ImVec2(static_cast<float>(imageWidth), static_cast<float>(imageHeight)));
-    //		ImGui::End();
-    //	}
-    //	textureSRV->Release();
-    //}
-    //else {
-    //	util::log(2, "loadtex err");
-    //}
+	//// Load texture from resources
+	//int imageWidth = 512;  // Specify the desired image width
+	//int imageHeight = 512; // Specify the desired image height
+	//ID3D11ShaderResourceView* textureSRV = nullptr;
+	//if (LoadTextureFromResources(MAKEINTRESOURCE(103), LPCSTR("PNG"), pDevice, &textureSRV, &imageWidth, &imageHeight)) {
+	//	// Draw the texture
+	//	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
+	//	//ImGui::SetNextWindowPos(ImVec2(about.width / 2, about.height * 0.063f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+	//	if (ImGui::Begin("Gato", nullptr, flags)) {
+	//		ImGui::Image(textureSRV, ImVec2(static_cast<float>(imageWidth), static_cast<float>(imageHeight)));
+	//		ImGui::End();
+	//	}
+	//	textureSRV->Release();
+	//}
+	//else {
+	//	util::log(2, "loadtex err");
+	//}
 
-    pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
+	return fnIDXGISwapChainPresent(pChain, SyncInterval, Flags);
 }
 
 void DetourDirectXPresent() {
@@ -260,54 +259,54 @@ void PrintValues() {
 LRESULT CALLBACK DXGIMsgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) { return DefWindowProc(hwnd, uMsg, wParam, lParam); }
 
 void GetPresent() {
-    WNDCLASSEXA wc = { sizeof(WNDCLASSEX), CS_CLASSDC, DXGIMsgProc, 0L, 0L, GetModuleHandleA(NULL), NULL, NULL, NULL, NULL, "DX", NULL };
-    RegisterClassExA(&wc);
-    HWND hWnd = CreateWindowA("DX", NULL, WS_OVERLAPPEDWINDOW, 100, 100, 300, 300, NULL, NULL, wc.hInstance, NULL);
+	WNDCLASSEXA wc = { sizeof(WNDCLASSEX), CS_CLASSDC, DXGIMsgProc, 0L, 0L, GetModuleHandleA(NULL), NULL, NULL, NULL, NULL, "DX", NULL };
+	RegisterClassExA(&wc);
+	HWND hWnd = CreateWindowA("DX", NULL, WS_OVERLAPPEDWINDOW, 100, 100, 300, 300, NULL, NULL, wc.hInstance, NULL);
 
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory(&sd, sizeof(sd));
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = 2;
-    sd.BufferDesc.Height = 2;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = hWnd;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
-    sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-    D3D_FEATURE_LEVEL FeatureLevelsRequested = D3D_FEATURE_LEVEL_11_0;
-    UINT numFeatureLevelsRequested = 1;
-    D3D_FEATURE_LEVEL FeatureLevelsSupported;
-    HRESULT hr;
-    IDXGISwapChain* swapchain = 0;
-    ID3D11Device* dev = 0;
-    ID3D11DeviceContext* devcon = 0;
-    if (FAILED(hr = D3D11CreateDeviceAndSwapChain(NULL,
-	D3D_DRIVER_TYPE_HARDWARE,
-	NULL,
-	0,
-	&FeatureLevelsRequested,
-	numFeatureLevelsRequested,
-	D3D11_SDK_VERSION,
-	&sd,
-	&swapchain,
-	&dev,
-	&FeatureLevelsSupported,
-	&devcon))) {
-	//util::log(M_Error, "Failed to hook Present with VT method.");
-	return;
-    }
-    DWORD_PTR* pSwapChainVtable = NULL;
-    pSwapChainVtable = (DWORD_PTR*)swapchain;
-    pSwapChainVtable = (DWORD_PTR*)pSwapChainVtable[0];
-    fnIDXGISwapChainPresent = (IDXGISwapChainPresent)(DWORD_PTR)pSwapChainVtable[8];
-    oResizeBuffers = (ResizeBuffers)(DWORD_PTR)pSwapChainVtable[13];
-    g_PresentHooked = true;
+	DXGI_SWAP_CHAIN_DESC sd;
+	ZeroMemory(&sd, sizeof(sd));
+	sd.BufferCount = 1;
+	sd.BufferDesc.Width = 2;
+	sd.BufferDesc.Height = 2;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferDesc.RefreshRate.Numerator = 60;
+	sd.BufferDesc.RefreshRate.Denominator = 1;
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.OutputWindow = hWnd;
+	sd.SampleDesc.Count = 1;
+	sd.SampleDesc.Quality = 0;
+	sd.Windowed = TRUE;
+	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	D3D_FEATURE_LEVEL FeatureLevelsRequested = D3D_FEATURE_LEVEL_11_0;
+	UINT numFeatureLevelsRequested = 1;
+	D3D_FEATURE_LEVEL FeatureLevelsSupported;
+	HRESULT hr;
+	IDXGISwapChain* swapchain = 0;
+	ID3D11Device* dev = 0;
+	ID3D11DeviceContext* devcon = 0;
+	if (FAILED(hr = D3D11CreateDeviceAndSwapChain(NULL,
+		D3D_DRIVER_TYPE_HARDWARE,
+		NULL,
+		0,
+		&FeatureLevelsRequested,
+		numFeatureLevelsRequested,
+		D3D11_SDK_VERSION,
+		&sd,
+		&swapchain,
+		&dev,
+		&FeatureLevelsSupported,
+		&devcon))) {
+		//util::log(M_Error, "Failed to hook Present with VT method.");
+		return;
+	}
+	DWORD_PTR* pSwapChainVtable = NULL;
+	pSwapChainVtable = (DWORD_PTR*)swapchain;
+	pSwapChainVtable = (DWORD_PTR*)pSwapChainVtable[0];
+	fnIDXGISwapChainPresent = (IDXGISwapChainPresent)(DWORD_PTR)pSwapChainVtable[8];
+	oResizeBuffers = (ResizeBuffers)(DWORD_PTR)pSwapChainVtable[13];
+	g_PresentHooked = true;
 
-    Sleep(2000);
+	Sleep(2000);
 }
 
 void* SwapChain[18];

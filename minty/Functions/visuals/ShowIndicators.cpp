@@ -38,11 +38,12 @@ namespace cheat {
 
 	void ShowIndicators::Status() {
 		if (f_Enabled.getValue()) {
-			ImGui::Text("%s (%s)", _("SHOW_INDICATORS_TITLE"),
+			/*ImGui::Text("%s (%s)", _("SHOW_INDICATORS_TITLE"),
 				f_ShowChests.getValue() && f_ShowWaypoints.getValue() ? _("ALL_INDICATORS_STATUS") :
 				f_ShowChests.getValue() ? _("CHESTS_INDICATORS_STATUS") :
 				f_ShowWaypoints.getValue() ? _("WAYPOINTS_INDICATORS_STATUS") :
-				_("NONE_INDICATORS_STATUS"));
+				_("NONE_INDICATORS_STATUS"));*/
+			ImGui::Text("%s", _("SHOW_INDICATORS_TITLE"));
 		}
 	}
 
@@ -55,12 +56,12 @@ namespace cheat {
 
 		if (showIndicators.f_Enabled.getValue()) {
 			bool isWaypoint = __this->fields._dataItem->fields.ownerUid == 0;
-			/*bool showIcon = (showIndicators.f_Chests.getValue() && !isWaypoint) ||
-			(showIndicators.f_Waypoints.getValue() && isWaypoint) ||
-			(showIndicators.f_Chests.getValue() && showIndicators.f_Waypoints.getValue());*/
-			bool showIcon = showIndicators.f_ShowChests.getValue() ? !isWaypoint :
+			bool showIcon = (showIndicators.f_ShowChests.getValue() && !isWaypoint) ||
+			(showIndicators.f_ShowWaypoints.getValue() && isWaypoint) ||
+			(showIndicators.f_ShowChests.getValue() && showIndicators.f_ShowWaypoints.getValue());
+			/*bool showIcon = showIndicators.f_ShowChests.getValue() ? !isWaypoint :
 				showIndicators.f_ShowWaypoints.getValue() ? isWaypoint :
-				showIndicators.f_ShowChests.getValue() && showIndicators.f_ShowWaypoints.getValue();
+				showIndicators.f_ShowChests.getValue() && showIndicators.f_ShowWaypoints.getValue();*/
 
 			if (showIcon)
 				app::MoleMole_LCIndicatorPlugin_ShowIcon(__this);

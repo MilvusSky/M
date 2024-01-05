@@ -289,7 +289,7 @@ static app::Byte__Array* RecordUserData_Hook(int32_t nType) {
 }
 
 app::Byte__Array* OnRecordUserData(int32_t nType) {
-	/*if (m_CorrectSignatures.count(nType)) {
+	if (m_CorrectSignatures.count(nType)) {
 		auto byteClass = app::GetIl2Classes()[0x25];
 		auto& content = m_CorrectSignatures[nType];
 		auto newArrayNotByte = (app::Il2CppArray*) il2cpp_array_new(byteClass, content.size());
@@ -297,7 +297,7 @@ app::Byte__Array* OnRecordUserData(int32_t nType) {
 		
 		memmove_s(newArray->vector, content.size(), content.data(), content.size());
 		return newArray;
-	}*/
+	}
 
 	app::Byte__Array* result = CALL_ORIGIN(RecordUserData_Hook, nType);
 	auto resultArray = TO_UNI_ARRAY(result, byte);
@@ -325,7 +325,7 @@ static int RecordChecksumUserData_Hook(int type, char* out, int out_size) {
 		"08126aeb28524e7b05d718826b6c5e4e",
 		"b8c1d4c0f687df999270a5c2ece67e6c27",
 		""
-		//""
+		""
 	};
 
 	assert(type < sizeof(data) / sizeof(const char*));
@@ -421,6 +421,19 @@ static __int64 __fastcall sub_18012A580_Hook(__int64 a1, __int64 a2) {
 void ProtectionBypass::Init() {
 	auto& settings = cheat::Settings::getInstance();
 
+	if (settings.f_UseSignature.getValue()) {
+		HookManager::install(app::Unity_RecordUserData, RecordUserData_Hook);
+
+		for (int i = 0; i < 4; i++) {
+			app::MoleMole_SecurityModule_RecordUserData(i, nullptr);
+			//std::string checksum = std::string((char*)app::MoleMole_SecurityModule_RecordUserData(i, nullptr)->vector,
+				//app::MoleMole_SecurityModule_RecordUserData(i, nullptr)->max_length);
+			//std::cout << "[DEBUG] checksum #" << i << ": " << checksum << "\n";
+		}
+
+		HookManager::install(app::RecordChecksumUserData, RecordChecksumUserData_Hook);
+	}
+
 	if (settings.f_DisableLog.getValue()) {
 		DisableLogReport();
 
@@ -430,19 +443,6 @@ void ProtectionBypass::Init() {
 		}
 
 		HookManager::install((sub_18012A580)(hTelemetry + 0x12A580), sub_18012A580_Hook);
-	}
-
-	if (settings.f_UseSignature.getValue()) {
-		HookManager::install(app::Unity_RecordUserData, RecordUserData_Hook);
-
-		for (int i = 0; i < 4; i++) {
-			app::MoleMole_SecurityModule_RecordUserData(i, nullptr);
-			//std::string checksum = std::string((char*) app::MoleMole_SecurityModule_RecordUserData(i, nullptr)->vector,
-			//	app::MoleMole_SecurityModule_RecordUserData(i, nullptr)->max_length);
-			//std::cout << "[DEBUG] checksum #" << i << ": " << checksum << "\n";
-		}
-
-		HookManager::install(app::RecordChecksumUserData, RecordChecksumUserData_Hook);
 	}
 
 	HookManager::install(app::CrashReporter, CrashReporter_Hook);

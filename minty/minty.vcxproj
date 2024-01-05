@@ -157,7 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Functions\Lua\LuaConsole.cpp" />
+    <ClCompile Include="functions\lua\LuaConsole.cpp" />
     <ClCompile Include="functions\visuals\CameraZoom.cpp" />
     <ClCompile Include="Functions\visuals\GraphicsChanger.cpp" />
     <ClCompile Include="Functions\World\AutoChallenge.cpp" />
@@ -221,7 +221,7 @@
     <ClInclude Include="config\ConfigField.h" />
     <ClInclude Include="config\ConfigManager.h" />
     <ClInclude Include="functions\FunctionIncludes.h" />
-    <ClInclude Include="Functions\Lua\LuaConsole.h" />
+    <ClInclude Include="functions\lua\LuaConsole.h" />
     <ClInclude Include="functions\visuals\CameraZoom.h" />
     <ClInclude Include="Functions\visuals\GraphicsChanger.h" />
     <ClInclude Include="Functions\World\AutoChallenge.h" />

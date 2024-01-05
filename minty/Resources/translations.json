@@ -15,6 +15,11 @@
     "ABOUT_GITHUB": "Minty Github",
     "ABOUT_DISCORD": "KWT Discord",
 
+    "MODULE_LUA": "Lua",
+
+    "LUA_CONSOLE_TITLE": "Lua console",
+    "EXECUTE_TITLE": "Execute",
+
     "MODULE_PLAYER": "Player",
 
     "GODMODE_TITLE": "God Mode",

@@ -4,7 +4,7 @@ namespace cheat {
 	void About::GUI() {
 		ImGui::SeparatorText(_("MODULE_ABOUT"));
 
-		ImGui::Text("%s: %s", _("ABOUT_MINTY_VERSION"), "1.41.51");
+		ImGui::Text("%s: %s", _("ABOUT_MINTY_VERSION"), getVersion());
 		ImGui::Text("%s: %s", _("ABOUT_IMGUI_VERSION"), ImGui::GetVersion());
 		ImGui::Text("%s %s", _("ABOUT_DESIGN"), "KittyKate :3");
 
@@ -38,5 +38,10 @@ namespace cheat {
 	About& About::getInstance() {
 		static About instance;
 		return instance;
+	}
+
+	std::string About::getVersion() {
+		//return "4.3.0.2-beta";
+		return "4.3.0.2-stable";
 	}
 }

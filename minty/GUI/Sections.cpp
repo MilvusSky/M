@@ -64,7 +64,7 @@ void Init() {
 	INIT_FUNC(Settings);
 
     INIT_FUNC(CameraZoom);
-    //INIT_FUNC(FovChanger);
+    INIT_FUNC(FovChanger);
     INIT_FUNC(HideDamage);
     INIT_FUNC(HideReaction);
     INIT_FUNC(HideUI);
@@ -73,7 +73,7 @@ void Init() {
     INIT_FUNC(ProfileChanger);
     INIT_FUNC(ShowIndicators);
     INIT_FUNC(UnlockFPS);
-    INIT_FUNC(GraphicsChanger);
+    //INIT_FUNC(GraphicsChanger);
     
     INIT_FUNC(LuaConsole);
 
@@ -86,7 +86,7 @@ void Init() {
 	INIT_FUNC(DumbEnemies);
 	INIT_FUNC(ElementalSight);
 	INIT_FUNC(GameSpeed);
-	INIT_FUNC(ESP);
+	//INIT_FUNC(ESP);
 	//INIT_FUNC(MobVacuum);
 	//INIT_FUNC(OpenTeamImmediately);
 	//INIT_FUNC(VacuumLoot);
@@ -110,17 +110,20 @@ void Status() {
 		flags |= ImGuiWindowFlags_NoMove;
 
 	ImGui::Begin("Status", nullptr, flags);
-	//ImGui::BeginListBox("##STATSYDUTASYUDATSYDUTYdasudyTGTD");
+
 	auto windowWidth = ImGui::GetWindowSize().x;
-	auto textWidth = ImGui::CalcTextSize("Minty-GI 4.3_01").x;
+	auto& about = cheat::About::getInstance();
+	//std::string text = "Minty-GI " + about.getVersion();
+	std::string text = "Status";
+	auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
 	ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
-	ImGui::PushStyleColor(ImGuiCol_Text, { 0.f / 255, 142.f / 255, 85.f / 255, 1.f });
-	ImGui::Text("Minty-GI 4.3_01");
+	ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f / 255, 142.0f / 255, 85.0f / 255, 1.0f });
+	ImGui::Text("%s", text);
 	ImGui::PopStyleColor();
 	ImGui::Separator();
 	for (auto& feature : functions)
 		feature->Status();
-	//ImGui::EndListBox();
 	ImGui::End();
 }
 

@@ -7,7 +7,7 @@ namespace cheat {
 		f_DisableProtection = config::getValue("functions:Settings", "disableProtection", true);
 		f_DisableLog = config::getValue("functions:Settings", "disableLog", true);
 		f_SpoofACResult = config::getValue("functions:Settings", "spoofACResult", true);
-		f_UseSignature = config::getValue("functions:Settings", "useSignature", false);
+		f_UseSignature = config::getValue("functions:Settings", "useSignature", true);
 		f_ShowFps = config::getValue("functions:Settings", "showFps", true);
 		f_ShowRpc = config::getValue("functions:Settings", "showRpc", true);
 		f_ShowConsole = config::getValue("functions:Settings", "showConsole", true);
@@ -32,8 +32,8 @@ namespace cheat {
 	const char* languages[] = { "English", "Russian", "Chinese", "Indonesian" };
 
 	void Settings::GUI() {
-		ImGui::SeparatorText(_("SETTINGS_LANGUAGE"));
-		ConfigComboLanguage(f_Language);
+		//ImGui::SeparatorText(_("SETTINGS_LANGUAGE"));
+		//ConfigComboLanguage(f_Language);
 
 		ImGui::SeparatorText(_("SETTINGS_GENERAL"));
 

@@ -9,6 +9,8 @@ namespace cheat {
 
 		std::string getModule() override;
 
+		std::string getVersion();
+
 		static About& getInstance();
 	};
 }
