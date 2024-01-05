@@ -1,111 +1,195 @@
-﻿#include "ESP.h"
+﻿#include "ESPRender.h"
 
-namespace cheat {
-    ESPBase::ESPDrawInfo drawInfo;
-    std::vector<ESPBase::Filter> v_Filters;
+namespace cheat 
+{
+	void DrawExternal();
+	static int boxItemCurrent;
+	static int tracerItemCurrent;
+	ImColor CalcContrastColor(const ImColor& foreground, float maxContrastRatio = 2.0f, const ImColor& background = ImColor(1.0f, 1.0f, 1.0f), const ImColor& inverted = ImColor(0.0f, 0.0f, 0.0f));
 
-    void GameManager_Update_h(app::GameManager* this_, app::MethodInfo* mi);
+    ESP::ESP(){
+		f_Enabled = config::getValue("functions:ESP", "enabled", false);
+		f_MinSize = config::getValue("functions:ESP", "minSize", 0.1f);
 
-    ESP::ESP() {
-        b_Enabled = config::getValue("functions:ESP", "enabled", false);
+		f_TracerSize = config::getValue("functions:ESP", "tracerSize", 1.f);
+		f_ArrowRadius = config::getValue("functions:ESP", "arrowRadius", 50.f);
+		f_OutlineThickness = config::getValue("functions:ESP", "outlineThickness", 0.f);
 
-        c_Color = config::getValue<std::vector<float>>("functions:ESP:DrawInfo", "color", { 1, 1, 1, 1 });
-        i_OutlineType = config::getValue("functions:ESP:DrawInfo", "DrawType", 2);
-        f_OutlineWidth = config::getValue("functions:ESP:DrawInfo", "OutlineWidth", 10.f);
-        b_TracerEnabled = config::getValue("functions:ESP:DrawInfo", "Tracer", true);
-        f_TracerWidth = config::getValue("functions:ESP:DrawInfo", "TracerWidth", 5.f);
+		f_Range = config::getValue("functions:ESP", "range", 200.f);
 
-        drawInfo.color = { c_Color.getValue()[0], c_Color.getValue()[1], c_Color.getValue()[2], c_Color.getValue()[3] };
-        drawInfo.drawMode = i_OutlineType.getValue();
-        drawInfo.outlineWidth = f_OutlineWidth.getValue();
-        drawInfo.tracerEnabled = b_TracerEnabled.getValue();
-        drawInfo.tracerWidth = f_TracerWidth.getValue();
+		f_DrawBox = config::getValue("functions:ESP", "drawBox", false);
+		f_DrawTracer = config::getValue("functions:ESP", "drawTracer", false);
 
-        v_Filters = config::getValue<std::vector<std::tuple<int, bool, std::string>>>("functions:ESP", "filters", {
-            // Chests
-            { 0, false, "Common chest" },
-            { 1, false, "Exquisite chest" },
-            { 2, false, "Precious chest" },
-            { 3, false, "Luxurious chest" },
-            { 4, false, "Remarkable chest" },
-            { 5, false, "Buried chest" },
-            // Environment
-            { 6, false, "TP Point" },
-            { 7, false, "Archon statue" },
-            { 8, false, "Dungeon" },
-            // Puzzles
-            { 9, false, "Time trial" },
-            { 10, false, "Seelie" },
-            { 11, false, "Shrine of depths" },
-            { 12, false, "Elemental monument" },
-            { 13, false, "Elemental torch" },
-            // NPC
-            { 14, false, "NPC" },
-            { 15, false, "Enemy" },
-            // Exploration
-            { 16, false, "Anemoculus" },
-            { 17, false, "Geoculus" },
-            { 18, false, "Electroculus" },
-            { 19, false, "Dendroculus" },
-            { 20, false, "Hydroculus" },
-            { 21, false, "Crimson Agate" },
-            { 22, false, "Lumenspar" }
-        });
+		f_FillTransparency = config::getValue("functions:ESP", "fillTransparency", 70.f);
 
-	    HookManager::install(app::GameManager_Update, GameManager_Update_h);
+		f_BoxItemCurrent = config::getValue("functions:ESP", "drawBoxMode", 0);
+		f_TracerItemCurrent = config::getValue("functions:ESP", "drawTracerMode", 0);
+
+		boxItemCurrent = f_BoxItemCurrent.getValue();
+		tracerItemCurrent = f_TracerItemCurrent.getValue();
+
+		// Filters
+		f_Ores = config::getValue("functions:ESP:filters", "ores", false);
+		f_Oculies = config::getValue("functions:ESP:filters", "oculies", false);
+		f_Plants = config::getValue("functions:ESP:filters", "plants", false);
+		f_PickableLoot = config::getValue("functions:ESP:filters", "itemDrops", false);
+		f_Chests = config::getValue("functions:ESP:filters", "chests", false); 
+		f_Monsters = config::getValue("functions:ESP:filters", "enemies", false);
+
+		entityManager = &game::EntityManager::getInstance();
     }
 
-    void ESP::GUI() {
-        ConfigCheckbox("ESP", b_Enabled, "Shows chosen categories of entities through the walls.");
-        if (b_Enabled) {
-            ImGui::Indent();
-            if (ImGui::ColorEdit4("Outline color", &c_Color.getValue()[0], ImGuiColorEditFlags_AlphaBar)) {
-                c_Color.setValue(c_Color.getValue());
-                config::setValue(c_Color, c_Color.getValue());
+	std::string ESP::getModule() {
+		return _("MODULE_WORLD");
             }
-            if (BeginGroupPanel("Choose target entities", true)) {
-                for (int i = 0; i < 23; i++) {
-                    if (ImGui::Checkbox(std::get<2>(v_Filters.getValue()[i]).c_str(), &std::get<1>(v_Filters.getValue()[i]))) {
-                        v_Filters.setValue(v_Filters.getValue());
-                        config::setValue(v_Filters, v_Filters.getValue());
+
+	void ESP::Outer() {
+		if (f_Hotkey.IsPressed())
+			f_Enabled.setValue(!f_Enabled.getValue());
+		DrawExternal();
+	}
+
+    void ESP::GUI()
+    {
+	    if (BeginGroupPanel("General", true))
+	    {
+		    ConfigCheckbox("Enabled", f_Enabled, "Show filtered object through obstacles.");
+			ConfigSliderFloat("Range (m)", f_Range, 1.0f, 200.0f);
+
+			ConfigCheckbox("Draw box", f_DrawBox);
+
+			if (f_DrawBox.getValue()) {
+				const char* box_items[] = { "Rectangle", "Box" };
+				ConfigSliderFloat("Transparency", f_FillTransparency, 0.01f, 1.0f, "Transparency of filled part.");
+				ImGui::Combo("Box mode", &boxItemCurrent, box_items, IM_ARRAYSIZE(box_items)); ImGui::SameLine(); HelpMarker("Select the mode of box drawing");
+
+				switch (boxItemCurrent) {
+				case 0:
+					f_DrawBoxMode = DrawMode::Rectangle;
+					break;
+				case 1:
+					f_DrawBoxMode = DrawMode::Box;
+					break;
+				}
+				config::setValue("functions:ESP", "drawBoxMode", boxItemCurrent);
+
+			} else 
+				f_DrawBoxMode = DrawMode::None;
+
+			ConfigCheckbox("Draw tracer", f_DrawTracer); ImGui::SameLine(); HelpMarker("Draw tracer from middle part of the screen");
+
+			if (f_DrawTracer.getValue()) {
+				const char* tracer_items[] = { "Offscreen arrows", "Lines" };
+				ImGui::Combo("Tracer mode", &tracerItemCurrent, tracer_items, IM_ARRAYSIZE(tracer_items)); ImGui::SameLine(); HelpMarker("Select the mode of tracer drawing");
+
+				switch (tracerItemCurrent) {
+				case 0:
+					f_DrawTracerMode = DrawTracerMode::OffscreenArrows;
+					break;
+				case 1:
+					f_DrawTracerMode = DrawTracerMode::Line;
+					break;
                     }
+				config::setValue("functions:ESP", "drawTracerMode", tracerItemCurrent);
+			} else
+				f_DrawTracerMode = DrawTracerMode::None;
+
+		    if (f_DrawTracerMode == DrawTracerMode::OffscreenArrows)
+		    {
+			    if (BeginGroupPanel("Arrow tracer options", true))
+			    {
+					ConfigSliderFloat("Size of tracer", f_TracerSize,  0.1f, 10.0f);
+					ConfigSliderFloat("Radius of arrow", f_ArrowRadius, 0.5f, 300.0f);
+					ConfigSliderFloat("Outline thickness of arrow", f_OutlineThickness, 0.1f, 10.0f);
                 }
-            } EndGroupPanel();
-            ImGui::Unindent();
+			    EndGroupPanel();
         }
+
+			ConfigCheckbox("Draw name", f_DrawName, "Draw name of object.");
+			ConfigCheckbox("Draw distance", f_DrawDistance, "Draw distance of object.");
+
+			if (f_DrawName.getValue() or f_DrawDistance.getValue()) {
+				ConfigSliderInt("Font size", f_FontSize, 1, 100, "Font size of name or distance.");
+				ConfigSliderFloat("Font outline", f_FontOutlineSize, 0.1f, 10.0f);
     }
 
-    void ESP::Outer() {
+		    if (BeginGroupPanel("Colors", true))
+		    {
+				ImGuiColorEditFlags_ flag = ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar;
 
+				ImGui::ColorEdit4("Global ESP color", &f_GlobalESPColor.getValue().Value.x, flag);
+				if (BeginGroupPanel("Advanced", true)) {
+					ImGui::ColorEdit4("Color of box", &f_GlobalBoxColor.getValue().Value.x, flag);
+					ImGui::ColorEdit4("Color of line", &f_GlobalLineColor.getValue().Value.x, flag);
+					ImGui::ColorEdit4("Color of rectangle", &f_GlobalRectColor.getValue().Value.x, flag);
+					ImGui::ColorEdit4("Color of arrow tracers", &f_GlobalTracersColor.getValue().Value.x, flag);
+				}
+				EndGroupPanel();
+		    }
+		    EndGroupPanel();
+
+			if (BeginGroupPanel("Filters", true)) {
+				ConfigCheckbox("Ores", f_Ores);
+				ConfigCheckbox("Oculies", f_Oculies);
+				ConfigCheckbox("Plants", f_Plants);
+				ConfigCheckbox("Pickable loot", f_PickableLoot);
+				ConfigCheckbox("Chests", f_Chests);
+				ConfigCheckbox("Monsters", f_Monsters);
+    }
+			EndGroupPanel();
+
+			ConfigSliderFloat("Minimal size ", f_MinSize, 0.1f, 10.0f, "Minimum entity size as measured in-world.\n" \
+			    "Some entities have either extremely small or no bounds at all.\n" \
+			    "This parameter helps filter out entities that don't meet this condition.");
+	    }
+	    EndGroupPanel();
     }
 
-    void ESP::Status() {
-
+    void ESP::Status()
+    {
+	    ImGui::Text("ESP [%.01fm|%s|%s%s%s%s]",
+		    f_Range.getValue(),
+		    f_DrawBoxMode == DrawMode::Box ? "Box" : f_DrawBoxMode == DrawMode::Rectangle ? "Rect" : "None",
+		    f_DrawTracerMode == DrawTracerMode::Line ? "L" : f_DrawTracerMode == DrawTracerMode::OffscreenArrows ? "A" : "",
+		    f_DrawName.getValue() ? "N" : "",
+		    f_DrawDistance.getValue() ? "D" : ""
+	    );
     }
 
-    ESP& ESP::getInstance() {
+	ESP& ESP::getInstance()
+	{
 	    static ESP instance;
 	    return instance;
     }
 
-    std::string ESP::getModule() {
-	    return _("World");
-    }
-
-    void GameManager_Update_h(app::GameManager* this_, app::MethodInfo* mi) {
-        LOG_INFO("1");
-        game::EntityManager& instance = cheat::game::EntityManager::getInstance();
-        LOG_INFO("2");
+    void DrawExternal()
+    {
         auto& esp = ESP::getInstance();
-        LOG_INFO("3");
-        app::Camera* camera = app::Camera_get_main();
-        LOG_INFO("4");
-        std::vector<ESPBase::Filter> filters;
-        LOG_INFO("5");
-        for (int i = 0; i < 23; i++) {
-            LOG_INFO("6");
-            filters[i] = { (ESPBase::ESPFilter)std::get<0>(esp.v_Filters.getValue()[i]), std::get<1>(esp.v_Filters.getValue()[i]), std::get<2>(esp.v_Filters.getValue()[i]) };
-            LOG_INFO("7");
+	    if (!esp.f_Enabled.getValue())
+		    return;
+
+	    PrepareFrame();
+
+	    for (auto& entity : esp.entityManager->entities())
+	    {
+		    if (esp.entityManager->avatar()->distance(entity) > esp.f_Range.getValue())
+			    continue;
+
+			if (!(
+				(esp.f_Ores.getValue() and game::filters::combined::Ores.IsValid(entity)) or
+				(esp.f_Oculies.getValue() and game::filters::combined::Oculies.IsValid(entity)) or
+				(esp.f_Plants.getValue() and game::filters::combined::Plants.IsValid(entity)) or
+				(esp.f_PickableLoot.getValue() and 
+					(game::filters::combined::AllPickableLoot.IsValid(entity) and
+					game::filters::combined::Equipments.IsValid(entity) and 
+					game::filters::combined::OresDrop.IsValid(entity))
+					) or (esp.f_Chests.getValue() and entity->isChest()) or
+				(esp.f_Monsters.getValue() and game::filters::combined::AllMonsters.IsValid(entity))
+				))
+				continue;
+
+			DrawEntity(entity->name(), entity, esp.f_GlobalESPColor.getValue(), CalcContrastColor(esp.f_GlobalESPColor.getValue()));
+	    }
         }
         LOG_INFO("8");
         ESPBase::DrawESP(camera, instance, filters, drawInfo);

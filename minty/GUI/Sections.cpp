@@ -42,6 +42,9 @@
 //#include "../functions/world/VacuumLoot.h"
 #include "../Functions/World/ESP.h"
 
+#include "../functions/World/ESP.h"
+
+
 std::vector<std::string> ModuleOrder = {
     _("MODULE_PLAYER"),
     _("MODULE_WORLD"),
@@ -63,33 +66,33 @@ void Init() {
 
 	INIT_FUNC(Settings);
 
-    INIT_FUNC(CameraZoom);
-    INIT_FUNC(FovChanger);
-    INIT_FUNC(HideDamage);
-    INIT_FUNC(HideReaction);
-    INIT_FUNC(HideUI);
-    INIT_FUNC(NoFog);
-    INIT_FUNC(Peeking);
-    INIT_FUNC(ProfileChanger);
-    INIT_FUNC(ShowIndicators);
-    INIT_FUNC(UnlockFPS);
-    //INIT_FUNC(GraphicsChanger);
-    
-    INIT_FUNC(LuaConsole);
+  INIT_FUNC(CameraZoom);
+  //INIT_FUNC(FovChanger);
+  INIT_FUNC(HideDamage);
+  INIT_FUNC(HideReaction);
+  INIT_FUNC(HideUI);
+  INIT_FUNC(NoFog);
+  INIT_FUNC(Peeking);
+  INIT_FUNC(ProfileChanger);
+  INIT_FUNC(ShowIndicators);
+  INIT_FUNC(UnlockFPS);
 
-	//INIT_FUNC(AutoChallenge);
-	//INIT_FUNC(AutoDestroy);
-	//INIT_FUNC(AutoLoot);
-	INIT_FUNC(AutoTalk);
-	//INIT_FUNC(AutoTP);
-	INIT_FUNC(CutsceneSkip);
-	INIT_FUNC(DumbEnemies);
-	INIT_FUNC(ElementalSight);
-	INIT_FUNC(GameSpeed);
-	//INIT_FUNC(ESP);
-	//INIT_FUNC(MobVacuum);
-	//INIT_FUNC(OpenTeamImmediately);
-	//INIT_FUNC(VacuumLoot);
+  INIT_FUNC(PickupRange);
+  INIT_FUNC(AutoLoot);
+  //INIT_FUNC(AutoChallenge);
+  //INIT_FUNC(MobVacuum);
+  //INIT_FUNC(AutoDestroy);
+  INIT_FUNC(AutoTalk);
+  //INIT_FUNC(AutoTP);
+  INIT_FUNC(CutsceneSkip);
+  INIT_FUNC(DumbEnemies);
+  INIT_FUNC(ElementalSight);
+  INIT_FUNC(GameSpeed);
+  //INIT_FUNC(OpenTeamImmediately);
+  //INIT_FUNC(SkipEnhanceAnimation);
+  INIT_FUNC(VacuumLoot);
+
+  INIT_FUNC(ESP);
 }
 
 void Outer() {

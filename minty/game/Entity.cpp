@@ -1,4 +1,4 @@
-#include "Entity.h"
+﻿#include "Entity.h"
 #include "EntityManager.h"
 
 namespace cheat::game {
@@ -231,10 +231,13 @@ namespace cheat::game {
 
 	app::GameObject* Entity::gameObject()
 	{
-		SAFE_BEGIN();
-		return app::MoleMole_BaseEntity_get_rootGameObject(m_RawEntity);
-		SAFE_ERROR();
+	    if (!isLoaded())
 		return nullptr;
-		SAFE_END();
+
+	    SAFE_BEGIN();
+	    return app::MoleMole_BaseEntity_get_gameObject(m_RawEntity);
+	    SAFE_ERROR();
+	    return nullptr;
+	    SAFE_END();
 	}
 }

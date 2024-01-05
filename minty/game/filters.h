@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "AdvancedFilter.h"
 #include "SimpleFilter.h"
@@ -347,6 +347,7 @@ namespace cheat::game::filters
 	namespace combined
 	{
 		extern SimpleFilter Oculies;
+		extern SimpleFilter AllMonsters;
 		extern SimpleFilter Chests;
 		extern SimpleFilter Ores;
 		extern SimpleFilter OresDrop;
