@@ -40,7 +40,7 @@ namespace cheat
     }
 
 	std::string ESP::getModule() {
-		return _("ESP");
+		return _("MODULE_WORLD");
 	}
 
 	void ESP::Outer() {
