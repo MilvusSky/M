@@ -4,38 +4,41 @@ namespace cheat {
     bool needUpdate;
 
     GraphicsChanger::GraphicsChanger() {
-	b_Enabled = config::getValue("functions:GraphicsChanger", "enabled", false);
+		b_Enabled = config::getValue("functions:GraphicsChanger", "enabled", false);
     }
 
     void GraphicsChanger::GUI() {
-	needUpdate = false;
-	ConfigCheckbox("Graphics changer", b_Enabled, "Allows to customize few graphics settings.");
-	if (b_Enabled) {
-	    if (ImGui::SliderFloat("Outline width", &f_OutlineWidth.getValue(), 0, 10)) {
-		f_OutlineWidth.setValue(f_OutlineWidth.getValue());
-		config::setValue(f_OutlineWidth, f_OutlineWidth.getValue());
-		needUpdate = true;
-		std::string outline = "CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\").outlineCorrectionWidth = " + std::to_string(f_OutlineWidth.getValue()); // Outline width
-		luahookfunc(outline.c_str());
-	    }
-	    if (ImGui::SliderFloat("Gamma scale", &f_GammaScale.getValue(), 0, 20)) {
-		f_GammaScale.setValue(f_GammaScale.getValue());
-		config::setValue(f_GammaScale, f_GammaScale.getValue());
-		needUpdate = true;
-		std::string gamma = "CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\")._gammaValue = " + std::to_string(f_GammaScale.getValue()); // Gamma scale
-		luahookfunc(gamma.c_str());
-		//luahookfunc("CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\").cameraBufferDirty = true");
-	    }
-	    if (ImGui::SliderFloat("Render resolution", &f_RenderScale.getValue(), 0, 5)) {
-		f_RenderScale.setValue(f_RenderScale.getValue());
-		config::setValue(f_RenderScale, f_RenderScale.getValue());
-		needUpdate = true;
-		auto uaba = (uint64_t)GetModuleHandleA("UserAssembly.dll");
-		write<float>(read<uint64_t>(read<uint64_t>(read<uint64_t>(read<uint64_t>(read<uint64_t>(read<uint64_t>(uaba + 0x0205FC68) + 0x98) + 0x10) + 0x18) + 0x130) + 0xB0) + 0x44, f_RenderScale.getValue());
-		luahookfunc("CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\").cameraBufferDirty = true");
-	    }
-    	}
-    }
+		needUpdate = false;
+		ConfigCheckbox("Graphics changer", b_Enabled, "Allows to customize few graphics settings.");
+		if (b_Enabled) {
+			ImGui::Indent();
+			if (ImGui::SliderFloat("Outline width", &f_OutlineWidth.getValue(), 0, 10)) {
+				f_OutlineWidth.setValue(f_OutlineWidth.getValue());
+				config::setValue(f_OutlineWidth, f_OutlineWidth.getValue());
+				needUpdate = true;
+				std::string outline = "CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\").outlineCorrectionWidth = " + std::to_string(f_OutlineWidth.getValue()); // Outline width
+				luahookfunc(outline.c_str());
+			}
+			if (ImGui::SliderFloat("Gamma scale", &f_GammaScale.getValue(), 0, 20)) {
+				f_GammaScale.setValue(f_GammaScale.getValue());
+				config::setValue(f_GammaScale, f_GammaScale.getValue());
+				needUpdate = true;
+				std::string gamma = "CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\")._gammaValue = " + std::to_string(f_GammaScale.getValue()); // Gamma scale
+				luahookfunc(gamma.c_str());
+				//luahookfunc("CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\").cameraBufferDirty = true");
+			}
+			if (ImGui::SliderFloat("Render resolution", &f_RenderScale.getValue(), 0, 5)) {
+				f_RenderScale.setValue(f_RenderScale.getValue());
+				config::setValue(f_RenderScale, f_RenderScale.getValue());
+				needUpdate = true;
+				auto uaba = (uint64_t)GetModuleHandleA("UserAssembly.dll");
+				write<float>(read<uint64_t>(read<uint64_t>(read<uint64_t>(read<uint64_t>(read<uint64_t>(read<uint64_t>(uaba + 0x0205FC68) + 0x98) + 0x10) + 0x18) + 0x130) + 0xB0) + 0x44, f_RenderScale.getValue());
+				luahookfunc("CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\").cameraBufferDirty = true");
+			}
+			ImGui::Unindent();
+
+		}
+	}
     
     void GraphicsChanger::Outer() {
     	if (!b_Enabled.getValue()) return;

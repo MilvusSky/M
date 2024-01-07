@@ -2,12 +2,9 @@
 
 namespace cheat {
 	static void LCSelectPickup_AddInteeBtnByID_Hook(void* __this, app::BaseEntity* entity, app::MethodInfo* method);
-	static bool LCSelectPickup_IsInPosition_Hook(void* __this, app::BaseEntity* entity, app::MethodInfo* method);
-	static bool LCSelectPickup_IsOutPosition_Hook(void* __this, app::BaseEntity* entity, app::MethodInfo* method);
 	void OnAutoLoot();
 	void GameManager_Update_AutoLootHook(app::GameManager* __this, app::MethodInfo* method);
 
-	float g_default_range = 3.0f;
 	app::MoleMole_ItemModule* ItemModule;
 	SafeQueue<uint32_t> toBeLootedItems;
 	int64_t nextLootTime;
@@ -19,8 +16,6 @@ namespace cheat {
 
 		HookManager::install(app::GameManager_Update, GameManager_Update_AutoLootHook);
 		HookManager::install(app::MoleMole_LCSelectPickup_AddInteeBtnByID, LCSelectPickup_AddInteeBtnByID_Hook);
-		HookManager::install(app::MoleMole_LCSelectPickup_IsInPosition, LCSelectPickup_IsInPosition_Hook);
-		HookManager::install(app::MoleMole_LCSelectPickup_IsOutPosition, LCSelectPickup_IsOutPosition_Hook);
 	}
 
 	AutoLoot& AutoLoot::getInstance() {
@@ -156,10 +151,6 @@ namespace cheat {
 			auto& manager = game::EntityManager::getInstance();
 
 			for (auto& entity : manager.entities(game::filters::combined::Chests)) {
-				float range = autoLoot.f_UseCustomRange.getValue() ? autoLoot.f_CustomRange.getValue() : g_default_range;
-				if (manager.avatar()->distance(entity) >= range)
-					continue;
-
 				auto chest = reinterpret_cast<game::Chest*>(entity);
 				auto chestType = chest->itemType();
 
@@ -207,26 +198,6 @@ namespace cheat {
 
 	}
 
-	void OnCheckIsInPosition(bool& result, app::BaseEntity* entity) {
-		AutoLoot& autoLoot = AutoLoot::getInstance();
-		auto& manager = game::EntityManager::getInstance();
-
-		if (autoLoot.f_AutoPickup.getValue() || autoLoot.f_UseCustomRange.getValue()) {
-			float pickupRange = autoLoot.f_UseCustomRange.getValue() ? autoLoot.f_CustomRange.getValue() : g_default_range;
-
-			if (autoLoot.f_PickupFilter.getValue()) {
-				if (!autoLoot.f_PickupFilter_Animals.getValue() && entity->fields.entityType == app::EntityType__Enum_1::EnvAnimal ||
-					!autoLoot.f_PickupFilter_DropItems.getValue() && entity->fields.entityType == app::EntityType__Enum_1::DropItem ||
-					!autoLoot.f_PickupFilter_Resources.getValue() && entity->fields.entityType == app::EntityType__Enum_1::GatherObject ||
-					!autoLoot.f_PickupFilter_Oculus.getValue() && game::filters::combined::Oculies.IsValid(manager.entity(entity->fields._runtimeID_k__BackingField))) {
-					result = false;
-					return;
-				}
-			}
-
-			result = manager.avatar()->distance(entity) < pickupRange;
-		}
-	}
 
 	bool OnCreateButton(app::BaseEntity* entity) {
 		AutoLoot& autoLoot = AutoLoot::getInstance();
@@ -252,19 +223,5 @@ namespace cheat {
 
 		if (!canceled)
 			CALL_ORIGIN(LCSelectPickup_AddInteeBtnByID_Hook, __this, entity, method);
-	}
-
-	static bool LCSelectPickup_IsInPosition_Hook(void* __this, app::BaseEntity* entity, app::MethodInfo* method) {
-		bool result = CALL_ORIGIN(LCSelectPickup_IsInPosition_Hook, __this, entity, method);
-
-		OnCheckIsInPosition(result, entity);
-		return result;
-	}
-
-	static bool LCSelectPickup_IsOutPosition_Hook(void* __this, app::BaseEntity* entity, app::MethodInfo* method) {
-		bool result = CALL_ORIGIN(LCSelectPickup_IsOutPosition_Hook, __this, entity, method);
-
-		OnCheckIsInPosition(result, entity);
-		return result;
 	}
 }

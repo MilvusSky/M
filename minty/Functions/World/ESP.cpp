@@ -115,19 +115,11 @@ namespace cheat
 			EndGroupPanel();
 
 			if (BeginGroupPanel("Filters", true)) {
-				/*ConfigCheckbox("Ores", f_Ores);
-				ConfigCheckbox("Oculies", f_Oculies);
-				ConfigCheckbox("Plants", f_Plants);
-				ConfigCheckbox("Pickable loot", f_PickableLoot);
-				ConfigCheckbox("Chests", f_Chests);
-				ConfigCheckbox("Monsters", f_Monsters);*/
-
 				for (ESPFilter& filter : filters) {
 					ImGui::Checkbox(filter.name.c_str(), &filter.enabled);
 					std::string key = FirstCharToLowercase(filter.name);
 					config::setValue("functions:ESP:filters", key, filter.enabled);
 				}
-
 			}
 			EndGroupPanel();
 

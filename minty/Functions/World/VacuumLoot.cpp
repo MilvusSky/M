@@ -2,7 +2,7 @@
 
 namespace cheat
 {
-	void onUpdate_8(app::GameManager* __this, app::MethodInfo* method);
+	void GameManager_Update_VacuumLoot_Hook(app::GameManager* __this, app::MethodInfo* method);
 
 	VacuumLoot::VacuumLoot() {
 		f_Enabled = config::getValue("functions:VacuumLoot", "enabled", false);
@@ -18,7 +18,7 @@ namespace cheat
 		f_Equipments = config::getValue("functions:VacuumLoot", "equipments", false);
 		f_ItemDrops = config::getValue("functions:VacuumLoot", "itemDrops", false);
 
-		HookManager::install(app::GameManager_Update, onUpdate_8);
+		HookManager::install(app::GameManager_Update, GameManager_Update_VacuumLoot_Hook);
 	}
 
 	VacuumLoot& VacuumLoot::getInstance()
@@ -34,7 +34,7 @@ namespace cheat
 			ImGui::Indent();
 			ConfigSliderInt("Delay Time (ms)", f_Delay, 1, 1000, _("Delay (in ms) between loot vacuum."));
 			ConfigSliderFloat("Radius (m)", f_Radius, 0.1f, 100.0f, _("Radius of common loot vacuum."));
-			ConfigSliderFloat("Distance (m)", f_Distance, 0.1f, 10.0f, _("Distance between the player and the loot.\n"
+			ConfigSliderFloat("Distance (m)", f_Distance, 1.f, 10.0f, _("Distance between the player and the loot.\n"
 				"Values under 1.5 may be too intruding."));
 
 			if (ImGui::BeginCombo("Select the loot to be picked up.", "Filters")) {
@@ -72,14 +72,12 @@ namespace cheat
 			f_Enabled.setValue(!f_Enabled.getValue());
 	}
 
-	void onUpdate_8(app::GameManager* __this, app::MethodInfo* method)
+	void GameManager_Update_VacuumLoot_Hook(app::GameManager* __this, app::MethodInfo* method)
 	{
 		auto currentTime = util::GetCurrentTimeMillisec();
 		auto vacuumLoot = VacuumLoot::getInstance();
-		if (currentTime < vacuumLoot.nextTime || !vacuumLoot.f_Enabled.getValue()) {
-			CALL_ORIGIN(onUpdate_8, __this, method);
-			return;
-		}
+		if (currentTime < vacuumLoot.nextTime || !vacuumLoot.f_Enabled.getValue()) 
+			return CALL_ORIGIN(GameManager_Update_VacuumLoot_Hook, __this, method);
 
 		auto& manager = game::EntityManager::getInstance();
 		auto avatarEntity = manager.avatar();
@@ -98,13 +96,11 @@ namespace cheat
 
 			auto distance = manager.avatar()->distance(entity);
 			
-			if (distance <= vacuumLoot.f_Radius.getValue()) {
-
+			if (distance <= vacuumLoot.f_Radius.getValue())
 				entity->setRelativePosition(avatarEntity->relativePosition() + avatarEntity->forward() * vacuumLoot.f_Distance.getValue());
-			}
 		}
 		vacuumLoot.nextTime = currentTime + vacuumLoot.f_Delay.getValue();
 
-		CALL_ORIGIN(onUpdate_8, __this, method);
+		return CALL_ORIGIN(GameManager_Update_VacuumLoot_Hook, __this, method);
 	}
 }

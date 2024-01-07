@@ -3,6 +3,7 @@
 #include "../FunctionIncludes.h"
 #include "../../game/filters.h"
 #include "../../game/SimpleFilter.h"
+#include "../../GUI/mutil.h"
 
 namespace cheat {
     class VacuumLoot : public Function {

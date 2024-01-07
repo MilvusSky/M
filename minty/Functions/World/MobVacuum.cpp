@@ -1,3 +1,5 @@
+// many bugs
+
 #include "MobVacuum.h"
 
 #define UPDATE_DELAY(delay) \
@@ -50,7 +52,6 @@ namespace cheat
 					ImGui::EndCombo();
 				}
 				ImGui::Unindent();
-
 			}
 			
 			ConfigCheckbox("Animals", f_IncludeAnimals, "Include animals in vacuum.");
@@ -157,7 +158,6 @@ namespace cheat
 
 		return avatarEntity->relativePosition() + avatarEntity->forward() * mobVacuum.f_Distance.getValue();
 	}
-
 
 
 	// Set Monster's collider

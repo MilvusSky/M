@@ -1,62 +1,55 @@
-﻿#include "../functions/about/About.h"
+﻿#include "../Functions/About/About.h"
 
-#include "../functions/player/GodMode.h"
-#include "../functions/player/InfiniteEnergy.h"
-#include "../functions/player/InfiniteStamina.h"
-#include "../functions/player/MultiHit.h"
-#include "../functions/player/NoClip.h"
-#include "../functions/player/NoCooldown.h"
+#include "../Functions/Player/GodMode.h"
+#include "../Functions/Player/InfiniteEnergy.h"
+#include "../Functions/Player/InfiniteStamina.h"
+#include "../Functions/Player/MultiHit.h"
+#include "../Functions/Player/NoClip.h"
+#include "../Functions/Player/NoCooldown.h"
 
-#include "../functions/settings/Settings.h"
+#include "../Functions/Settings/Settings.h"
 
-#include "../functions/visuals/CameraZoom.h"
-#include "../functions/visuals/FovChanger.h"
-#include "../functions/visuals/HideDamage.h"
-#include "../functions/visuals/HideReaction.h"
-#include "../functions/visuals/HideUI.h"
-#include "../functions/visuals/NoFog.h"
-#include "../functions/visuals/Peeking.h"
-#include "../functions/visuals/ProfileChanger.h"
-#include "../functions/visuals/ShowIndicators.h"
-#include "../functions/visuals/UnlockFPS.h"
-#include "../functions/visuals/GraphicsChanger.h"
+#include "../Functions/Visuals/CameraZoom.h"
+#include "../Functions/Visuals/FovChanger.h"
+#include "../Functions/Visuals/HideDamage.h"
+#include "../Functions/Visuals/HideReaction.h"
+#include "../Functions/Visuals/HideUI.h"
+#include "../Functions/Visuals/NoFog.h"
+#include "../Functions/Visuals/Peeking.h"
+#include "../Functions/Visuals/ProfileChanger.h"
+#include "../Functions/Visuals/ShowIndicators.h"
+#include "../Functions/Visuals/UnlockFPS.h"
+#include "../Functions/Visuals/GraphicsChanger.h"
 
 #include "../Functions/Lua/LuaConsole.h"
 
-#include "../functions/world/AutoLoot.h"
-#include "../functions/world/AutoTalk.h"
-//#include "../functions/world/MobVacuum.h"
-#include "../functions/world/VacuumLoot.h"
-//#include "../functions/world/AutoDestroy.h"
-//#include "../functions/world/AutoChallenge.h"
-//#include "../functions/world/AutoDestroy.h"
-//#include "../functions/world/AutoLoot.h"
-#include "../functions/world/AutoTalk.h"
-//#include "../functions/world/AutoTP.h"
-#include "../functions/world/CutsceneSkip.h"
-#include "../functions/world/DumbEnemies.h"
-#include "../functions/world/ElementalSight.h"
-#include "../functions/world/GameSpeed.h"
-//#include "../functions/world/MobVacuum.h"
-//#include "../functions/world/OpenTeamImmediately.h"
-//#include "../functions/world/VacuumLoot.h"
+#include "../Functions/World/PickupRange.h"
+#include "../Functions/World/AutoTalk.h"
+#include "../Functions/World/VacuumLoot.h"
+#include "../Functions/World/CutsceneSkip.h"
+#include "../Functions/World/DumbEnemies.h"
+#include "../Functions/World/ElementalSight.h"
+#include "../Functions/World/GameSpeed.h"
 #include "../Functions/World/ESP.h"
 
-#include "../functions/World/ESP.h"
-
+//#include "../Functions/World/OpenTeamImmediately.h"
+//#include "../Functions/World/AutoDestroy.h"
+//#include "../Functions/World/AutoChallenge.h"
+//#include "../Functions/World/AutoLoot.h"
+//#include "../Functions/World/AutoTP.h"
+//#include "../Functions/World/MobVacuum.h"
 
 std::vector<std::string> ModuleOrder = {
     _("MODULE_PLAYER"),
     _("MODULE_WORLD"),
-    _("MODULE_VISUALS"),
+	_("MODULE_VISUALS"),
     _("MODULE_LUA"),
     _("MODULE_SETTINGS"),
     _("MODULE_ABOUT")
 };
 
 void Init() {
-	INIT_FUNC(About);
-
+	// Player
 	INIT_FUNC(GodMode);
 	INIT_FUNC(InfiniteEnergy);
 	INIT_FUNC(InfiniteStamina);
@@ -64,38 +57,45 @@ void Init() {
 	INIT_FUNC(NoClip);
 	INIT_FUNC(NoCooldown);
 
+	// World
+	INIT_FUNC(CameraZoom);
+	//INIT_FUNC(FovChanger);
+	INIT_FUNC(GraphicsChanger);
+	INIT_FUNC(HideDamage);
+	INIT_FUNC(HideReaction);
+	INIT_FUNC(HideUI);
+	INIT_FUNC(NoFog);
+	INIT_FUNC(Peeking);
+	INIT_FUNC(ProfileChanger);
+	INIT_FUNC(ShowIndicators);
+	INIT_FUNC(UnlockFPS);
+
+	// Lua
+	INIT_FUNC(LuaConsole);
+
+	// World
+	INIT_FUNC(AutoTalk);
+	INIT_FUNC(CutsceneSkip);
+	INIT_FUNC(DumbEnemies);
+	INIT_FUNC(ElementalSight);
+	INIT_FUNC(GameSpeed);
+	//INIT_FUNC(MobVacuum);
+	INIT_FUNC(PickupRange);
+	INIT_FUNC(VacuumLoot);
+
+	INIT_FUNC(ESP);
+
+	//INIT_FUNC(AutoLoot);
+	//INIT_FUNC(AutoChallenge);
+	//INIT_FUNC(AutoDestroy);
+	//INIT_FUNC(OpenTeamImmediately);
+	//INIT_FUNC(AutoTP);
+
+	// Settings
 	INIT_FUNC(Settings);
 
-  INIT_FUNC(CameraZoom);
-  //INIT_FUNC(FovChanger);
-  INIT_FUNC(HideDamage);
-  INIT_FUNC(HideReaction);
-  INIT_FUNC(HideUI);
-  INIT_FUNC(NoFog);
-  INIT_FUNC(Peeking);
-  INIT_FUNC(ProfileChanger);
-  INIT_FUNC(ShowIndicators);
-  INIT_FUNC(UnlockFPS);
-  INIT_FUNC(GraphicsChanger);
-
-  INIT_FUNC(LuaConsole);
-
-  //INIT_FUNC(PickupRange);
-  INIT_FUNC(AutoLoot);
-  //INIT_FUNC(AutoChallenge);
-  //INIT_FUNC(MobVacuum);
-  //INIT_FUNC(AutoDestroy);
-  INIT_FUNC(AutoTalk);
-  //INIT_FUNC(AutoTP);
-  INIT_FUNC(CutsceneSkip);
-  INIT_FUNC(DumbEnemies);
-  INIT_FUNC(ElementalSight);
-  INIT_FUNC(GameSpeed);
-  //INIT_FUNC(OpenTeamImmediately);
-  //INIT_FUNC(SkipEnhanceAnimation);
-  INIT_FUNC(VacuumLoot);
-
-  INIT_FUNC(ESP);
+	// About
+	INIT_FUNC(About);
 }
 
 void Outer() {
