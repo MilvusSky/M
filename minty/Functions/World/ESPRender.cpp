@@ -146,7 +146,7 @@ namespace cheat
 		return { vec3.x, vec3.y };
 	}
 
-	static app::Bounds GetEntityMinBounds(game::Entity* entity, float minSize)
+	static app::Bounds GetEntityMinBounds(game::Entity* entity, float minSize = 0.1)
 	{
 		auto entityPosition = entity->relativePosition();
 		return { entityPosition, { minSize, minSize, minSize } };
@@ -157,15 +157,15 @@ namespace cheat
 		auto& esp = ESP::getInstance();
 		auto gameObject = entity->gameObject();
 		if (gameObject == nullptr)
-			return GetEntityMinBounds(entity, esp.f_MinSize.getValue());
+			return GetEntityMinBounds(entity);
 
 		SAFE_BEGIN();
 
 		auto bounds = app::wtf(gameObject);
-		if (bounds.m_Extents.x < esp.f_MinSize.getValue() &&
+		/*if (bounds.m_Extents.x < esp.f_MinSize.getValue() &&
 			bounds.m_Extents.y < esp.f_MinSize.getValue() &&
 			bounds.m_Extents.z < esp.f_MinSize.getValue())
-			bounds.m_Extents = { esp.f_MinSize.getValue(), esp.f_MinSize.getValue(), esp.f_MinSize.getValue() };
+			bounds.m_Extents = { esp.f_MinSize.getValue(), esp.f_MinSize.getValue(), esp.f_MinSize.getValue() };*/
 
 		auto min = bounds.m_Center - bounds.m_Extents;
 		auto max = bounds.m_Center + bounds.m_Extents;
@@ -177,7 +177,7 @@ namespace cheat
 		
 		SAFE_ERROR();
 
-		return GetEntityMinBounds(entity, esp.f_MinSize.getValue());
+		return GetEntityMinBounds(entity);
 		
 		SAFE_END();
 	}
@@ -287,15 +287,15 @@ namespace cheat
 		return boxRect;
 	}
 
-	static void DrawQuadLines(const ImVec2& p1, const ImVec2& p2, const ImVec2& p3, const ImVec2& p4, ImU32 col)
+	static void DrawQuadLines(const ImVec2& p1, const ImVec2& p2, const ImVec2& p3, const ImVec2& p4, ImU32 col, float thicc)
 	{
 		auto draw = ImGui::GetBackgroundDrawList();
 
-		draw->AddLine(p1, p2, col);
-		draw->AddLine(p2, p3, col);
-		draw->AddLine(p3, p4, col);
-		draw->AddLine(p4, p1, col);
-		}
+		draw->AddLine(p1, p2, col, thicc);
+		draw->AddLine(p2, p3, col, thicc);
+		draw->AddLine(p3, p4, col, thicc);
+		draw->AddLine(p4, p1, col, thicc);
+	}
 
 	static bool HasCenter(const Rect& rect)
 	{
@@ -303,30 +303,7 @@ namespace cheat
 
 		return rect.xMin < centerPoint.x&& centerPoint.x < rect.xMax &&
 			rect.yMin < centerPoint.y&& centerPoint.y < rect.yMax;
-			}
-
-	static Rect DrawRect(game::Entity* entity, const ImColor& color)
-	{
-		auto box = GetEntityScreenBox(entity);
-		if (!box)
-			return {};
-
-		auto entityRect = GetEntityScreenRect(*box);
-		if (entityRect.empty())
-			return {};
-
-		auto& esp = ESP::getInstance();
-		auto draw = ImGui::GetBackgroundDrawList();
-
-		auto pMin = ImVec2(entityRect.xMin, entityRect.yMin);
-		auto pMax = ImVec2(entityRect.xMax, entityRect.yMax);
-		ImColor newColor = color;
-		newColor.Value.w = 1.0f - esp.f_FillTransparency.getValue();
-		draw->AddRectFilled(pMin, pMax, newColor);
-		draw->AddRect(pMin, pMax, color);
-
-		return entityRect;
-		}
+	}
 
 	static Rect DrawBox(game::Entity* entity, const ImColor& color)
 	{
@@ -363,17 +340,18 @@ namespace cheat
 
 #undef ADD_FIXED_QUAD
 
-		DrawQuadLines(box->lowerBottomLeft, box->lowerTopLeft, box->lowerTopRight, box->lowerBottomRight, color);
-		DrawQuadLines(box->upperBottomLeft, box->upperTopLeft, box->upperTopRight, box->upperBottomRight, color);
+		DrawQuadLines(box->lowerBottomLeft, box->lowerTopLeft, box->lowerTopRight, box->lowerBottomRight, color, esp.f_OutlineThickness.getValue());
+		DrawQuadLines(box->upperBottomLeft, box->upperTopLeft, box->upperTopRight, box->upperBottomRight, color, esp.f_OutlineThickness.getValue());
 
-		draw->AddLine(box->lowerBottomLeft, box->upperBottomLeft, color);
-		draw->AddLine(box->lowerTopLeft, box->upperTopLeft, color);
-		draw->AddLine(box->lowerTopRight, box->upperTopRight, color);
-		draw->AddLine(box->lowerBottomRight, box->upperBottomRight, color);
+		draw->AddLine(box->lowerBottomLeft, box->upperBottomLeft, color, esp.f_OutlineThickness.getValue());
+		draw->AddLine(box->lowerTopLeft, box->upperTopLeft, color, esp.f_OutlineThickness.getValue());
+		draw->AddLine(box->lowerTopRight, box->upperTopRight, color, esp.f_OutlineThickness.getValue());
+		draw->AddLine(box->lowerBottomRight, box->upperBottomRight, color, esp.f_OutlineThickness.getValue());
+		// top<->bottom lines
 
 		auto rect = GetEntityScreenRect(*box, false);
 		return rect;
-		}
+	}
 
 	static void UpdateAvatarPosition()
 	{
@@ -407,71 +385,10 @@ namespace cheat
 		auto screen_center = screen_rect.GetCenter();
 
 		//LOG_DEBUG("screen_center = %f %f", screen_center.x, screen_center.y);
-		LOG_DEBUG("screenPos = %f %f", screenPos.value().x, screenPos.value().y);
+		//LOG_DEBUG("screenPos = %f %f", screenPos.value().x, screenPos.value().y);
 		
-		draw->AddLine(screen_center, *screenPos, color, 1.f);
+		draw->AddLine(screen_center, *screenPos, color, esp.f_TracerSize.getValue());
 	}
-
-#define PI 3.14159265358979323846f
-
-	static void DrawOffscreenArrows(game::Entity* entity, const ImColor& color)
-	{
-		ImRect screen_rect = { 0.0f, 0.0f, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y };
-		auto entity_pos = WorldToScreenPosScalled(entity->relativePosition());
-		if (entity_pos.z > 0 && screen_rect.Contains({ entity_pos.x, entity_pos.y }))
-			return;
-
-		auto screen_center = screen_rect.GetCenter();
-		auto angle = atan2(screen_center.y - entity_pos.y, screen_center.x - entity_pos.x);
-		angle += entity_pos.z > 0 ? PI : 0.0f;
-
-		auto& esp = ESP::getInstance();
-		ImVec2 arrow_center {
-			screen_center.x + esp.f_ArrowRadius.getValue() * cosf(angle),
-			screen_center.y + esp.f_ArrowRadius.getValue() * sinf(angle)
-		};
-
-		// Triangle
-		std::array<ImVec2, 4> points {
-			ImVec2(-22.0f, -8.6f),
-			ImVec2(0.0f, 0.0f),
-			ImVec2(-22.0f, 8.6f),
-			ImVec2(-18.0f, 0.0f)
-		};
-
-		for (auto& point : points)
-		{
-			auto x = point.x * esp.f_TracerSize.getValue();
-			auto y = point.y * esp.f_TracerSize.getValue();
-
-			point.x = arrow_center.x + x * cosf(angle) - y * sinf(angle);
-			point.y = arrow_center.y + x * sinf(angle) + y * cosf(angle);
-		}
-		
-		
-		auto draw = ImGui::GetBackgroundDrawList();
-
-		float alpha = 1.0f;
-		if (entity_pos.z > 0)
-		{
-			constexpr float nearThreshold = 200.0f * 200.0f;
-			ImVec2 screen_outer_diff = {
-				entity_pos.x < 0 ? abs(entity_pos.x) : (entity_pos.x > screen_rect.Max.x ? entity_pos.x - screen_rect.Max.x : 0.0f),
-				entity_pos.y < 0 ? abs(entity_pos.y) : (entity_pos.y > screen_rect.Max.y ? entity_pos.y - screen_rect.Max.y : 0.0f),
-			};
-			float distance = static_cast<float>(std::pow(screen_outer_diff.x, 2) + std::pow(screen_outer_diff.y, 2));
-			alpha = entity_pos.z < 0 ? 1.0f : (distance / nearThreshold);
-		}
-		auto arrowColor = color; // Copy
-		arrowColor.Value.w = std::min(alpha, 1.0f);
-
-		// Draw the arrow
-		draw->AddTriangleFilled(points[0], points[1], points[3], arrowColor);
-		draw->AddTriangleFilled(points[2], points[1], points[3], arrowColor);
-		draw->AddQuad(points[0], points[1], points[2], points[3], ImColor(0.0f, 0.0f, 0.0f, alpha), esp.f_OutlineThickness.getValue());
-	}
-
-#undef PI
 
 	static void DrawName(const Rect& boxRect, game::Entity* entity, const std::string& name, const ImColor& color, const ImColor& contrastColor)
 	{
@@ -495,7 +412,7 @@ namespace cheat
 			text = name;
 			}
 
-		LOG_DEBUG("text = %s", text.c_str());
+		//LOG_DEBUG("text = %s", text.c_str());
 
 		ImVec2 namePosition;
 		if (!boxRect.empty())
@@ -527,40 +444,23 @@ namespace cheat
 		auto& esp = ESP::getInstance();
 
 		Rect rect;
-		switch (esp.f_DrawBoxMode)
-		{
-		case ESP::DrawMode::Box:
-			rect = DrawBox(entity, esp.f_GlobalBoxColor.getValue() ? esp.f_GlobalBoxColor.getValue() : color);
-			break;
-		case ESP::DrawMode::Rectangle:
-			rect = DrawRect(entity, esp.f_GlobalRectColor.getValue() ? esp.f_GlobalRectColor.getValue() : color);
-			break;
-		default:
-			rect = {};
-			break;
+		if (esp.f_DrawBox) {
+			rect = DrawBox(entity, esp.GlobalBoxColor ? esp.GlobalBoxColor : color);
 		}
 
-		switch (esp.f_DrawTracerMode)
-		{
-		case ESP::DrawTracerMode::Line:
-			DrawLine(entity, esp.f_GlobalLineColor.getValue() ? esp.f_GlobalLineColor.getValue() : color);
-			break;
-		case ESP::DrawTracerMode::OffscreenArrows:
-			DrawOffscreenArrows(entity, esp.f_GlobalTracersColor.getValue() ? esp.f_GlobalTracersColor.getValue() : color);
-			break;
-		default:
-			break;
-	}
+		if (esp.f_DrawTracer) {
+			DrawLine(entity, esp.GlobalLineColor ? esp.GlobalLineColor : color);
+		}
 
 		if (esp.f_DrawName.getValue() || esp.f_DrawDistance.getValue())
-			DrawName(rect, entity, name, esp.f_GlobalFontColor.getValue() ? esp.f_GlobalFontColor.getValue() : color,
+			DrawName(rect, entity, name, esp.GlobalESPColor ? esp.GlobalESPColor : color,
 				esp.m_FontContrastColor ? esp.m_FontContrastColor : contrastColor);
 
 		return HasCenter(rect);
 		SAFE_ERROR();
 		return false;
 		SAFE_END();
-}
+	}
 
 	void PrepareFrame()
 	{
@@ -568,7 +468,7 @@ namespace cheat
 		UpdateResolutionScale();
 
 		auto& esp = ESP::getInstance();
-		if (esp.f_DrawTracerMode != ESP::DrawTracerMode::None)
+		if (esp.f_DrawTracer)
 			UpdateAvatarPosition();
 	}
 }

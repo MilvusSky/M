@@ -35,7 +35,6 @@ namespace cheat {
 		luahookfunc("CS.UnityEngine.GameObject.Find(\"/EntityRoot/MainCamera(Clone)(Clone)\"):GetComponent(\"PostProcessLayer\").cameraBufferDirty = true");
 	    }
     	}
-	Logger::log(Logger::Level::Info, "dick pizda: %d", needUpdate);
     }
     
     void GraphicsChanger::Outer() {

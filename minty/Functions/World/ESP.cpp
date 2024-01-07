@@ -3,30 +3,26 @@
 namespace cheat 
 {
 	void DrawExternal();
-	static int boxItemCurrent;
-	static int tracerItemCurrent;
+
 	ImColor CalcContrastColor(const ImColor& foreground, float maxContrastRatio = 2.0f, const ImColor& background = ImColor(1.0f, 1.0f, 1.0f), const ImColor& inverted = ImColor(0.0f, 0.0f, 0.0f));
 
     ESP::ESP(){
 		f_Enabled = config::getValue("functions:ESP", "enabled", false);
-		f_MinSize = config::getValue("functions:ESP", "minSize", 0.1f);
 
 		f_TracerSize = config::getValue("functions:ESP", "tracerSize", 1.f);
-		f_ArrowRadius = config::getValue("functions:ESP", "arrowRadius", 50.f);
-		f_OutlineThickness = config::getValue("functions:ESP", "outlineThickness", 0.f);
+		f_OutlineThickness = config::getValue("functions:ESP", "outlineThickness", 1.f);
 
 		f_Range = config::getValue("functions:ESP", "range", 200.f);
 
-		f_DrawBox = config::getValue("functions:ESP", "drawBox", false);
-		f_DrawTracer = config::getValue("functions:ESP", "drawTracer", false);
+		f_DrawBox = config::getValue("functions:ESP", "drawBox", true);
+		f_DrawTracer = config::getValue("functions:ESP", "drawTracer", true);
 
-		f_FillTransparency = config::getValue("functions:ESP", "fillTransparency", 70.f);
+		f_DrawName = config::getValue("functions:ESP", "drawName", false);
+		f_DrawDistance = config::getValue("functions:ESP", "drawDistance", false);
 
-		f_BoxItemCurrent = config::getValue("functions:ESP", "drawBoxMode", 0);
-		f_TracerItemCurrent = config::getValue("functions:ESP", "drawTracerMode", 0);
+		f_FontSize = config::getValue("function::ESP", "textSize", 15);
 
-		boxItemCurrent = f_BoxItemCurrent.getValue();
-		tracerItemCurrent = f_TracerItemCurrent.getValue();
+		f_FillTransparency = config::getValue("functions:ESP", "fillTransparency", 50.f);
 
 		// Filters
 		f_Ores = config::getValue("functions:ESP:filters", "ores", false);
@@ -36,12 +32,20 @@ namespace cheat
 		f_Chests = config::getValue("functions:ESP:filters", "chests", false); 
 		f_Monsters = config::getValue("functions:ESP:filters", "enemies", false);
 
+		f_GlobalBoxColor = config::getValue<std::vector<float>>("functions:ESP:colors", "box", { 0.5f, 0.5f, 0.5f, 1.0f });
+		f_GlobalLineColor = config::getValue<std::vector<float>>("functions:ESP:colors", "tracer", { 0.5f, 0.5f, 0.5f, 1.0f });
+		f_GlobalESPColor = config::getValue<std::vector<float>>("functions:ESP:colors", "text", { 1.f, 1.f, 1.f, 1.0f });
+
+		GlobalESPColor.Value = { f_GlobalESPColor.getValue()[0], f_GlobalESPColor.getValue()[1], f_GlobalESPColor.getValue()[2], f_GlobalESPColor.getValue()[3] };
+		GlobalLineColor.Value = { f_GlobalLineColor.getValue()[0], f_GlobalLineColor.getValue()[1], f_GlobalLineColor.getValue()[2], f_GlobalLineColor.getValue()[3] };
+		GlobalBoxColor.Value = { f_GlobalBoxColor.getValue()[0], f_GlobalBoxColor.getValue()[1], f_GlobalBoxColor.getValue()[2], f_GlobalBoxColor.getValue()[3] };
+
 		entityManager = &game::EntityManager::getInstance();
     }
 
 	std::string ESP::getModule() {
 		return _("MODULE_WORLD");
-            }
+    }
 
 	void ESP::Outer() {
 		if (f_Hotkey.IsPressed())
@@ -51,82 +55,39 @@ namespace cheat
 
     void ESP::GUI()
     {
-	    if (BeginGroupPanel("General", true))
-	    {
-		    ConfigCheckbox("Enabled", f_Enabled, "Show filtered object through obstacles.");
-			ConfigSliderFloat("Range (m)", f_Range, 1.0f, 200.0f);
-
-			ConfigCheckbox("Draw box", f_DrawBox);
-
-			if (f_DrawBox.getValue()) {
-				const char* box_items[] = { "Rectangle", "Box" };
-				ConfigSliderFloat("Transparency", f_FillTransparency, 0.01f, 1.0f, "Transparency of filled part.");
-				ImGui::Combo("Box mode", &boxItemCurrent, box_items, IM_ARRAYSIZE(box_items)); ImGui::SameLine(); HelpMarker("Select the mode of box drawing");
-
-				switch (boxItemCurrent) {
-				case 0:
-					f_DrawBoxMode = DrawMode::Rectangle;
-					break;
-				case 1:
-					f_DrawBoxMode = DrawMode::Box;
-					break;
-				}
-				config::setValue("functions:ESP", "drawBoxMode", boxItemCurrent);
-
-			} else 
-				f_DrawBoxMode = DrawMode::None;
-
-			ConfigCheckbox("Draw tracer", f_DrawTracer); ImGui::SameLine(); HelpMarker("Draw tracer from middle part of the screen");
-
-			if (f_DrawTracer.getValue()) {
-				const char* tracer_items[] = { "Offscreen arrows", "Lines" };
-				ImGui::Combo("Tracer mode", &tracerItemCurrent, tracer_items, IM_ARRAYSIZE(tracer_items)); ImGui::SameLine(); HelpMarker("Select the mode of tracer drawing");
-
-				switch (tracerItemCurrent) {
-				case 0:
-					f_DrawTracerMode = DrawTracerMode::OffscreenArrows;
-					break;
-				case 1:
-					f_DrawTracerMode = DrawTracerMode::Line;
-					break;
-                    }
-				config::setValue("functions:ESP", "drawTracerMode", tracerItemCurrent);
-			} else
-				f_DrawTracerMode = DrawTracerMode::None;
-
-		    if (f_DrawTracerMode == DrawTracerMode::OffscreenArrows)
-		    {
-			    if (BeginGroupPanel("Arrow tracer options", true))
-			    {
-					ConfigSliderFloat("Size of tracer", f_TracerSize,  0.1f, 10.0f);
-					ConfigSliderFloat("Radius of arrow", f_ArrowRadius, 0.5f, 300.0f);
-					ConfigSliderFloat("Outline thickness of arrow", f_OutlineThickness, 0.1f, 10.0f);
-                }
-			    EndGroupPanel();
-        }
-
-			ConfigCheckbox("Draw name", f_DrawName, "Draw name of object.");
-			ConfigCheckbox("Draw distance", f_DrawDistance, "Draw distance of object.");
-
-			if (f_DrawName.getValue() or f_DrawDistance.getValue()) {
-				ConfigSliderInt("Font size", f_FontSize, 1, 100, "Font size of name or distance.");
-				ConfigSliderFloat("Font outline", f_FontOutlineSize, 0.1f, 10.0f);
-    }
-
-		    if (BeginGroupPanel("Colors", true))
-		    {
+		ConfigCheckbox("ESP", f_Enabled, "Show filtered object through obstacles.");
+		if (f_Enabled) {
+			ImGui::Indent();
+			if (BeginGroupPanel("Config", true))
+			{
 				ImGuiColorEditFlags_ flag = ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar;
 
-				ImGui::ColorEdit4("Global ESP color", &f_GlobalESPColor.getValue().Value.x, flag);
-				if (BeginGroupPanel("Advanced", true)) {
-					ImGui::ColorEdit4("Color of box", &f_GlobalBoxColor.getValue().Value.x, flag);
-					ImGui::ColorEdit4("Color of line", &f_GlobalLineColor.getValue().Value.x, flag);
-					ImGui::ColorEdit4("Color of rectangle", &f_GlobalRectColor.getValue().Value.x, flag);
-					ImGui::ColorEdit4("Color of arrow tracers", &f_GlobalTracersColor.getValue().Value.x, flag);
+				ImGui::SeparatorText("Overlay settings");
+				ConfigCheckbox("Draw box", f_DrawBox);
+				ConfigCheckbox("Draw tracer", f_DrawTracer); ImGui::SameLine(); HelpMarker("Draw tracer from center of the screen");
+				ConfigCheckbox("Draw name", f_DrawName, "Draw name of object.");
+				ConfigCheckbox("Draw distance", f_DrawDistance, "Draw distance to object.");
+				ConfigSliderInt("Font size", f_FontSize, 1, 100, "Font size of name or distance.");
+				ConfigSliderFloat("Range (m)", f_Range, 1.0f, 200.0f); ImGui::SameLine(); HelpMarker("Max. distance to detect target objects");
+				ConfigSliderFloat("Outline width", f_OutlineThickness, 1.0f, 20.0f); ImGui::SameLine(); HelpMarker("Thickness of box outline");
+				ConfigSliderFloat("Tracer width", f_TracerSize, 1.0f, 20.0f); ImGui::SameLine(); HelpMarker("Thickness of tracer");
+
+				ImGui::SeparatorText("Colors");
+				if (ImGui::ColorEdit4("Color of box", &f_GlobalBoxColor.getValue()[0], flag)) {
+					config::setValue(f_GlobalBoxColor, f_GlobalBoxColor.getValue());
+					f_GlobalBoxColor.setValue(f_GlobalBoxColor.getValue());
 				}
-				EndGroupPanel();
-		    }
-		    EndGroupPanel();
+				if (ImGui::ColorEdit4("Color of tracer", &f_GlobalLineColor.getValue()[0], flag)) {
+					config::setValue(f_GlobalLineColor, f_GlobalLineColor.getValue());
+					f_GlobalLineColor.setValue(f_GlobalLineColor.getValue());
+				}
+				if (ImGui::ColorEdit4("Color of text", &f_GlobalESPColor.getValue()[0], flag)) {
+					config::setValue(f_GlobalESPColor, f_GlobalESPColor.getValue());
+					f_GlobalESPColor.setValue(f_GlobalESPColor.getValue());
+				}
+				ConfigSliderFloat("Transparency", f_FillTransparency, 0.01f, 1.0f, "Transparency of box filling.");
+			}
+			EndGroupPanel();
 
 			if (BeginGroupPanel("Filters", true)) {
 				ConfigCheckbox("Ores", f_Ores);
@@ -135,25 +96,18 @@ namespace cheat
 				ConfigCheckbox("Pickable loot", f_PickableLoot);
 				ConfigCheckbox("Chests", f_Chests);
 				ConfigCheckbox("Monsters", f_Monsters);
-    }
+			}
 			EndGroupPanel();
 
-			ConfigSliderFloat("Minimal size ", f_MinSize, 0.1f, 10.0f, "Minimum entity size as measured in-world.\n" \
-			    "Some entities have either extremely small or no bounds at all.\n" \
-			    "This parameter helps filter out entities that don't meet this condition.");
-	    }
-	    EndGroupPanel();
+			f_Hotkey.Draw();
+
+			ImGui::Unindent();
+		}
     }
 
     void ESP::Status()
     {
-	    ImGui::Text("ESP [%.01fm|%s|%s%s%s%s]",
-		    f_Range.getValue(),
-		    f_DrawBoxMode == DrawMode::Box ? "Box" : f_DrawBoxMode == DrawMode::Rectangle ? "Rect" : "None",
-		    f_DrawTracerMode == DrawTracerMode::Line ? "L" : f_DrawTracerMode == DrawTracerMode::OffscreenArrows ? "A" : "",
-		    f_DrawName.getValue() ? "N" : "",
-		    f_DrawDistance.getValue() ? "D" : ""
-	    );
+	    ImGui::Text("ESP [%.01fm]", f_Range.getValue());
     }
 
 	ESP& ESP::getInstance()
@@ -188,7 +142,7 @@ namespace cheat
 				))
 				continue;
 
-			DrawEntity(entity->name(), entity, esp.f_GlobalESPColor.getValue(), CalcContrastColor(esp.f_GlobalESPColor.getValue()));
+			DrawEntity(entity->name(), entity, esp.GlobalESPColor, CalcContrastColor(esp.GlobalESPColor));
 	    }
     }
 }

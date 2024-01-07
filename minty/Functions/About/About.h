@@ -5,11 +5,12 @@
 namespace cheat {
 	class About : public Function {
 	public:
+		std::string mVersion;
 		void GUI() override;
 
 		std::string getModule() override;
 
-		std::string getVersion();
+		About();
 
 		static About& getInstance();
 	};

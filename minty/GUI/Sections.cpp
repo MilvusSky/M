@@ -78,6 +78,8 @@ void Init() {
   INIT_FUNC(UnlockFPS);
   INIT_FUNC(GraphicsChanger);
 
+  INIT_FUNC(LuaConsole);
+
   //INIT_FUNC(PickupRange);
   INIT_FUNC(AutoLoot);
   //INIT_FUNC(AutoChallenge);
@@ -117,13 +119,10 @@ void Status() {
 
 	auto windowWidth = ImGui::GetWindowSize().x;
 	auto& about = cheat::About::getInstance();
-	//std::string text = "Minty-GI " + about.getVersion();
-	std::string text = "Status";
-	auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+	std::string version = about.mVersion;
 
-	ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
-	ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f / 255, 142.0f / 255, 85.0f / 255, 1.0f });
-	ImGui::Text("%s", text);
+	ImGui::PushStyleColor(ImGuiCol_Text, { 0.17f, 0.63f, 0.45f, 1.00f });
+	ImGui::Text("Minty-GI %s", version);
 	ImGui::PopStyleColor();
 	ImGui::Separator();
 	for (auto& feature : functions)
