@@ -1,12 +1,34 @@
 ﻿#include "ESPRender.h"
 
-namespace cheat 
+namespace cheat
 {
-	void DrawExternal();
+	struct ESPFilter {
+		std::string name;
+		bool enabled;
+		game::SimpleFilter simpleFilter;
 
+		explicit operator bool() const {
+			return name != "Empty";
+		}
+	};
+
+	std::vector<ESPFilter> filters;
+	void DrawExternal();
 	ImColor CalcContrastColor(const ImColor& foreground, float maxContrastRatio = 2.0f, const ImColor& background = ImColor(1.0f, 1.0f, 1.0f), const ImColor& inverted = ImColor(0.0f, 0.0f, 0.0f));
 
-    ESP::ESP(){
+	std::string FirstCharToLowercase(std::string string) {
+		std::string output = string;
+		output[0] = std::tolower(output[0]);
+		return output;
+	}
+
+	void AddFilter(std::string name, std::string path, game::SimpleFilter filter) {
+		std::string key = FirstCharToLowercase(name);
+		auto value = config::getValue(path, key, false);
+		filters.push_back({ name, value.getValue(), filter });
+	}
+
+	ESP::ESP() {
 		f_Enabled = config::getValue("functions:ESP", "enabled", false);
 
 		f_TracerSize = config::getValue("functions:ESP", "tracerSize", 1.f);
@@ -20,32 +42,32 @@ namespace cheat
 		f_DrawName = config::getValue("functions:ESP", "drawName", false);
 		f_DrawDistance = config::getValue("functions:ESP", "drawDistance", false);
 
-		f_FontSize = config::getValue("function::ESP", "textSize", 15);
+		f_FontSize = config::getValue("functions::ESP", "textSize", 15);
 
 		f_FillTransparency = config::getValue("functions:ESP", "fillTransparency", 50.f);
-
-		// Filters
-		f_Ores = config::getValue("functions:ESP:filters", "ores", false);
-		f_Oculies = config::getValue("functions:ESP:filters", "oculies", false);
-		f_Plants = config::getValue("functions:ESP:filters", "plants", false);
-		f_PickableLoot = config::getValue("functions:ESP:filters", "itemDrops", false);
-		f_Chests = config::getValue("functions:ESP:filters", "chests", false); 
-		f_Monsters = config::getValue("functions:ESP:filters", "enemies", false);
-
-		f_GlobalBoxColor = config::getValue<std::vector<float>>("functions:ESP:colors", "box", { 0.5f, 0.5f, 0.5f, 1.0f });
+		
+		f_GlobalTextColor = config::getValue<std::vector<float>>("functions:ESP:colors", "text", { 1.f, 1.f, 1.f, 1.0f });
 		f_GlobalLineColor = config::getValue<std::vector<float>>("functions:ESP:colors", "tracer", { 0.5f, 0.5f, 0.5f, 1.0f });
-		f_GlobalESPColor = config::getValue<std::vector<float>>("functions:ESP:colors", "text", { 1.f, 1.f, 1.f, 1.0f });
+		f_GlobalBoxColor = config::getValue<std::vector<float>>("functions:ESP:colors", "box", { 0.5f, 0.5f, 0.5f, 1.0f });
 
-		GlobalESPColor.Value = { f_GlobalESPColor.getValue()[0], f_GlobalESPColor.getValue()[1], f_GlobalESPColor.getValue()[2], f_GlobalESPColor.getValue()[3] };
+		GlobalTextColor.Value = { f_GlobalTextColor.getValue()[0], f_GlobalTextColor.getValue()[1], f_GlobalTextColor.getValue()[2], f_GlobalTextColor.getValue()[3] };
 		GlobalLineColor.Value = { f_GlobalLineColor.getValue()[0], f_GlobalLineColor.getValue()[1], f_GlobalLineColor.getValue()[2], f_GlobalLineColor.getValue()[3] };
 		GlobalBoxColor.Value = { f_GlobalBoxColor.getValue()[0], f_GlobalBoxColor.getValue()[1], f_GlobalBoxColor.getValue()[2], f_GlobalBoxColor.getValue()[3] };
 
 		entityManager = &game::EntityManager::getInstance();
-    }
+
+		// Filters
+		AddFilter("Chest", "functions:ESP:filters", game::filters::combined::Chests);
+		AddFilter("Ore", "functions:ESP:filters", game::filters::combined::Ores);
+		AddFilter("Plant", "functions:ESP:filters", game::filters::combined::Plants);
+		AddFilter("Monster", "functions:ESP:filters", game::filters::combined::Monsters);
+		AddFilter("ItemDrop", "functions:ESP:filters", game::filters::featured::ItemDrops);
+		AddFilter("Oculus", "functions:ESP:filters", game::filters::combined::Oculies);
+	}
 
 	std::string ESP::getModule() {
 		return _("MODULE_WORLD");
-    }
+	}
 
 	void ESP::Outer() {
 		if (f_Hotkey.IsPressed())
@@ -53,8 +75,8 @@ namespace cheat
 		DrawExternal();
 	}
 
-    void ESP::GUI()
-    {
+	void ESP::GUI()
+	{
 		ConfigCheckbox("ESP", f_Enabled, "Show filtered object through obstacles.");
 		if (f_Enabled) {
 			ImGui::Indent();
@@ -76,26 +98,36 @@ namespace cheat
 				if (ImGui::ColorEdit4("Color of box", &f_GlobalBoxColor.getValue()[0], flag)) {
 					config::setValue(f_GlobalBoxColor, f_GlobalBoxColor.getValue());
 					f_GlobalBoxColor.setValue(f_GlobalBoxColor.getValue());
+					GlobalBoxColor.Value = { f_GlobalBoxColor.getValue()[0], f_GlobalBoxColor.getValue()[1], f_GlobalBoxColor.getValue()[2], f_GlobalBoxColor.getValue()[3] };
 				}
 				if (ImGui::ColorEdit4("Color of tracer", &f_GlobalLineColor.getValue()[0], flag)) {
 					config::setValue(f_GlobalLineColor, f_GlobalLineColor.getValue());
 					f_GlobalLineColor.setValue(f_GlobalLineColor.getValue());
+					GlobalLineColor.Value = { f_GlobalLineColor.getValue()[0], f_GlobalLineColor.getValue()[1], f_GlobalLineColor.getValue()[2], f_GlobalLineColor.getValue()[3] };
 				}
-				if (ImGui::ColorEdit4("Color of text", &f_GlobalESPColor.getValue()[0], flag)) {
-					config::setValue(f_GlobalESPColor, f_GlobalESPColor.getValue());
-					f_GlobalESPColor.setValue(f_GlobalESPColor.getValue());
+				if (ImGui::ColorEdit4("Color of text", &f_GlobalTextColor.getValue()[0], flag)) {
+					config::setValue(f_GlobalTextColor, f_GlobalTextColor.getValue());
+					f_GlobalTextColor.setValue(f_GlobalTextColor.getValue());
+					GlobalTextColor.Value = { f_GlobalTextColor.getValue()[0], f_GlobalTextColor.getValue()[1], f_GlobalTextColor.getValue()[2], f_GlobalTextColor.getValue()[3] };
 				}
 				ConfigSliderFloat("Transparency", f_FillTransparency, 0.01f, 1.0f, "Transparency of box filling.");
 			}
 			EndGroupPanel();
 
 			if (BeginGroupPanel("Filters", true)) {
-				ConfigCheckbox("Ores", f_Ores);
+				/*ConfigCheckbox("Ores", f_Ores);
 				ConfigCheckbox("Oculies", f_Oculies);
 				ConfigCheckbox("Plants", f_Plants);
 				ConfigCheckbox("Pickable loot", f_PickableLoot);
 				ConfigCheckbox("Chests", f_Chests);
-				ConfigCheckbox("Monsters", f_Monsters);
+				ConfigCheckbox("Monsters", f_Monsters);*/
+
+				for (ESPFilter& filter : filters) {
+					ImGui::Checkbox(filter.name.c_str(), &filter.enabled);
+					std::string key = FirstCharToLowercase(filter.name);
+					config::setValue("functions:ESP:filters", key, filter.enabled);
+				}
+
 			}
 			EndGroupPanel();
 
@@ -103,46 +135,48 @@ namespace cheat
 
 			ImGui::Unindent();
 		}
-    }
+	}
 
-    void ESP::Status()
-    {
-	    ImGui::Text("ESP [%.01fm]", f_Range.getValue());
-    }
+	void ESP::Status()
+	{
+		ImGui::Text("ESP [%.01fm]", f_Range.getValue());
+	}
 
 	ESP& ESP::getInstance()
 	{
-	    static ESP instance;
-	    return instance;
-    }
+		static ESP instance;
+		return instance;
+	}
 
-    void DrawExternal()
-    {
-        auto& esp = ESP::getInstance();
-	    if (!esp.f_Enabled.getValue())
-		    return;
+	ESPFilter FilterEntity(game::Entity entity) {
+		auto& esp = ESP::getInstance();
 
-	    PrepareFrame();
+		for (ESPFilter& filter : filters) {
+			if (filter.simpleFilter.IsValid(&entity) and filter.enabled) {
+				return filter;
+				LOG_DEBUG("return filter, name %s", filter.name);
+			}
+		}
 
-	    for (auto& entity : esp.entityManager->entities())
-	    {
-		    if (esp.entityManager->avatar()->distance(entity) > esp.f_Range.getValue())
-			    continue;
+		return { "Empty", false, game::filters::Empty };
+	}
 
-			if (!(
-				(esp.f_Ores.getValue() and game::filters::combined::Ores.IsValid(entity)) or
-				(esp.f_Oculies.getValue() and game::filters::combined::Oculies.IsValid(entity)) or
-				(esp.f_Plants.getValue() and game::filters::combined::Plants.IsValid(entity)) or
-				(esp.f_PickableLoot.getValue() and 
-					(game::filters::combined::AllPickableLoot.IsValid(entity) and
-					game::filters::combined::Equipments.IsValid(entity) and 
-					game::filters::combined::OresDrop.IsValid(entity))
-					) or (esp.f_Chests.getValue() and entity->isChest()) or
-				(esp.f_Monsters.getValue() and game::filters::combined::AllMonsters.IsValid(entity))
-				))
+	void DrawExternal()
+	{
+		auto& esp = ESP::getInstance();
+		if (!esp.f_Enabled.getValue())
+			return;
+
+		PrepareFrame();
+
+		for (auto& entity : esp.entityManager->entities())
+		{
+			if (esp.entityManager->avatar()->distance(entity) > esp.f_Range.getValue())
 				continue;
 
-			DrawEntity(entity->name(), entity, esp.GlobalESPColor, CalcContrastColor(esp.GlobalESPColor));
-	    }
-    }
+			ESPFilter data = FilterEntity(*entity);
+			if (data) 
+				DrawEntity(data.name, entity, CalcContrastColor(esp.GlobalTextColor));
+		}
+	}
 }

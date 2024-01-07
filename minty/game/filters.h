@@ -6,6 +6,8 @@
 
 namespace cheat::game::filters
 {
+	extern SimpleFilter Empty;
+
 	namespace collection
 	{
 		extern SimpleFilter Book;

@@ -438,23 +438,23 @@ namespace cheat
 			draw->AddText(font, static_cast<float>(esp.f_FontSize.getValue()), namePosition, color, text.c_str());
 	}
 
-	bool DrawEntity(const std::string& name, game::Entity* entity, const ImColor& color, const ImColor& contrastColor)
+	bool DrawEntity(const std::string& name, game::Entity* entity, const ImColor& contrastColor)
 	{
 		SAFE_BEGIN();
 		auto& esp = ESP::getInstance();
 
 		Rect rect;
 		if (esp.f_DrawBox) {
-			rect = DrawBox(entity, esp.GlobalBoxColor ? esp.GlobalBoxColor : color);
+			rect = DrawBox(entity, esp.GlobalBoxColor);
 		}
 
 		if (esp.f_DrawTracer) {
-			DrawLine(entity, esp.GlobalLineColor ? esp.GlobalLineColor : color);
+			DrawLine(entity, esp.GlobalLineColor);
 		}
 
 		if (esp.f_DrawName.getValue() || esp.f_DrawDistance.getValue())
-			DrawName(rect, entity, name, esp.GlobalESPColor ? esp.GlobalESPColor : color,
-				esp.m_FontContrastColor ? esp.m_FontContrastColor : contrastColor);
+			DrawName(rect, entity, name, esp.GlobalTextColor,
+				esp.m_FontContrastColor);
 
 		return HasCenter(rect);
 		SAFE_ERROR();

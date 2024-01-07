@@ -5,6 +5,9 @@ namespace cheat::game::filters
 	using namespace game;
 	using namespace app;
 
+	SimpleFilter Empty = { app::EntityType__Enum_1::GatherObject,  "" };
+
+
 	namespace collection
 	{
 		SimpleFilter Book = { app::EntityType__Enum_1::GatherObject, "SkillObj_EmptyGadget" };
