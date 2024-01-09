@@ -22,6 +22,25 @@ namespace cheat
 		return output;
 	}
 
+	std::string ConvertToWords(const std::string& input) { // convert strings with format "SomeString" to "Some string"
+		std::string result;
+
+		for (size_t i = 0; i < input.length(); ++i) {
+			if (i > 0 && isupper(input[i]))
+				result += ' ';
+
+			result += tolower(input[i]);
+		}
+		result[0] = toupper(result[0]);
+
+		return result;
+	}
+
+	/*
+	The first parameter is a name for the entity and at the same time a key to save the filter status in the config.
+	Second - path to the place where the filter value will be saved.
+	Third - the filter itself(see game / filters.h).
+	*/
 	void AddFilter(std::string name, std::string path, game::SimpleFilter filter) {
 		std::string key = FirstCharToLowercase(name);
 		auto value = config::getValue(path, key, false);
@@ -45,7 +64,7 @@ namespace cheat
 		f_FontSize = config::getValue("functions::ESP", "textSize", 15);
 
 		f_FillTransparency = config::getValue("functions:ESP", "fillTransparency", 50.f);
-		
+
 		f_GlobalTextColor = config::getValue<std::vector<float>>("functions:ESP:colors", "text", { 1.f, 1.f, 1.f, 1.0f });
 		f_GlobalLineColor = config::getValue<std::vector<float>>("functions:ESP:colors", "tracer", { 0.5f, 0.5f, 0.5f, 1.0f });
 		f_GlobalBoxColor = config::getValue<std::vector<float>>("functions:ESP:colors", "box", { 0.5f, 0.5f, 0.5f, 1.0f });
@@ -56,13 +75,20 @@ namespace cheat
 
 		entityManager = &game::EntityManager::getInstance();
 
-		// Filters
+		/*
+		Filters
+		Write names in the format "SomeEntityName" to save them in the config as
+		"someEntityName" and for the name in the game as "Some entity name"
+		*/
 		AddFilter("Chest", "functions:ESP:filters", game::filters::combined::Chests);
 		AddFilter("Ore", "functions:ESP:filters", game::filters::combined::Ores);
 		AddFilter("Plant", "functions:ESP:filters", game::filters::combined::Plants);
-		AddFilter("Monster", "functions:ESP:filters", game::filters::combined::Monsters);
-		AddFilter("ItemDrop", "functions:ESP:filters", game::filters::featured::ItemDrops);
+		AddFilter("Monsters", "functions:ESP:filters", game::filters::combined::AllMonsters);
+		AddFilter("Items", "functions:ESP:filters", game::filters::featured::ItemDrops);
+		// AddFilter("Items", "functions:ESP:filters", game::filters::combined::AllPickableLoot); idk why its not workin
 		AddFilter("Oculus", "functions:ESP:filters", game::filters::combined::Oculies);
+		AddFilter("Seelie", "functions:ESP:filters", game::filters::combined::Seelies);
+		AddFilter("SeelieLamp", "functions:ESP:filters", game::filters::puzzle::SeelieLamp);
 	}
 
 	std::string ESP::getModule() {
@@ -116,7 +142,8 @@ namespace cheat
 
 			if (BeginGroupPanel("Filters", true)) {
 				for (ESPFilter& filter : filters) {
-					ImGui::Checkbox(filter.name.c_str(), &filter.enabled);
+					auto name = ConvertToWords(filter.name);
+					ImGui::Checkbox(name.c_str(), &filter.enabled);
 					std::string key = FirstCharToLowercase(filter.name);
 					config::setValue("functions:ESP:filters", key, filter.enabled);
 				}
@@ -144,10 +171,8 @@ namespace cheat
 		auto& esp = ESP::getInstance();
 
 		for (ESPFilter& filter : filters) {
-			if (filter.simpleFilter.IsValid(&entity) and filter.enabled) {
+			if (filter.simpleFilter.IsValid(&entity) and filter.enabled)
 				return filter;
-				LOG_DEBUG("return filter, name %s", filter.name);
-			}
 		}
 
 		return { "Empty", false, game::filters::Empty };
@@ -167,8 +192,11 @@ namespace cheat
 				continue;
 
 			ESPFilter data = FilterEntity(*entity);
-			if (data) 
-				DrawEntity(data.name, entity, CalcContrastColor(esp.GlobalTextColor));
+
+			//LOG_DEBUG("%s", entity->name().c_str());
+
+			if (data)
+				DrawEntity(ConvertToWords(data.name), entity, CalcContrastColor(esp.GlobalTextColor));
 		}
 	}
 }

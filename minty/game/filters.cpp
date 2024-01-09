@@ -7,7 +7,6 @@ namespace cheat::game::filters
 
 	SimpleFilter Empty = { app::EntityType__Enum_1::GatherObject,  "" };
 
-
 	namespace collection
 	{
 		SimpleFilter Book = { app::EntityType__Enum_1::GatherObject, "SkillObj_EmptyGadget" };
@@ -304,7 +303,8 @@ namespace cheat::game::filters
 		SimpleFilter EightStoneTablets = { EntityType__Enum_1::Gadget, "_HistoryBoard" };
 		SimpleFilter ElectricConduction = { EntityType__Enum_1::Gear, "_ElectricPowerSource" };
 		SimpleFilter RelayStone = { EntityType__Enum_1::Worktop, "_ElectricTransfer_" };
-		WhitelistFilter ElectroSeelie = { {EntityType__Enum_1::Field, EntityType__Enum_1::Platform }, "_ElectricSeelie" };
+		//WhitelistFilter ElectroSeelie = { {EntityType__Enum_1::Field, EntityType__Enum_1::Platform }, "_ElectricSeelie" };
+		SimpleFilter ElectroSeelie = { EntityType__Enum_1::Platform, "_ElectricSeelie" };
 		SimpleFilter ElementalMonument = { EntityType__Enum_1::Gear, "_ElemTablet" };
 		SimpleFilter FloatingAnemoSlime = { EntityType__Enum_1::Platform, "_WindSlime" };
 		SimpleFilter Geogranum = { EntityType__Enum_1::Gadget, "_Property_Prop_RockFragment" };
@@ -347,6 +347,13 @@ namespace cheat::game::filters
 
 	namespace combined
 	{
+		SimpleFilter Seelies = {
+			puzzle::ElectroSeelie,
+			puzzle::LuminousSeelie,
+			puzzle::WarmingSeelie,
+			puzzle::Seelie
+		};
+
 		SimpleFilter Oculies = {
 			featured::Anemoculus,
 			featured::CrimsonAgate,
@@ -386,11 +393,7 @@ namespace cheat::game::filters
 			plant::MistFlowerCorolla,
 			plant::FlamingFlowerStamen
 		};
-		SimpleFilter BreakableObjects = {
-			puzzle::AncientRime,
-			puzzle::LargeRockPile,
-			puzzle::SmallRockPile
-		};
+
 		WhitelistFilter Doodads = {
 			EntityType__Enum_1::Gadget,
 			{
@@ -419,6 +422,12 @@ namespace cheat::game::filters
 			"WoodenBox",
 			"RoadBlock"
 			}
+		};
+		SimpleFilter BreakableObjects = {
+			puzzle::AncientRime,
+			puzzle::LargeRockPile,
+			puzzle::SmallRockPile,
+			puzzle::Bombbarrel,
 		};
 		SimpleFilter Animals = { EntityType__Enum_1::EnvAnimal };
 		SimpleFilter AnimalDrop = {
@@ -570,18 +579,9 @@ namespace cheat::game::filters
 			monster::Whopperflower
 		};
 		SimpleFilter MonsterEquips = { EntityType__Enum_1::MonsterEquip };
-		BlacklistFilter Living = {
-			{EntityType__Enum_1::EnvAnimal, EntityType__Enum_1::Monster},
-			{
-				// Environmental mobs
-				"Cat", "DogPrick", "Vulpues", "Inu_Tanuki",
-				// Overworld bosses
-				"Ningyo", "Regisvine", "Hypostasis", "Planelurker", "Nithhoggr"
-			}
-		};
-		SimpleFilter OrganicTargets = { Monsters, Animals }; 
-		SimpleFilter Lightning = { EntityType__Enum_1::Lightning };
 
+		SimpleFilter OrganicTargets = { Monsters, Animals };
+		SimpleFilter Lightning = { EntityType__Enum_1::Lightning };
 		SimpleFilter Plants = {
 			plant::AmakumoFruit,
 			plant::Apple,
@@ -638,7 +638,7 @@ namespace cheat::game::filters
 			plant::Ajilenakh
 		};
 
-		SimpleFilter Equipments {
+		SimpleFilter Equipments{
 			equipment::Artifacts,
 			equipment::Catalyst,
 			equipment::Sword,
@@ -648,22 +648,17 @@ namespace cheat::game::filters
 		};
 
 		SimpleFilter AllMonsters{
-			Monsters,
 			MonsterCommon,
 			MonsterElites
 		};
 
 		SimpleFilter AllPickableLoot = {
-			Ores, 
 			OresDrop,
-			AnimalDrop, 
+			AnimalDrop,
 			AnimalPickUp,
-			Oculies,
-			Plants,
 			Equipments,
-
 			featured::ItemDrops,
 			living::Meat,
-		}; 
+		};
 	}
 }

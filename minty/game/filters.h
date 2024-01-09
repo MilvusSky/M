@@ -305,7 +305,7 @@ namespace cheat::game::filters
 		extern SimpleFilter EightStoneTablets;
 		extern SimpleFilter ElectricConduction;
 		extern SimpleFilter RelayStone;
-		extern WhitelistFilter ElectroSeelie;
+		extern SimpleFilter ElectroSeelie;
 		extern SimpleFilter ElementalMonument;
 		extern SimpleFilter FloatingAnemoSlime;
 		extern SimpleFilter Geogranum;
@@ -348,6 +348,7 @@ namespace cheat::game::filters
 
 	namespace combined
 	{
+		extern SimpleFilter Seelies;
 		extern SimpleFilter Oculies;
 		extern SimpleFilter AllMonsters;
 		extern SimpleFilter Chests;
