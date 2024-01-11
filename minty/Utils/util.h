@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <regex>
+#include <filesystem>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -16,14 +18,15 @@
 #define SAFE_EEND() SAFE_ERROR(); SAFE_END();
 
 namespace util {
-    std::vector<std::string> split(const std::string& content, const std::string& delimiter);
-    int64_t GetCurrentTimeMillisec();
+	std::string getUAHash(std::string execPath);
+	std::vector<std::string> split(const std::string& content, const std::string& delimiter);
+	int64_t GetCurrentTimeMillisec();
 
-    template <typename T>
-    const char* get_ptr(const T& value) {
-	std::stringstream ss;
-	ss << std::hex << std::showbase << reinterpret_cast<const void*>(value);
-	static std::string result = ss.str();
-	return result.c_str();
-    }
+	template <typename T>
+	const char* get_ptr(const T& value) {
+		std::stringstream ss;
+		ss << std::hex << std::showbase << reinterpret_cast<const void*>(value);
+		static std::string result = ss.str();
+		return result.c_str();
+	}
 }

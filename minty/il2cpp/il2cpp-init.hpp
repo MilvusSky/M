@@ -40,13 +40,20 @@ enum class GameVersion {
 };
 
 GameVersion getGameVersion() {
-	std::string execPath = config::getValue<std::string>("general", "execPath", "").getValue();
+	// 4.3.0 (pkg_version -> md5)
+	std::array<std::pair<GameVersion, std::string>, 2> gameVersions = {{
+			{ GameVersion::GLOBAL, "218603b67495dab9f6ce28515451c231" },
+			{ GameVersion::CHINA, "9171a8aba135d881b082bcdd6174d812" }
+		}};
+	std::string hash = util::getUAHash(config::getValue<std::string>("general", "execPath", "").getValue());
 
-	if (execPath.find("GenshinImpact.exe") != std::string::npos)
-		return GameVersion::GLOBAL;
+	for (const auto& [gameVersion, checksum] : gameVersions) {
+		if (checksum != hash)
+			continue;
 
-	if (execPath.find("YuanShen.exe") != std::string::npos)
-		return GameVersion::CHINA;
+		return gameVersion;
+	}
+
 	return GameVersion::NONE;
 }
 
@@ -72,8 +79,6 @@ VOID init_il2cpp() {
 		if (GetModuleHandleA("UserAssembly.dll") != nullptr) {
 			baseAddress = (uint64_t) GetModuleHandleA("UserAssembly.dll");
 			unityPlayerAddress = (uint64_t) GetModuleHandleA("UnityPlayer.dll");
-			//LOG_DEBUG("UserAssembly ptr: %p", baseAddress);
-			//LOG_DEBUG("UnityPlayer ptr: %p", unityPlayerAddress);
 
 			#define DO_API(a, b, r, n, p) n = (r (*) p)(baseAddress + SELECT_VERSION(gameVersion, a, b))
 				#include "il2cpp-api-functions.h"
