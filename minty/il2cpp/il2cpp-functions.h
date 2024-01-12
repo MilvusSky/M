@@ -1,17 +1,6 @@
 ﻿#include "il2cpp-types.h"
 
 using namespace app;
-DO_APP_FUNC(0x0CF67940, 0x0, Transform*, Transform_FindChild, (Transform* __this, String* name));
-
-//0x06238AC0 and 0x045CDC10 works perfectly
-DO_APP_FUNC(0x06238AC0, 0x0620E5B0, app::Bounds, wtf, (app::GameObject* gameObject));
-
-DO_APP_FUNC(0x0CFA1DF0, 0x0CF3DC20, Vector3, Camera_WorldToScreenPoint, (Camera* __this, Vector3 position));
-DO_APP_FUNC(0x0CFA17C0, 0x0CF3D590, int32_t, Camera_get_pixelWidth, (Camera* __this));
-DO_APP_FUNC(0x0CFA17D0, 0x0CF3D5A0, int32_t, Camera_get_pixelHeight, (Camera* __this));
-
-DO_APP_FUNC(0x0D0B9510, 0x0D0550E0, bool, Behaviour_get_isActiveAndEnabled, (Behaviour* __this));
-DO_APP_FUNC(0x07631C30, 0x075F46F0, GameObject*, MoleMole_BaseEntity_get_gameObject, (BaseEntity* __this));
 
 // unsorted
 DO_APP_FUNC(0x0617E860, 0x06155180, void, MoleMole_LCSelectPickup_AddInteeBtnByID, (void* __this, app::BaseEntity* entity, app::MethodInfo* method));
@@ -19,17 +8,8 @@ DO_APP_FUNC(0x0617D170, 0x06153AE0, bool, MoleMole_LCSelectPickup_IsInPosition, 
 DO_APP_FUNC(0x0617D420, 0x06153D90, bool, MoleMole_LCSelectPickup_IsOutPosition, (void* __this, app::BaseEntity* entity, app::MethodInfo* method));
 DO_APP_FUNC(0x0611B100, 0x060F1E70, void, MoleMole_ItemModule_PickItem, (void* __this, uint32_t entityID, app::MethodInfo* method));
 
-DO_APP_FUNC(0x088C46D0, 0x08879AF0, void, MoleMole_LCAbilityElement_ReduceModifierDurability, (app::LCAbilityElement* __this, int32_t modifierDurabilityIndex, float reduceDurability, app::Nullable_1_Single_ deltaTime, app::MethodInfo* method));
-DO_APP_FUNC(0x042B9550, 0x042FEEF0, app::List_1_MoleMole_BaseEntity_*, MoleMole_EntityManager_GetEntities, (app::MoleMole_EntityManager* __this));
-DO_APP_FUNC(0x0507AA60, 0x0505F580, app::String*, MoleMole_BaseEntity_ToStringRelease, (app::BaseEntity* __this));
-DO_APP_FUNC(0x05680A80, 0x05660730, app::Vector2, Miscs_GenLevelPos_1, (app::Vector3 worldPos));
-DO_APP_FUNC(0x0B816730, 0x0B7B9F70, app::Vector3, MoleMole_BaseEntity_GetAbsolutePosition, (app::BaseEntity* __this));
-//DO_APP_FUNC(0x007BF620, 0x0, LCBaseCombat*, MoleMole_BaseEntity_GetLogicCombatComponent_1, (app::BaseEntity* __this, app::MethodInfo* method)); // 4.2
-//DO_APP_FUNC_METHODINFO(0x931C7A8, MoleMole_BaseEntity_GetLogicCombatComponent_1__MethodInfo); // 4.2
-DO_APP_FUNC(0x0CF56FD0, 0x0CEF2FC0, float, Vector2_Distance, (app::Vector2 pos1, app::Vector2 pos2));
-
 // Cooldown cheats
-DO_APP_FUNC(0x03FFC5A0, 0x03FF2C40, bool, MoleMole_HumanoidMoveFSM_CheckSprintCooldown, (/* HumanoidMoveFSM */void* __this));
+DO_APP_FUNC(0x03FFC5A0, 0x03FF2C40, bool, MoleMole_HumanoidMoveFSM_CheckSprintCooldown, (void* __this));
 DO_APP_FUNC(0x05A06440, 0x059E2A50, bool, MoleMole_LCAvatarCombat_IsEnergyMax, (void* __this));
 DO_APP_FUNC(0x05A03280, 0x059DF920, bool, MoleMole_LCAvatarCombat_OnSkillStart, (app::LCAvatarCombat* __this, uint32_t skillid, float multipler));
 DO_APP_FUNC(0x04BFF7C0, 0x04BE9300, void, MoleMole_ActorAbilityPlugin_AddDynamicFloatWithRange, (app::MoleMole_ActorAbilityPlugin* __this, app::String* key, float value, float minf, float maxf, bool forceDoAtRemote));
@@ -38,7 +18,7 @@ DO_APP_FUNC(0x04BFF7C0, 0x04BE9300, void, MoleMole_ActorAbilityPlugin_AddDynamic
 DO_APP_FUNC(0x07EDE180, 0x07E99350, void, MoleMole_SCameraModuleInitialize_SetWarningLocateRatio, (app::SCameraModuleInitialize* __this, double deltaTime, app::CameraShareData* data));
 DO_APP_FUNC(0x05519DB0, 0x054FB110, void, MoleMole_VCBaseSetDitherValue_set_ManagerDitherAlphaValue, (app::MoleMole_VCBaseSetDitherValue* __this, float value));
 
-// God mode
+// God Mode
 DO_APP_FUNC(0x05394400, 0x053769C0, void, VCHumanoidMove_NotifyLandVelocity, (app::VCHumanoidMove* __this, app::Vector3 velocity, float reachMaxDownVelocityTime));
 DO_APP_FUNC(0x05652AC0, 0x05632B70, bool, Miscs_CheckTargetAttackable, (app::BaseEntity* attacker, app::BaseEntity* target, bool checkBackstage));
 DO_APP_FUNC(0x081FEFA0, 0x081B8670, void, MoleMole_LCBaseCombat_FireBeingHitEvent, (app::LCBaseCombat* __this, uint32_t attackeeRuntimeID, app::AttackResult* attackResult));
@@ -59,12 +39,14 @@ DO_APP_FUNC(0x0CFDFC30, 0x0CF7B960, void, Slider_1_set_minValue, (app::Slider_1*
 DO_APP_FUNC(0x0CFDFCB0, 0x0CF7B9E0, void, Slider_1_set_maxValue, (app::Slider_1* __this, float value));
 DO_APP_FUNC(0x0CFDFE20, 0x0CF7BB50, void, Slider_1_set_value, (app::Slider_1* __this, float value));
 
-// should be 'op_Implicit' not 'get_value'
 DO_APP_FUNC(0x07E0AC70, 0x07DC6820, float, MoleMole_SafeFloat_get_Value, (app::SafeFloat safeFloat));
-// should be 'op_Implicit' not 'set_value'
 DO_APP_FUNC(0x07E0AC50, 0x07DC6800, app::SafeFloat, MoleMole_SafeFloat_set_Value, (float value));
 
 DO_APP_FUNC(0x0C771F70, 0x0C711660, app::String*, Marshal_PtrToStringAnsi, (void* ptr));
+
+DO_APP_FUNC(0x05680A80, 0x05660730, app::Vector2, Miscs_GenLevelPos_1, (app::Vector3 worldPos));
+
+DO_APP_FUNC(0x06238AC0, 0x0620E5B0, app::Bounds, GetBounds, (app::GameObject* target));
 
 // Game Object, Transform, Object, Component Utility
 DO_APP_FUNC(0x0D0A8100, 0x0D043CF0, app::GameObject*, GameObject_CreatePrimitive, (app::PrimitiveType__Enum type));
@@ -77,6 +59,7 @@ DO_APP_FUNC(0x0D0A8470, 0x0D044060, app::Transform*, GameObject_get_transform, (
 
 DO_APP_FUNC(0x0CF679C0, 0x0CF03960, app::Transform*, Transform_GetChild, (app::Transform* __this, int32_t index));
 DO_APP_FUNC(0x0CF679D0, 0x0CF03970, int32_t, Transform_GetChildCount, (app::Transform* __this));
+DO_APP_FUNC(0x0CF67940, 0x0CF038E0, app::Transform*, Transform_FindChild, (app::Transform* __this, app::String* name));
 DO_APP_FUNC(0x0CF622E0, 0x0CEFE270, void, Transform_set_localPosition, (app::Transform* __this, app::Vector3 value));
 DO_APP_FUNC(0x0CF653F0, 0x0CF01390, void, Transform_set_localRotation, (app::Transform* __this, app::Quaternion value));
 DO_APP_FUNC(0x0CF65B30, 0x0CF01AD0, app::Vector3, Transform_get_localScale, (app::Transform* __this));
@@ -108,6 +91,9 @@ DO_APP_FUNC(0x0D08F430, 0x0D02B060, bool*, Application_get_isFocused, ());
 DO_APP_FUNC(0x0D08F590, 0x0D02B1C0, void*, Application_set_targetFrameRate, (int32_t value));
 
 DO_APP_FUNC(0x0D0EED10, 0x0D08A870, void*, QualitySettings_set_vSyncCount, (int32_t value));
+DO_APP_FUNC(0x0D0EECA0, 0x0D08A800, void, QualitySettings_set_shadows, (app::ShadowQuality value));
+
+DO_APP_FUNC(0x0CF56FD0, 0x0CEF2FC0, float, Vector2_Distance, (app::Vector2 pos1, app::Vector2 pos2));
 
 DO_APP_FUNC(0x0D0BC3D0, 0x0D057FA0, float, Vector3_Distance, (app::Vector3 pos1, app::Vector3 pos2));
 DO_APP_FUNC(0x0D0BB080, 0x0D056C50, app::Vector3, Vector3_Lerp, (app::Vector3 start, app::Vector3 end, float time));
@@ -119,8 +105,14 @@ DO_APP_FUNC(0x0CF73F60, 0x0CF0FEA0, void, Cursor_set_lockState, (app::CursorLock
 DO_APP_FUNC(0x0CF54E10, 0x0CEF0E00, int32_t, Screen_get_width, (app::MethodInfo* method));
 DO_APP_FUNC(0x0CF54E20, 0x0CEF0E10, int32_t, Screen_get_height, (app::MethodInfo* method));
 
+DO_APP_FUNC(0x0CFA1DF0, 0x0CF3DC20, app::Vector3, Camera_WorldToScreenPoint, (app::Camera* __this, app::Vector3 position));
+DO_APP_FUNC(0x0CFA17C0, 0x0CF3D590, int32_t, Camera_get_pixelWidth, (app::Camera* __this));
+DO_APP_FUNC(0x0CFA17D0, 0x0CF3D5A0, int32_t, Camera_get_pixelHeight, (app::Camera* __this));
 DO_APP_FUNC(0x0CFA1E50, 0x0CF3DC20, app::Vector3, Camera_WorldToScreen, (app::Camera* this_, app::Vector3 pos));
 DO_APP_FUNC(0x0CFA21E0, 0x0CF3DFB0, app::Camera*, Camera_get_main, ());
+
+DO_APP_FUNC(0x0D0B9510, 0x0D0550E0, bool, Behaviour_get_isActiveAndEnabled, (app::Behaviour* __this));
+
 DO_APP_FUNC(0x0CEB38C0, 0x0CE4F9E0, app::Bounds, Collider_get_bounds, (app::Collider* this_));
 
 DO_APP_FUNC(0x0CEC02A0, 0x0CE5C3C0, void, Rigidbody_set_velocity, (app::Rigidbody* __this, app::Vector3 value));
@@ -130,7 +122,7 @@ DO_APP_FUNC(0x0CEC0560, 0x0CE5C680, app::Vector3, Rigidbody_get_position, (app::
 DO_APP_FUNC(0x0CEC05C0, 0x0CE5C6E0, void, Rigidbody_set_position, (app::Rigidbody* __this, app::Vector3 value));
 DO_APP_FUNC(0x0CEC0670, 0x0CE5C790, void, Rigidbody_MovePosition, (app::Rigidbody* __this, app::Vector3 position));
 
-DO_APP_FUNC(0x0C7AE520, 0x0C74DAD0, void, Action_Invoke, (/*Action*/ void* __this));
+DO_APP_FUNC(0x0C7AE520, 0x0C74DAD0, void, Action_Invoke, (void* __this));
 
 // Lua functions
 DO_APP_FUNC(0x03FA0B10, 0x03F974E0, void, MoleMole_LuaShellManager_ReportLuaShellResult, (void* __this, app::String* type, app::String* value));
@@ -171,19 +163,23 @@ DO_APP_FUNC(0x03E2D5B0, 0x03E254D0, app::MoleMole_EntityManager*, MoleMole_InLev
 DO_APP_FUNC(0x042B6770, 0x042FC180, app::BaseEntity*, MoleMole_EntityManager_GetLocalAvatarEntity, (app::MoleMole_EntityManager* __this));
 DO_APP_FUNC(0x042B9080, 0x042FEA20, app::CameraEntity*, MoleMole_EntityManager_GetMainCameraEntity, (app::MoleMole_EntityManager* __this));
 DO_APP_FUNC(0x042B9710, 0x042FF0B0, app::BaseEntity*, MoleMole_EntityManager_GetValidEntity, (app::MoleMole_EntityManager* __this, uint32_t runtimeID));
+DO_APP_FUNC(0x042B9550, 0x042FEEF0, app::List_1_MoleMole_BaseEntity_*, MoleMole_EntityManager_GetEntities, (app::MoleMole_EntityManager* __this));
 
+DO_APP_FUNC(0x0505A7E0, 0x0503F4E0, bool, MoleMole_BaseEntity_IsActive, (app::BaseEntity* __this));
 DO_APP_FUNC(0x0506F080, 0x05053C40, uint32_t, MoleMole_BaseEntity_get_runtimeID, (app::BaseEntity* __this));
 DO_APP_FUNC(0x0506F0C0, 0x05053C80, uint32_t, MoleMole_BaseEntity_get_configID, (app::BaseEntity* __this));
-DO_APP_FUNC(0x0505A7E0, 0x0503F4E0, bool, MoleMole_BaseEntity_IsActive, (app::BaseEntity* __this));
+DO_APP_FUNC(0x05079BC0, 0x0505E6E0, app::EntityType__Enum_1, MoleMole_BaseEntity_get_entityType, (app::BaseEntity* __this));
+DO_APP_FUNC(0x0507AA60, 0x0505F580, app::String*, MoleMole_BaseEntity_ToStringRelease, (app::BaseEntity* __this));
 DO_APP_FUNC(0x07631D50, 0x075F4810, app::Animator*, MoleMole_BaseEntity_get_animator, (app::BaseEntity* __this));
 DO_APP_FUNC(0x07631AB0, 0x075F4570, app::GameObject*, MoleMole_BaseEntity_get_rootGameObject, (app::BaseEntity* __this));
+DO_APP_FUNC(0x07631C30, 0x075F46F0, app::GameObject*, MoleMole_BaseEntity_get_gameObject, (app::BaseEntity* __this));
 DO_APP_FUNC(0x076359C0, 0x075F8490, app::Rigidbody*, MoleMole_BaseEntity_GetRigidbody, (app::BaseEntity* __this));
-DO_APP_FUNC(0x05079BC0, 0x0505E6E0, app::EntityType__Enum_1, MoleMole_BaseEntity_get_entityType, (app::BaseEntity* __this));
 DO_APP_FUNC(0x07635B60, 0x075F8630, app::Vector3, MoleMole_BaseEntity_GetRelativePosition, (app::BaseEntity* __this));
 DO_APP_FUNC(0x07636940, 0x075F93E0, void, MoleMole_BaseEntity_SetRelativePosition, (app::BaseEntity* __this, app::Vector3 position, bool forceSyncToRigidbody));
 DO_APP_FUNC(0x076371D0, 0x075F9C80, app::Vector3, MoleMole_BaseEntity_GetForward, (app::BaseEntity* __this));
 DO_APP_FUNC(0x07637630, 0x075FA0E0, app::Vector3, MoleMole_BaseEntity_GetRight, (app::BaseEntity* __this));
 DO_APP_FUNC(0x076379D0, 0x075FA480, app::Vector3, MoleMole_BaseEntity_GetUp, (app::BaseEntity* __this));
+DO_APP_FUNC(0x0B816730, 0x0B7B9F70, app::Vector3, MoleMole_BaseEntity_GetAbsolutePosition, (app::BaseEntity* __this));
 
 DO_APP_FUNC(0x04713420, 0x04702DE0, app::BaseEntity*, MoleMole_GadgetEntity_GetOwnerEntity, (app::GadgetEntity* __this));
 
@@ -199,15 +195,10 @@ DO_APP_FUNC(0x00D82A70, 0x0, void, MoleMole_InLevelPlayerProfilePageContext_Setu
 DO_APP_FUNC(0x00D7EFF0, 0x0, void, MoleMole_InLevelPlayerProfilePageContext_ClearView, (void* __this));
 DO_APP_FUNC(0x013E7B30, 0x0, void, MoleMole_InLevelMainPageContext_EndCountDown, (app::InLevelMainPageContext* __this));
 
-// Unlimited stamina
+// Infinite Stamina
 DO_APP_FUNC(0x03A70CE0, 0x03A6CCA0, void, MoleMole_LevelSyncCombatPlugin_RequestSceneEntityMoveReq, (app::LevelSyncCombatPlugin* __this, uint32_t entityId, app::MotionInfo* syncInfo, bool isReliable, uint32_t reliableSeq));
 DO_APP_FUNC(0x07431BC0, 0x073F6850, app::MotionState__Enum, MotionInfo_get_State, (app::MotionInfo* __this));
 DO_APP_FUNC(0x07431BD0, 0x073F6860, app::MotionState__Enum, MotionInfo_set_State, (app::MotionInfo* __this, app::MotionState__Enum value));
-//DO_APP_FUNC(0x03AFF770, 0x03AFAED0, void, MoleMole_DataItem_HandleNormalProp, (app::DataItem* __this, uint32_t type, int64_t value, app::DataPropOp__Enum state));
+DO_APP_FUNC(0x03AFF770, 0x03AFAED0, void, MoleMole_DataItem_HandleNormalProp, (app::DataItem* __this, uint32_t type, int64_t value, app::DataPropOp__Enum state));
 // Wanderer E Stamina
-DO_APP_FUNC(0x0539BA80, 0x0537E040, void, VCHumanoidMove_Scara, (app::VCHumanoidMove* __this, float value));
-
-DO_APP_FUNC(0x0D0EECA0, 0x0D08A800, void, QualitySettings_set_shadows, (app::ShadowQuality value));
-
-// ESP
-
+DO_APP_FUNC(0x0539BB80, 0x0537E0B0, void, VCHumanoidMove_Scara, (app::VCHumanoidMove* __this, float val));

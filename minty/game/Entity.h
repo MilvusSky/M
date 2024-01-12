@@ -36,7 +36,6 @@ namespace cheat::game {
 		float distance(const app::Vector2& levelPoint);
 		app::Vector3 absolutePosition();
 		app::Vector2 levelPosition();
-		app::LCBaseCombat* combat();
 		std::string& name();
 
 		app::Vector3 forward() const;

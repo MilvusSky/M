@@ -6,7 +6,6 @@ namespace cheat {
 	class InfiniteStamina : public Function {
 	public:
 		ConfigField<bool> f_Enabled;
-		ConfigField<bool> f_EnabledPacket;
 
 		Hotkey f_Hotkey;
 

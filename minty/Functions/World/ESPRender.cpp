@@ -49,7 +49,7 @@ namespace cheat
 	static void UpdateMainCamera()
 	{
 		UPDATE_DELAY(1000);
-	    
+
 		s_Camera = nullptr;
 
 		SAFE_BEGIN();
@@ -59,7 +59,7 @@ namespace cheat
 
 		if (!app::Behaviour_get_isActiveAndEnabled(reinterpret_cast<app::Behaviour*>(camera)))
 			return;
-		
+
 		s_Camera = camera;
 		SAFE_EEND();
 	}
@@ -161,7 +161,7 @@ namespace cheat
 
 		SAFE_BEGIN();
 
-		auto bounds = app::wtf(gameObject);
+		auto bounds = app::GetBounds(gameObject);
 		/*if (bounds.m_Extents.x < esp.f_MinSize.getValue() &&
 			bounds.m_Extents.y < esp.f_MinSize.getValue() &&
 			bounds.m_Extents.z < esp.f_MinSize.getValue())
@@ -174,11 +174,11 @@ namespace cheat
 			return GetEntityMinBounds(entity, 1);
 
 		return bounds;
-		
+
 		SAFE_ERROR();
 
 		return GetEntityMinBounds(entity);
-		
+
 		SAFE_END();
 	}
 
@@ -250,7 +250,7 @@ namespace cheat
 
 #undef FIX_Y
 
-			}
+	}
 
 	static Rect GetEntityScreenRect(const BoxScreen& box, bool scalling = true)
 	{
@@ -301,8 +301,8 @@ namespace cheat
 	{
 		ImVec2 centerPoint = ImVec2(s_ScreenResolution.x / 2, s_ScreenResolution.y / 2);
 
-		return rect.xMin < centerPoint.x&& centerPoint.x < rect.xMax &&
-			rect.yMin < centerPoint.y&& centerPoint.y < rect.yMax;
+		return rect.xMin < centerPoint.x && centerPoint.x < rect.xMax &&
+			rect.yMin < centerPoint.y && centerPoint.y < rect.yMax;
 	}
 
 	static Rect DrawBox(game::Entity* entity, const ImColor& color)
@@ -315,10 +315,10 @@ namespace cheat
 		auto& esp = ESP::getInstance();
 		auto draw = ImGui::GetBackgroundDrawList();
 
-			ImColor newColor = color;
-			newColor.Value.w = 1.0f - esp.f_FillTransparency.getValue();
+		ImColor newColor = color;
+		newColor.Value.w = 1.0f - esp.f_FillTransparency.getValue();
 
-			float threshold = 2.0f;
+		float threshold = 2.0f;
 #define ADD_FIXED_QUAD(p1, p2, p3, p4, col) {\
 						ImVec2 p13 { std::abs(p3.x - p1.x), std::abs(p3.y - p1.y) };\
 						ImVec2 p24 { std::abs(p2.x - p4.x), std::abs(p2.y - p4.y) };\
@@ -329,14 +329,14 @@ namespace cheat
 							draw->AddQuadFilled(p1, p2, p3, p4, newColor);\
 			}
 
-			ADD_FIXED_QUAD(box->lowerBottomLeft, box->lowerTopLeft, box->lowerTopRight, box->lowerBottomRight, newColor);
-			ADD_FIXED_QUAD(box->upperBottomLeft, box->upperTopLeft, box->upperTopRight, box->upperBottomRight, newColor);
+		ADD_FIXED_QUAD(box->lowerBottomLeft, box->lowerTopLeft, box->lowerTopRight, box->lowerBottomRight, newColor);
+		ADD_FIXED_QUAD(box->upperBottomLeft, box->upperTopLeft, box->upperTopRight, box->upperBottomRight, newColor);
 
-			ADD_FIXED_QUAD(box->lowerBottomLeft, box->upperBottomLeft, box->upperBottomRight, box->lowerBottomRight, newColor);
-			ADD_FIXED_QUAD(box->lowerTopLeft, box->upperTopLeft, box->upperTopRight, box->lowerTopRight, newColor);
+		ADD_FIXED_QUAD(box->lowerBottomLeft, box->upperBottomLeft, box->upperBottomRight, box->lowerBottomRight, newColor);
+		ADD_FIXED_QUAD(box->lowerTopLeft, box->upperTopLeft, box->upperTopRight, box->lowerTopRight, newColor);
 
-			ADD_FIXED_QUAD(box->lowerBottomLeft, box->lowerTopLeft, box->upperTopLeft, box->upperBottomLeft, newColor);
-			ADD_FIXED_QUAD(box->lowerBottomRight, box->lowerTopRight, box->upperTopRight, box->upperBottomRight, newColor);
+		ADD_FIXED_QUAD(box->lowerBottomLeft, box->lowerTopLeft, box->upperTopLeft, box->upperBottomLeft, newColor);
+		ADD_FIXED_QUAD(box->lowerBottomRight, box->lowerTopRight, box->upperTopRight, box->upperBottomRight, newColor);
 
 #undef ADD_FIXED_QUAD
 
@@ -361,7 +361,7 @@ namespace cheat
 
 		s_AvatarPosition = ImVec2(avatarPos.x, avatarPos.y);
 		SAFE_EEND();
-		}
+	}
 
 	static std::optional<ImVec2> GetEntityScreenPos(game::Entity* entity)
 	{
@@ -370,7 +370,7 @@ namespace cheat
 			return {};
 
 		return ImVec2(targetPos.x, targetPos.y);
-		}
+	}
 
 	static void DrawLine(game::Entity* entity, const ImColor& color)
 	{
@@ -386,7 +386,7 @@ namespace cheat
 
 		//LOG_DEBUG("screen_center = %f %f", screen_center.x, screen_center.y);
 		//LOG_DEBUG("screenPos = %f %f", screenPos.value().x, screenPos.value().y);
-		
+
 		draw->AddLine(screen_center, *screenPos, color, esp.f_TracerSize.getValue());
 	}
 
@@ -394,7 +394,7 @@ namespace cheat
 	{
 		auto& esp = ESP::getInstance();
 		auto& manager = game::EntityManager::getInstance();
-		
+
 		std::string text;
 		if (esp.f_DrawName.getValue() && esp.f_DrawDistance.getValue()) {
 			double distance = manager.avatar()->distance(entity);
@@ -407,10 +407,10 @@ namespace cheat
 			std::ostringstream oss;
 			oss << std::fixed << std::setprecision(1) << distance << "m";
 			text = oss.str();
-				}
+		}
 		else {
 			text = name;
-			}
+		}
 
 		//LOG_DEBUG("text = %s", text.c_str());
 
@@ -435,7 +435,7 @@ namespace cheat
 
 		auto draw = ImGui::GetBackgroundDrawList();
 		auto font = GetFontBySize(static_cast<float>(esp.f_FontSize.getValue()));
-			draw->AddText(font, static_cast<float>(esp.f_FontSize.getValue()), namePosition, color, text.c_str());
+		draw->AddText(font, static_cast<float>(esp.f_FontSize.getValue()), namePosition, color, text.c_str());
 	}
 
 	bool DrawEntity(const std::string& name, game::Entity* entity, const ImColor& contrastColor)

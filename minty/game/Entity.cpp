@@ -56,7 +56,6 @@ namespace cheat::game {
 		return app::MoleMole_BaseEntity_GetAbsolutePosition(m_RawEntity);
 	}
 
-
 	app::Vector2 Entity::levelPosition()
 	{
 		if (m_RawEntity == nullptr)
@@ -64,21 +63,6 @@ namespace cheat::game {
 
 		return app::Miscs_GenLevelPos_1(absolutePosition());
 	}
-
-
-	app::LCBaseCombat* Entity::combat()
-	{
-		/*if (!isLoaded())
-			return nullptr;
-
-		SAFE_BEGIN();
-		return app::MoleMole_BaseEntity_GetLogicCombatComponent_1(m_RawEntity, *app::MoleMole_BaseEntity_GetLogicCombatComponent_1__MethodInfo);
-		SAFE_ERROR();
-		return nullptr;
-		SAFE_END();*/
-		return nullptr;
-	}
-
 
 	bool Entity::isChest()
 	{
