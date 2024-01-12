@@ -271,7 +271,7 @@ namespace cheat::game::filters
 		SimpleFilter SeaGanoderma = { EntityType__Enum_1::GatherObject, "_Electroanemones" };
 		SimpleFilter Seagrass = { EntityType__Enum_1::GatherObject, "_Seagrass" };
 		SimpleFilter SilkFlower = { EntityType__Enum_1::GatherObject, "_NiChang_Drop" };
-		SimpleFilter SmallLampGrass = { EntityType__Enum_1::Field, "_Plant_Fuchsia" };
+		//SimpleFilter SmallLampGrass = { EntityType__Enum_1::Field, "_Plant_Fuchsia" };
 		SimpleFilter Snapdragon = { EntityType__Enum_1::GatherObject, "_Plant_Snapdragon" };
 		SimpleFilter Sunsettia = { EntityType__Enum_1::GatherObject, "_SunsetFruit" };
 		SimpleFilter SweetFlower = { EntityType__Enum_1::GatherObject, "_Plant_Whiteballet" };
@@ -292,6 +292,14 @@ namespace cheat::game::filters
 		SimpleFilter ZaytunPeach = { EntityType__Enum_1::GatherObject, "_Olea" };
 		SimpleFilter Redcrest = { EntityType__Enum_1::GatherObject, "RedPearlFruit" };
 		SimpleFilter Ajilenakh = { EntityType__Enum_1::GatherObject, "DatePalm" };
+		// fontaine plants - thanks to dvinefox12
+		SimpleFilter LumidouceBell = { EntityType__Enum_1::GatherObject, "Keiskei" };
+		SimpleFilter Marcotte = { EntityType__Enum_1::GatherObject, "Rosemary" };
+		SimpleFilter BulleFruite = { EntityType__Enum_1::GatherObject, "Tangerines" };
+		SimpleFilter SmallLampGrass = { EntityType__Enum_1::GatherObject, "Fuchsia" };
+		SimpleFilter SubdetectionUnit = { EntityType__Enum_1::GatherObject, "MachinaIustitia" };
+		SimpleFilter Lumitoile = { EntityType__Enum_1::GatherObject, "GlowStarfish" };
+		SimpleFilter PluieLotus = { EntityType__Enum_1::GatherObject, "WaterHyacinth" };
 	}
 
 	namespace puzzle
@@ -386,12 +394,6 @@ namespace cheat::game::filters
 			mineral::MagicalCrystalChunkDrop,
 			mineral::StarsilverDrop,
 			mineral::WhiteIronChunkDrop
-		};
-		SimpleFilter PlantDestroy = {
-			//plant::SakuraBloom,
-			plant::DandelionSeed,
-			plant::MistFlowerCorolla,
-			plant::FlamingFlowerStamen
 		};
 
 		WhitelistFilter Doodads = {
@@ -615,7 +617,7 @@ namespace cheat::game::filters
 			plant::SeaGanoderma,
 			plant::Seagrass,
 			plant::SilkFlower,
-			plant::SmallLampGrass,
+			//plant::SmallLampGrass,
 			plant::Snapdragon,
 			plant::Sunsettia,
 			plant::SweetFlower,
@@ -635,7 +637,13 @@ namespace cheat::game::filters
 			plant::Viparyas,
 			plant::ZaytunPeach,
 			plant::Redcrest,
-			plant::Ajilenakh
+			plant::Ajilenakh,
+			plant::LumidouceBell, 
+			plant::Marcotte,
+			plant::BulleFruite,
+			plant::SmallLampGrass,
+			plant::SubdetectionUnit,
+			plant::Lumitoile
 		};
 
 		SimpleFilter Equipments{
@@ -654,11 +662,11 @@ namespace cheat::game::filters
 
 		SimpleFilter AllPickableLoot = {
 			OresDrop,
-			AnimalDrop,
+			//AnimalDrop,
 			AnimalPickUp,
 			Equipments,
 			featured::ItemDrops,
-			living::Meat,
+			living::Meat
 		};
 	}
 }

@@ -2,6 +2,29 @@
 
 namespace cheat
 {
+	struct VacuumLootFilter {
+		std::string name;
+		bool enabled;
+		game::SimpleFilter simpleFilter;
+
+		explicit operator bool() const {
+			return name != "Empty";
+		}
+	};
+
+	std::vector<VacuumLootFilter> filters;
+
+	/*
+	The first parameter is a name for the entity and at the same time a key to save the filter status in the config.
+	Second - path to the place where the filter value will be saved.
+	Third - the filter itself(see game/filters.h).
+	*/
+	void AddVacuumLootFilter(std::string name, std::string path, game::SimpleFilter filter) {
+		std::string key = util::FirstCharToLowercase(name);
+		auto value = config::getValue(path, key, false);
+		filters.push_back({ name, value.getValue(), filter });
+	}
+
 	void GameManager_Update_VacuumLoot_Hook(app::GameManager* __this, app::MethodInfo* method);
 
 	VacuumLoot::VacuumLoot() {
@@ -11,12 +34,16 @@ namespace cheat
 		f_Radius = config::getValue("functions:VacuumLoot", "radius", 20.f);
 		f_Hotkey = Hotkey("functions:VacuumLoot");
 
-		f_Ores = config::getValue("functions:VacuumLoot", "ores", false);
-		f_OresDrop = config::getValue("functions:VacuumLoot", "oresDrop", false);
-		f_Oculies = config::getValue("functions:VacuumLoot", "oculies", false);
-		f_Plants = config::getValue("functions:VacuumLoot", "plants", false);
-		f_Equipments = config::getValue("functions:VacuumLoot", "equipments", false);
-		f_ItemDrops = config::getValue("functions:VacuumLoot", "itemDrops", false);
+		/*
+		Filters
+		Write names in the format "SomeEntityName" to save them in the config as
+		"someEntityName" and for the name in the game as "Some entity name"
+		*/
+		AddVacuumLootFilter("Ore", "functions:VacuumLoot:filters", game::filters::combined::Ores);
+		AddVacuumLootFilter("Plant", "functions:VacuumLoot:filters", game::filters::combined::Plants);
+		AddVacuumLootFilter("Item", "functions:VacuumLoot:filters", game::filters::featured::ItemDrops);
+		//AddVacuumLootFilter("Item", "functions:VacuumLoot:filters", game::filters::combined::AllPickableLoot); // idk why its not workin
+		AddVacuumLootFilter("Oculus", "functions:VacuumLoot:filters", game::filters::combined::Oculies);
 
 		HookManager::install(app::GameManager_Update, GameManager_Update_VacuumLoot_Hook);
 	}
@@ -37,16 +64,16 @@ namespace cheat
 			ConfigSliderFloat("Distance (m)", f_Distance, 1.f, 10.0f, _("Distance between the player and the loot.\n"
 				"Values under 1.5 may be too intruding."));
 
-			if (ImGui::BeginCombo("Select the loot to be picked up.", "Filters")) {
-				ConfigCheckbox("Ores", f_Ores);
-				ConfigCheckbox("Ores drop", f_OresDrop);
-				ConfigCheckbox("Oculies", f_Oculies, "All types of oculies");
-				ConfigCheckbox("Plants", f_Plants);
-				ConfigCheckbox("Equipments", f_Equipments, "Artifacts, swords, claymores etc.");
-				ConfigCheckbox("Mob loot", f_ItemDrops);
-
-				ImGui::EndCombo();
+			if (BeginGroupPanel("Filters", true)) {
+				for (VacuumLootFilter& filter : filters) {
+					auto name = util::ConvertToWords(filter.name);
+					ImGui::Checkbox(name.c_str(), &filter.enabled);
+					std::string key = util::FirstCharToLowercase(filter.name);
+					config::setValue("functions:VacuumLoot:filters", key, filter.enabled);
+				}
 			}
+			EndGroupPanel();
+
 
 			f_Hotkey.Draw();
 			ImGui::Unindent();
@@ -72,6 +99,17 @@ namespace cheat
 			f_Enabled.setValue(!f_Enabled.getValue());
 	}
 
+	VacuumLootFilter FilterEntity(game::Entity entity) {
+		auto vacuumLoot = VacuumLoot::getInstance();
+
+		for (VacuumLootFilter& filter : filters) {
+			if (filter.simpleFilter.IsValid(&entity) and filter.enabled)
+				return filter;
+		}
+
+		return { "Empty", false, game::filters::Empty };
+	}
+
 	void GameManager_Update_VacuumLoot_Hook(app::GameManager* __this, app::MethodInfo* method)
 	{
 		auto currentTime = util::GetCurrentTimeMillisec();
@@ -84,21 +122,19 @@ namespace cheat
 
 		for (const auto& entity : manager.entities())
 		{
-			if (!(
-				(vacuumLoot.f_Ores.getValue() && game::filters::combined::Ores.IsValid(entity)) ||
-				(vacuumLoot.f_OresDrop.getValue() && game::filters::combined::OresDrop.IsValid(entity)) ||
-				(vacuumLoot.f_Oculies.getValue() && game::filters::combined::Oculies.IsValid(entity)) ||
-				(vacuumLoot.f_Plants.getValue() && game::filters::combined::Plants.IsValid(entity)) ||
-				(vacuumLoot.f_Equipments.getValue() && game::filters::combined::Equipments.IsValid(entity)) ||
-				(vacuumLoot.f_ItemDrops.getValue() && game::filters::featured::ItemDrops.IsValid(entity))
-			)) 
+			if (manager.avatar()->distance(entity) > vacuumLoot.f_Radius.getValue() and !entity->isAvatar())
 				continue;
 
-			auto distance = manager.avatar()->distance(entity);
-			
-			if (distance <= vacuumLoot.f_Radius.getValue())
+			LOG_DEBUG("%s", entity->name().c_str());
+
+			VacuumLootFilter data = FilterEntity(*entity);
+			if (data) 
 				entity->setRelativePosition(avatarEntity->relativePosition() + avatarEntity->forward() * vacuumLoot.f_Distance.getValue());
+			
 		}
+		LOG_DEBUG("GM ITERATION END");
+		LOG_DEBUG("");
+
 		vacuumLoot.nextTime = currentTime + vacuumLoot.f_Delay.getValue();
 
 		return CALL_ORIGIN(GameManager_Update_VacuumLoot_Hook, __this, method);

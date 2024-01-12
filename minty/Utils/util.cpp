@@ -37,4 +37,25 @@ namespace util {
 	int64_t GetCurrentTimeMillisec() {
 		return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	}
+
+	std::string FirstCharToLowercase(std::string string) {
+		std::string output = string;
+		output[0] = std::tolower(output[0]);
+		return output;
+	}
+
+	std::string ConvertToWords(const std::string& input) { // convert strings with format "SomeString" to "Some string"
+		std::string result;
+
+		for (size_t i = 0; i < input.length(); ++i) {
+			if (i > 0 && isupper(input[i]))
+				result += ' ';
+
+			result += tolower(input[i]);
+		}
+		result[0] = toupper(result[0]);
+
+		return result;
+	}
+
 }

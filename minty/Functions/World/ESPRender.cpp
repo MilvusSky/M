@@ -162,10 +162,6 @@ namespace cheat
 		SAFE_BEGIN();
 
 		auto bounds = app::wtf(gameObject);
-		/*if (bounds.m_Extents.x < esp.f_MinSize.getValue() &&
-			bounds.m_Extents.y < esp.f_MinSize.getValue() &&
-			bounds.m_Extents.z < esp.f_MinSize.getValue())
-			bounds.m_Extents = { esp.f_MinSize.getValue(), esp.f_MinSize.getValue(), esp.f_MinSize.getValue() };*/
 
 		auto min = bounds.m_Center - bounds.m_Extents;
 		auto max = bounds.m_Center + bounds.m_Extents;
@@ -261,9 +257,9 @@ namespace cheat
 		boxRect.xMax = std::max({ box.lowerTopLeft.x, box.lowerTopRight.x, box.lowerBottomLeft.x, box.lowerBottomRight.x,
 			box.upperTopLeft.x, box.upperTopRight.x, box.upperBottomRight.x, box.upperBottomLeft.x });
 
-		boxRect.yMin = std::max({ box.lowerTopLeft.y, box.lowerTopRight.y, box.lowerBottomLeft.y, box.lowerBottomRight.y,
+		boxRect.yMin = std::min({ box.lowerTopLeft.y, box.lowerTopRight.y, box.lowerBottomLeft.y, box.lowerBottomRight.y,
 			box.upperTopLeft.y, box.upperTopRight.y, box.upperBottomRight.y, box.upperBottomLeft.y });
-		boxRect.yMax = std::min({ box.lowerTopLeft.y, box.lowerTopRight.y, box.lowerBottomLeft.y, box.lowerBottomRight.y,
+		boxRect.yMax = std::max({ box.lowerTopLeft.y, box.lowerTopRight.y, box.lowerBottomLeft.y, box.lowerBottomRight.y,
 			box.upperTopLeft.y, box.upperTopRight.y, box.upperBottomRight.y, box.upperBottomLeft.y });
 
 		if (!scalling)
@@ -286,6 +282,7 @@ namespace cheat
 		boxRect.yMax = screenHeight - boxRect.yMax;
 		return boxRect;
 	}
+
 
 	static void DrawQuadLines(const ImVec2& p1, const ImVec2& p2, const ImVec2& p3, const ImVec2& p4, ImU32 col, float thicc)
 	{
@@ -384,9 +381,6 @@ namespace cheat
 		ImRect screen_rect = { 0.0f, 0.0f, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y };
 		auto screen_center = screen_rect.GetCenter();
 
-		//LOG_DEBUG("screen_center = %f %f", screen_center.x, screen_center.y);
-		//LOG_DEBUG("screenPos = %f %f", screenPos.value().x, screenPos.value().y);
-		
 		draw->AddLine(screen_center, *screenPos, color, esp.f_TracerSize.getValue());
 	}
 
@@ -432,7 +426,6 @@ namespace cheat
 			namePosition.y -= esp.f_FontSize.getValue();
 		}
 
-
 		auto draw = ImGui::GetBackgroundDrawList();
 		auto font = GetFontBySize(static_cast<float>(esp.f_FontSize.getValue()));
 			draw->AddText(font, static_cast<float>(esp.f_FontSize.getValue()), namePosition, color, text.c_str());
@@ -444,14 +437,11 @@ namespace cheat
 		auto& esp = ESP::getInstance();
 
 		Rect rect;
-		if (esp.f_DrawBox) {
+		if (esp.f_DrawBox) 
 			rect = DrawBox(entity, esp.GlobalBoxColor);
-		}
-
-		if (esp.f_DrawTracer) {
+		if (esp.f_DrawTracer) 
 			DrawLine(entity, esp.GlobalLineColor);
-		}
-
+		
 		if (esp.f_DrawName.getValue() || esp.f_DrawDistance.getValue())
 			DrawName(rect, entity, name, esp.GlobalTextColor,
 				esp.m_FontContrastColor);

@@ -16,33 +16,13 @@ namespace cheat
 	void DrawExternal();
 	ImColor CalcContrastColor(const ImColor& foreground, float maxContrastRatio = 2.0f, const ImColor& background = ImColor(1.0f, 1.0f, 1.0f), const ImColor& inverted = ImColor(0.0f, 0.0f, 0.0f));
 
-	std::string FirstCharToLowercase(std::string string) {
-		std::string output = string;
-		output[0] = std::tolower(output[0]);
-		return output;
-	}
-
-	std::string ConvertToWords(const std::string& input) { // convert strings with format "SomeString" to "Some string"
-		std::string result;
-
-		for (size_t i = 0; i < input.length(); ++i) {
-			if (i > 0 && isupper(input[i]))
-				result += ' ';
-
-			result += tolower(input[i]);
-		}
-		result[0] = toupper(result[0]);
-
-		return result;
-	}
-
 	/*
 	The first parameter is a name for the entity and at the same time a key to save the filter status in the config.
 	Second - path to the place where the filter value will be saved.
-	Third - the filter itself(see game / filters.h).
+	Third - the filter itself(see game/filters.h).
 	*/
 	void AddFilter(std::string name, std::string path, game::SimpleFilter filter) {
-		std::string key = FirstCharToLowercase(name);
+		std::string key = util::FirstCharToLowercase(name);
 		auto value = config::getValue(path, key, false);
 		filters.push_back({ name, value.getValue(), filter });
 	}
@@ -83,8 +63,8 @@ namespace cheat
 		AddFilter("Chest", "functions:ESP:filters", game::filters::combined::Chests);
 		AddFilter("Ore", "functions:ESP:filters", game::filters::combined::Ores);
 		AddFilter("Plant", "functions:ESP:filters", game::filters::combined::Plants);
-		AddFilter("Monsters", "functions:ESP:filters", game::filters::combined::AllMonsters);
-		AddFilter("Items", "functions:ESP:filters", game::filters::featured::ItemDrops);
+		AddFilter("Monster", "functions:ESP:filters", game::filters::combined::AllMonsters);
+		AddFilter("Item", "functions:ESP:filters", game::filters::featured::ItemDrops);
 		// AddFilter("Items", "functions:ESP:filters", game::filters::combined::AllPickableLoot); idk why its not workin
 		AddFilter("Oculus", "functions:ESP:filters", game::filters::combined::Oculies);
 		AddFilter("Seelie", "functions:ESP:filters", game::filters::combined::Seelies);
@@ -142,9 +122,9 @@ namespace cheat
 
 			if (BeginGroupPanel("Filters", true)) {
 				for (ESPFilter& filter : filters) {
-					auto name = ConvertToWords(filter.name);
+					auto name = util::ConvertToWords(filter.name);
 					ImGui::Checkbox(name.c_str(), &filter.enabled);
-					std::string key = FirstCharToLowercase(filter.name);
+					std::string key = util::FirstCharToLowercase(filter.name);
 					config::setValue("functions:ESP:filters", key, filter.enabled);
 				}
 			}
@@ -193,10 +173,8 @@ namespace cheat
 
 			ESPFilter data = FilterEntity(*entity);
 
-			//LOG_DEBUG("%s", entity->name().c_str());
-
 			if (data)
-				DrawEntity(ConvertToWords(data.name), entity, CalcContrastColor(esp.GlobalTextColor));
+				DrawEntity(util::ConvertToWords(data.name), entity, CalcContrastColor(esp.GlobalTextColor));
 		}
 	}
 }

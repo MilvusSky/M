@@ -21,6 +21,8 @@ namespace util {
 	std::string getUAHash(std::string execPath);
 	std::vector<std::string> split(const std::string& content, const std::string& delimiter);
 	int64_t GetCurrentTimeMillisec();
+	std::string ConvertToWords(const std::string& input);
+	std::string FirstCharToLowercase(std::string string);
 
 	template <typename T>
 	const char* get_ptr(const T& value) {
