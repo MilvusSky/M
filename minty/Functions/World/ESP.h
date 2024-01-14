@@ -1,7 +1,8 @@
 ﻿#pragma once
-#include "../../game/IEntityFilter.h"
 #include "../FunctionIncludes.h"
-#include "../../game/EntityManager.h"
+#include "../../game/filters.h"
+#include "../../game/SimpleFilter.h"
+
 #include "ESPRender.h"
 
 namespace cheat 

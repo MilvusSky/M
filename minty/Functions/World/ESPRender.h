@@ -1,8 +1,7 @@
 ﻿#pragma once
 
 #include "../FunctionIncludes.h"
-#include "../../game/filters.h"
-#include "../../game/SimpleFilter.h"
+
 
 #include "ESP.h"
 

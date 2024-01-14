@@ -1,5 +1,8 @@
 ﻿#include "filters.h"
 
+// if you want to add SimpleFilter that will filter all items using type without name checks than u should 
+// write symbol '~' instead of name
+
 namespace cheat::game::filters
 {
 	using namespace game;
@@ -61,6 +64,9 @@ namespace cheat::game::filters
 		SimpleFilter KeySigil = { EntityType__Enum_1::GatherObject, "RuneContent" };
 		SimpleFilter ShrineOfDepth = { EntityType__Enum_1::Gadget, "Temple" };
 		SimpleFilter TimeTrialChallenge = { EntityType__Enum_1::Field, "Challengestarter_" };
+
+		SimpleFilter Hydroculus = { EntityType__Enum_1::GatherObject, "_FontaineCrystal" };
+
 	}
 
 	namespace guide
@@ -146,6 +152,12 @@ namespace cheat::game::filters
 		SimpleFilter ScarletQuartzDrop = { EntityType__Enum_1::GatherObject, "_DropDulinsBlood" };
 		SimpleFilter StarsilverDrop = { EntityType__Enum_1::GatherObject, "_DropMoonMeteor" };
 		SimpleFilter WhiteIronChunkDrop = { EntityType__Enum_1::GatherObject, "_Drop_Metal" };
+
+		// Fountaine
+		SimpleFilter CondessenceCrystal = { EntityType__Enum_1::GatherObject, "_OreFountaine" };
+		SimpleFilter CondessenceCrystalDrop = { EntityType__Enum_1::GatherObject, "_DropOreFountaine" };
+
+		
 	}
 
 	namespace monster
@@ -271,7 +283,6 @@ namespace cheat::game::filters
 		SimpleFilter SeaGanoderma = { EntityType__Enum_1::GatherObject, "_Electroanemones" };
 		SimpleFilter Seagrass = { EntityType__Enum_1::GatherObject, "_Seagrass" };
 		SimpleFilter SilkFlower = { EntityType__Enum_1::GatherObject, "_NiChang_Drop" };
-		//SimpleFilter SmallLampGrass = { EntityType__Enum_1::Field, "_Plant_Fuchsia" };
 		SimpleFilter Snapdragon = { EntityType__Enum_1::GatherObject, "_Plant_Snapdragon" };
 		SimpleFilter Sunsettia = { EntityType__Enum_1::GatherObject, "_SunsetFruit" };
 		SimpleFilter SweetFlower = { EntityType__Enum_1::GatherObject, "_Plant_Whiteballet" };
@@ -292,7 +303,7 @@ namespace cheat::game::filters
 		SimpleFilter ZaytunPeach = { EntityType__Enum_1::GatherObject, "_Olea" };
 		SimpleFilter Redcrest = { EntityType__Enum_1::GatherObject, "RedPearlFruit" };
 		SimpleFilter Ajilenakh = { EntityType__Enum_1::GatherObject, "DatePalm" };
-		// fontaine plants - thanks to dvinefox12
+		// Fountaine plants - thanks to dvinefox12
 		SimpleFilter LumidouceBell = { EntityType__Enum_1::GatherObject, "Keiskei" };
 		SimpleFilter Marcotte = { EntityType__Enum_1::GatherObject, "Rosemary" };
 		SimpleFilter BulleFruite = { EntityType__Enum_1::GatherObject, "Tangerines" };
@@ -300,6 +311,8 @@ namespace cheat::game::filters
 		SimpleFilter SubdetectionUnit = { EntityType__Enum_1::GatherObject, "MachinaIustitia" };
 		SimpleFilter Lumitoile = { EntityType__Enum_1::GatherObject, "GlowStarfish" };
 		SimpleFilter PluieLotus = { EntityType__Enum_1::GatherObject, "WaterHyacinth" };
+		SimpleFilter LakelightLily = { EntityType__Enum_1::GatherObject, "_FountainPlant" };
+		
 	}
 
 	namespace puzzle
@@ -369,9 +382,12 @@ namespace cheat::game::filters
 			featured::Geoculus,
 			featured::Lumenspar,
 			featured::KeySigil,
-			featured::Dendroculus
+			featured::Dendroculus,
+			featured::Hydroculus
 		};
+
 		SimpleFilter Chests = { EntityType__Enum_1::Chest };
+
 		SimpleFilter Ores = {
 			mineral::AmethystLump,
 			mineral::ArchaicStone,
@@ -383,8 +399,11 @@ namespace cheat::game::filters
 			mineral::NoctilucousJade,
 			mineral::MagicalCrystalChunk,
 			mineral::Starsilver,
-			mineral::WhiteIronChunk
+			mineral::WhiteIronChunk,
+			mineral::CondessenceCrystal
+
 		};
+
 		SimpleFilter OresDrop = {
 			mineral::AmethystLumpDrop,
 			mineral::CrystalChunkDrop,
@@ -393,7 +412,8 @@ namespace cheat::game::filters
 			mineral::NoctilucousJadeDrop,
 			mineral::MagicalCrystalChunkDrop,
 			mineral::StarsilverDrop,
-			mineral::WhiteIronChunkDrop
+			mineral::WhiteIronChunkDrop,
+			mineral::CondessenceCrystalDrop
 		};
 
 		WhitelistFilter Doodads = {
@@ -425,13 +445,16 @@ namespace cheat::game::filters
 			"RoadBlock"
 			}
 		};
+
 		SimpleFilter BreakableObjects = {
 			puzzle::AncientRime,
 			puzzle::LargeRockPile,
 			puzzle::SmallRockPile,
 			puzzle::Bombbarrel,
 		};
+
 		SimpleFilter Animals = { EntityType__Enum_1::EnvAnimal };
+
 		SimpleFilter AnimalDrop = {
 			living::Falcon,
 			living::Pigeon,
@@ -450,6 +473,7 @@ namespace cheat::game::filters
 			monster::Scorpion,
 			monster::Vulture
 		};
+
 		SimpleFilter AnimalPickUp = {
 			living::CrystalCore,
 			living::Salamander,
@@ -467,13 +491,16 @@ namespace cheat::game::filters
 			living::Fish,
 			living::Scarab
 		};
+
 		SimpleFilter AnimalNPC = {
 			living::Dog,
 			living::Cat,
 			living::Kitsune,
 			living::BakeDanuki
 		};
+
 		SimpleFilter Monsters = { EntityType__Enum_1::Monster };
+
 		SimpleFilter MonsterCommon = {
 			monster::Slime,
 			monster::FloatingFungus,
@@ -495,6 +522,7 @@ namespace cheat::game::filters
 			monster::WingedShroom,
 			monster::GroundedShroom,
 		};
+
 		SimpleFilter MonsterElites = {
 			monster::Mitachurl,
 			monster::AbyssMage,
@@ -520,8 +548,8 @@ namespace cheat::game::filters
 			monster::BlackSerpentKnight,
 			monster::PrimalConstruct
 		};
+
 		SimpleFilter MonsterBosses = {
-			// Adding these comments for better tracking.
 			// Trounce
 			monster::Dvalin,
 			monster::Azhdaha,
@@ -566,6 +594,7 @@ namespace cheat::game::filters
 			monster::SemiPerpetualControlMatrix
 
 		};
+
 		SimpleFilter MonsterShielded = {
 			// Taken from https://genshin-impact.fandom.com/wiki/Shields/Enemy.
 			// We won't be including Regisvines and enemy objects here,
@@ -580,10 +609,13 @@ namespace cheat::game::filters
 			monster::Cicin,
 			monster::Whopperflower
 		};
+
 		SimpleFilter MonsterEquips = { EntityType__Enum_1::MonsterEquip };
 
 		SimpleFilter OrganicTargets = { Monsters, Animals };
+
 		SimpleFilter Lightning = { EntityType__Enum_1::Lightning };
+
 		SimpleFilter Plants = {
 			plant::AmakumoFruit,
 			plant::Apple,
@@ -617,7 +649,6 @@ namespace cheat::game::filters
 			plant::SeaGanoderma,
 			plant::Seagrass,
 			plant::SilkFlower,
-			//plant::SmallLampGrass,
 			plant::Snapdragon,
 			plant::Sunsettia,
 			plant::SweetFlower,
@@ -638,12 +669,15 @@ namespace cheat::game::filters
 			plant::ZaytunPeach,
 			plant::Redcrest,
 			plant::Ajilenakh,
+
 			plant::LumidouceBell, 
 			plant::Marcotte,
 			plant::BulleFruite,
 			plant::SmallLampGrass,
 			plant::SubdetectionUnit,
-			plant::Lumitoile
+			plant::Lumitoile,
+			plant::PluieLotus,
+			plant::LakelightLily,
 		};
 
 		SimpleFilter Equipments{
@@ -662,7 +696,6 @@ namespace cheat::game::filters
 
 		SimpleFilter AllPickableLoot = {
 			OresDrop,
-			//AnimalDrop,
 			AnimalPickUp,
 			Equipments,
 			featured::ItemDrops,
