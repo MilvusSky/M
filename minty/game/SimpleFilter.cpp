@@ -24,7 +24,7 @@ namespace cheat::game
 		auto& name = entity->name();
 		for (auto& pattern : m_Names)
 		{
-			if (name.find(pattern) != std::string::npos)
+			if (name.find(pattern) != std::string::npos or name.find("~") != std::string::npos)
 				return true;
 		}
 

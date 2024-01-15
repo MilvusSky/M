@@ -1,4 +1,4 @@
-﻿#include "ESPRender.h"
+﻿#include "ESP.h"
 
 namespace cheat
 {
@@ -21,7 +21,7 @@ namespace cheat
 	Second - path to the place where the filter value will be saved.
 	Third - the filter itself(see game/filters.h).
 	*/
-	void AddFilter(std::string name, std::string path, game::SimpleFilter filter) {
+	void AddESPFilter(std::string name, std::string path, game::SimpleFilter filter) {
 		std::string key = util::FirstCharToLowercase(name);
 		auto value = config::getValue(path, key, false);
 		filters.push_back({ name, value.getValue(), filter });
@@ -60,15 +60,15 @@ namespace cheat
 		Write names in the format "SomeEntityName" to save them in the config as
 		"someEntityName" and for the name in the game as "Some entity name"
 		*/
-		AddFilter("Chest", "functions:ESP:filters", game::filters::combined::Chests);
-		AddFilter("Ore", "functions:ESP:filters", game::filters::combined::Ores);
-		AddFilter("Plant", "functions:ESP:filters", game::filters::combined::Plants);
-		AddFilter("Monster", "functions:ESP:filters", game::filters::combined::AllMonsters);
-		AddFilter("Item", "functions:ESP:filters", game::filters::featured::ItemDrops);
-		// AddFilter("Items", "functions:ESP:filters", game::filters::combined::AllPickableLoot); idk why its not workin
-		AddFilter("Oculus", "functions:ESP:filters", game::filters::combined::Oculies);
-		AddFilter("Seelie", "functions:ESP:filters", game::filters::combined::Seelies);
-		AddFilter("SeelieLamp", "functions:ESP:filters", game::filters::puzzle::SeelieLamp);
+		AddESPFilter("Chest", "functions:ESP:filters", game::filters::combined::Chests);
+		AddESPFilter("Ore", "functions:ESP:filters", game::filters::combined::Ores);
+		AddESPFilter("Plant", "functions:ESP:filters", game::filters::combined::Plants);
+		AddESPFilter("Monster", "functions:ESP:filters", game::filters::combined::AllMonsters);
+		AddESPFilter("Item", "functions:ESP:filters", game::filters::featured::ItemDrops);
+		// AddESPFilter("Items", "functions:ESP:filters", game::filters::combined::AllPickableLoot); idk why its not workin
+		AddESPFilter("Oculus", "functions:ESP:filters", game::filters::combined::Oculies);
+		AddESPFilter("Seelie", "functions:ESP:filters", game::filters::combined::Seelies);
+		AddESPFilter("SeelieLamp", "functions:ESP:filters", game::filters::puzzle::SeelieLamp);
 	}
 
 	std::string ESP::getModule() {
@@ -171,10 +171,10 @@ namespace cheat
 			if (esp.entityManager->avatar()->distance(entity) > esp.f_Range.getValue())
 				continue;
 
-			ESPFilter data = FilterEntity(*entity);
+			ESPFilter filterData = FilterEntity(*entity);
 
-			if (data)
-				DrawEntity(util::ConvertToWords(data.name), entity, CalcContrastColor(esp.GlobalTextColor));
+			if (filterData)
+				DrawEntity(util::ConvertToWords(filterData.name), entity, CalcContrastColor(esp.GlobalTextColor));
 		}
 	}
 }

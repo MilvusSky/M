@@ -3,7 +3,6 @@
 #include "../FunctionIncludes.h"
 #include "../../game/filters.h"
 #include "../../game/SimpleFilter.h"
-#include "../../GUI/mutil.h"
 
 namespace cheat {
     class VacuumLoot : public Function {
@@ -27,9 +26,8 @@ namespace cheat {
         void Status() override;
 
         std::string getModule() override;
-
+        game::EntityManager* entityManager;
         static VacuumLoot& getInstance();
-        int64_t nextTime;
 
         VacuumLoot();
     };
